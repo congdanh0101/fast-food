@@ -54,6 +54,10 @@ const userSchema = new Schema({
       ref: 'Role',
     },
   ],
+  softDeleted: {
+    type: Boolean,
+    require: true,
+  },
 })
 
 userSchema.virtual('id').get(function () {

@@ -34,6 +34,7 @@ class AuthService {
     user['totalOrders'] = 0
     user['successfulOrder'] = 0
     user['percentageOfSuccessfulOrder'] = 0
+    user['softDeleted'] = false
 
     // const registerUser = new User(user)
     // const savedUser = await registerUser.save()

@@ -30,21 +30,25 @@ class UserService {
     return user
   }
 
-  async getAllUser() {
-    return await User.find()
+  async getAllUser(filter) {
+    return await User.find({ softDeleted: filter })
   }
 
   async deleteUserById(id) {
-    // if (!mongoose.isValidObjectId(id)) return null
-    // const deleteUser = await User.findByIdAndRemove(id)
-    // if (!deleteUser) return null
-    // return deleteUser
     const user = await this.getUserById(id)
     if (!user) return null
     user['softDeleted'] = true
+    user['refreshToken'] = null
     const softDeleted = await User.findByIdAndUpdate(id, user, { new: true })
     if (!softDeleted) return null
     return softDeleted
+  }
+
+  async updateUserById(id, data) {
+    if (!mongoose.isValidObjectId(id)) return null
+    var updateUser = await User.findByIdAndUpdate(id, data, { new: true })
+    if (!updateUser) return null
+    return updateUser
   }
 }
 

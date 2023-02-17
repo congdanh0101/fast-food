@@ -21,7 +21,5 @@ db.connectMongoDB()
 //App router
 // app.use(router)
 router(app)
-
-
 const PORT = process.env.PORT || 2001
 app.listen(PORT, () => console.log(`App listening at port ${PORT}`))

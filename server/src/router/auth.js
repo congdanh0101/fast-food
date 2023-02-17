@@ -10,5 +10,7 @@ router.post(
   validate.validateRegisterUser(),
   AuthController.register
 )
+router.post('/login', AuthController.login)
+router.post('/refreshtoken', AuthController.refreshToken)
 
 module.exports = router

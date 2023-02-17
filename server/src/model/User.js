@@ -58,6 +58,9 @@ const userSchema = new Schema({
     type: Boolean,
     require: true,
   },
+  refreshToken: {
+    type: String,
+  },
 })
 
 userSchema.virtual('id').get(function () {

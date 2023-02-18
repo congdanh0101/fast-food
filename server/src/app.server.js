@@ -5,16 +5,14 @@ const router = require('./router/router.index')
 const db = require('./utils/database.config')
 require('dotenv').config()
 const createError = require('http-errors')
-const Role = require('./model/Role')
-// const ErrorHandler = require('./middleware/ErrorHandler')
-// require('expr')
 const app = express()
+const cookieParser  = require('cookie-parser')
 
 //HTTP logger
 app.use(morgan('dev'))
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
-
+app.use(cookieParser())
 //DB connection
 db.connectMongoDB()
 

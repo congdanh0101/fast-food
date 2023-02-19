@@ -13,10 +13,8 @@ router.post(
 )
 router.post('/login', AuthController.login)
 router.post('/refreshtoken', AuthController.refreshToken)
-router.post(
-    '/logout',
-    Authenticate.verifyUSERAuthorization,
-    AuthController.logout
-)
+router.post('/logout', Authenticate.AuthorizationUSER, AuthController.logout)
+router.post('/verify/**', AuthController.verifyEmailCode)
+router.post('/forgot',AuthController.forgotPassword)
 
 module.exports = router

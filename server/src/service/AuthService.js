@@ -11,7 +11,9 @@ const { default: mongoose } = require('mongoose')
 
 class AuthService {
     async register(user) {
+        //Check email exist
         const existEmail = await User.findOne({ email: user['email'] })
+        //Check phone number exist
         const existPhoneNumber = await User.findOne({
             phoneNumber: user['phoneNumber'],
         })
@@ -20,16 +22,16 @@ class AuthService {
 
         if (user['confirmPassword'] !== user['password']) return `password`
 
-        const randomCode = this.generateVerificationCode()
+        const randomCode = Utils.generateVerificationCode()
 
-        // await EmailService.sendEmail(
-        //   user['email'],
-        //   'email verfication code'.toUpperCase(),
-        //   EmailService.htmlEmailVerificationCodeRegister(
-        //     randomCode,
-        //     user['fullName']
-        //   )
-        // )
+        await EmailService.sendEmail(
+            user['email'],
+            'email verfication code'.toUpperCase(),
+            EmailService.htmlEmailVerificationCodeRegister(
+                randomCode,
+                user['fullName']
+            )
+        )
 
         user['rewardPoint'] = 0
         user['rank'] = 'bronze'
@@ -42,10 +44,9 @@ class AuthService {
         // const registerUser = new User(user)
         // const savedUser = await registerUser.save()
         // return savedUser
-        return await UserService.createUser(user)
+        return randomCode
+        // return await UserService.createUser(user)
     }
-
-    generateVerificationCode = () => uuid.v4().split('-')[0].toUpperCase()
 
     async login(request) {
         const user = await User.findOne({ email: request['username'] })
@@ -55,7 +56,7 @@ class AuthService {
         const accessToken = Utils.generateAccessToken({ userID: user['_id'] })
         var refreshToken = Utils.generateRefreshToken({ userID: user['_id'] })
         user['refreshToken'] =
-            user['refreshToken'] !== null ? user['refreshToken'] : refreshToken
+            (user['refreshToken'] !== null && user['refreshToken']!==undefined) ? user['refreshToken'] : refreshToken
         refreshToken = user['refreshToken']
 
         await User.findByIdAndUpdate(user['id'], user, { new: true })
@@ -79,6 +80,34 @@ class AuthService {
             { refreshToken: null },
             { new: true }
         )
+    }
+
+    async forgotPassword(email) {
+        const user = await User.findOne({ email: email })
+        if (!user) return null
+        const randomCode = Utils.generateVerificationCode()
+        await EmailService.sendEmail(
+            email,
+            `email verfication code`.toUpperCase(),
+            EmailService.htmlEmailVerificationCodeForgotPasswor(
+                randomCode,
+                user['fullName']
+            )
+        )
+        return randomCode
+    }
+
+    async resetPassword(email) {
+        const newPassword = Utils.generateRandomResetPassword()
+        console.log(newPassword)
+        await EmailService.sendEmail(
+            email,
+            `email verfication code`.toUpperCase(),
+            EmailService.htmlResetPassword(newPassword)
+        )
+        const user = await User.findOne({ email })
+        user['password'] = bcrypt.hashSync(newPassword, 10)
+        return await user.save()
     }
 }
 

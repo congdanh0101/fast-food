@@ -4,7 +4,7 @@ const UserController = require('../controller/UserController')
 const Authenticate = require('../middleware/Authenticate')
 
 //get all
-router.get('/', Authenticate.verifyADMINAuthorization, UserController.getAllUser)
+router.get('/', Authenticate.AuthorizationADMIN, UserController.getAllUser)
 //get by id
 router.get(`/:id`, UserController.getUserById)
 //delete user by id

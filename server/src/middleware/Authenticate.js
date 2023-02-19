@@ -6,8 +6,8 @@ const RoleService = require('../service/RoleService')
 require('dotenv').config()
 
 class Authenticate {
-    async verifyUSERAuthorization(req, res, next) {
-        verifyToken(req, res, async () => {
+    async AuthorizationUSER(req, res, next) {
+        verifyAccessToken(req, res, async () => {
             const userID = req.user.userID
             const user = await UserService.getUserById(userID)
             if (!user)
@@ -24,8 +24,8 @@ class Authenticate {
         })
     }
 
-    async verifyADMINAuthorization(req, res, next) {
-        verifyToken(req, res, async () => {
+    async AuthorizationADMIN(req, res, next) {
+        verifyAccessToken(req, res, async () => {
             const userID = req.user.userID
             const user = await UserService.getUserById(userID)
             if (!user)
@@ -43,10 +43,11 @@ class Authenticate {
     }
 }
 
-const verifyToken = (req, res, next) => {
+const verifyAccessToken = (req, res, next) => {
     const authHeader = req.header('Authorization')
     const accessToken = authHeader && authHeader.split(' ')[1]
-    if (!accessToken) return next(createHttpError.Unauthorized())
+    if (!accessToken)
+        return res.status(401).send(createHttpError.Unauthorized())
     jwt.verify(
         accessToken,
         process.env.API_SECRET_ACCESS_KEY,
@@ -64,6 +65,7 @@ const verifyToken = (req, res, next) => {
     )
 }
 
+
 module.exports = new Authenticate()
 
-// module.exports = verifyToken
+// module.exports = verifyAccessToken

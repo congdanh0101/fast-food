@@ -1,3 +1,4 @@
+const ResourceNotFoundException = require('../exception/ResourceNotFoundException')
 const CategoryService = require('../service/CategoryService')
 const createError = require('http-errors')
 
@@ -18,10 +19,23 @@ class CategoryController {
         if (!category) return next(createError.NotFound())
         return res.json(category)
     }
-    
+
     //get all
     async getAllCategory(req, res, next) {
         res.json(await CategoryService.getAllCategory())
+    }
+
+    async updateCategory(req, res, next) {
+        const cate = { name: req.body.name }
+        const category = await CategoryService.updateCategory(
+            req.params.id,
+            cate
+        )
+        if (!category)
+            return next(
+                new ResourceNotFoundException(`Category`, `id`, req.params.id)
+            )
+        return res.json(category)
     }
 }
 

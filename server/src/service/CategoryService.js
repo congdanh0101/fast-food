@@ -18,6 +18,11 @@ class CategoryService {
         return await new Category(data).save()
     }
     getAllCategory = () => Category.find()
+
+    async updateCategory(id, data) {
+        if (!mongoose.isValidObjectId(id)) return null
+        return await Category.findByIdAndUpdate(id, data, { new: true })
+    }
 }
 
 module.exports = new CategoryService()

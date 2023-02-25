@@ -8,5 +8,7 @@ router.post('/', CategoryController.createCategory)
 router.get('/:id', CategoryController.getCategoryById)
 //get all category
 router.get('/',CategoryController.getAllCategory)
+//update category
+router.put('/:id',CategoryController.updateCategory)
 
 module.exports = router

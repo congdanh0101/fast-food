@@ -6,13 +6,15 @@ const db = require('./utils/database.config')
 require('dotenv').config()
 const createError = require('http-errors')
 const app = express()
-const cookieParser  = require('cookie-parser')
+const cookieParser = require('cookie-parser')
+const cors = require('cors')
 
 //HTTP logger
 app.use(morgan('dev'))
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 app.use(cookieParser())
+app.use(cors())
 //DB connection
 db.connectMongoDB()
 

@@ -132,7 +132,12 @@ class AuthController {
         // } else {
         if (path.includes('register')) {
             //get email verification code
+
             const emailVerficationCode = req.cookies.registerVerificationCode
+
+            console.log(emailVerficationCode)
+            console.log(req.headers.ck)
+
             //check token
             if (codeInput === emailVerficationCode) {
                 const user = await UserService.createUser(req.cookies.user)

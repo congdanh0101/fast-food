@@ -1,6 +1,7 @@
 const ResourceNotFoundException = require('../exception/ResourceNotFoundException')
 const CategoryService = require('../service/CategoryService')
 const createError = require('http-errors')
+const Utils = require('../utils/Utils')
 
 class CategoryController {
     //create new category
@@ -22,6 +23,7 @@ class CategoryController {
 
     //get all
     async getAllCategory(req, res, next) {
+        Utils.setCookie(res, 'cookie', 'haha')
         res.json(await CategoryService.getAllCategory())
     }
 

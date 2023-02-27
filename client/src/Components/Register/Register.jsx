@@ -3,7 +3,7 @@ import './register.css'
 import { useDispatch } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 import { registerUser } from '../../redux/apiRequest'
-import axios from 'axios'
+import request from '../../utils/axiosConfig'
 
 const Register = () => {
     const [email, setEmail] = useState('')
@@ -31,11 +31,8 @@ const Register = () => {
         }
         console.log(userRegister)
         registerUser(userRegister, dispatch, navigate)
-        // const res = await axios.post(
-        //     'http://localhost:2001/api/auth/register',
-        //     userRegister
-        // )
-        // console.log(res.headers['set-cookie'])
+        const res = await request.get('/category')
+        console.log(res.data)
     }
 
     return (

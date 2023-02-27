@@ -22,9 +22,9 @@ class Utils {
             httpOnly: true,
             secure: false,
             path: '/',
-            sameSite: 'strict',
+            sameSite: 'none',
             // expires: age === 0 ? 0 : new Date(Date.now() + age),
-            maxAge: age === 0 ? null : age*1000,
+            maxAge: age === 0 ? null : age * 1000,
         })
     }
 }

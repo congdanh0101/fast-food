@@ -48,6 +48,11 @@ class UserController {
             message: `User with id ${req.params.id} has been deleted`,
         })
     }
+
+    async createUser(req, res, next) {
+        const data = req.body
+        res.json(await UserService.createUser(data))
+    }
 }
 
 module.exports = new UserController()

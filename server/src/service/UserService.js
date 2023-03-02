@@ -7,6 +7,7 @@ const errorHandler = require('../middleware/ErrorHandler')
 
 class UserService {
     async createUser(user) {
+        console.log(user)
         // user['rewardPoint'] = 0
         // user['rank'] = 'bronze'
         // user['totalOrders'] = 0
@@ -14,6 +15,7 @@ class UserService {
         // user['percentageOfSuccessfulOrder'] = 0
         // user['softDeleted'] = false
         // user['refreshToken'] = null
+        delete user['confirmPassword']
         user['password'] = bcrypt.hashSync(user['password'], 10)
         const roleUser = await RoleService.getRoleByName('USER')
         user['roles'] = roleUser

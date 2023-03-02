@@ -26,18 +26,23 @@ const userSchema = new Schema({
     },
     rewardPoint: {
         type: Number,
+        default: 0,
     },
     rank: {
         type: String,
+        default: 'Bronze',
     },
     totalOrders: {
         type: Number,
+        default: 0,
     },
     successfulOrder: {
         type: Number,
+        default: 0,
     },
     percentageOfSuccessfulOrder: {
         type: Number,
+        default: 0,
     },
     email: {
         type: String,
@@ -53,13 +58,16 @@ const userSchema = new Schema({
             type: mongoose.Schema.Types.ObjectId,
             ref: 'Role',
         },
+        
     ],
     softDeleted: {
         type: Boolean,
         require: true,
+        default:false
     },
     refreshToken: {
         type: String,
+        default: null,
     },
 })
 

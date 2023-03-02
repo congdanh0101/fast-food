@@ -6,6 +6,9 @@ import {
     registerFailure,
     registerStart,
     registerSuccess,
+    verifyFailure,
+    verifyStart,
+    verifySuccess,
 } from './authSlice'
 
 export const loginUser = async (user, dispatch, navigate) => {
@@ -22,24 +25,28 @@ export const loginUser = async (user, dispatch, navigate) => {
 export const registerUser = async (user, dispatch, navigate) => {
     dispatch(registerStart())
     try {
-        const respone = await request.post(`/auth/register`, user, {
-            headers: {
-                ck: `haha`,
-            },
-        })
-        // console.log(respone.headers['set-cookie'])
-        // console.log(respone.headers)
+        const respone = await request.post(`/auth/register`, user)
         console.log(respone.data)
-        // console.log(respone.data.user)
-        // localStorage.setItem('code',respone.data.code)
-        // // localStorage.setItem('user',respone.data.user)
-        // localStorage.getItem('user')
-        document.cookie = `registerVerificationCode=${
-            respone.data.code
-        };maxAge=${60 * 1000}`
-        dispatch(registerSuccess(respone.data))
+        localStorage.setItem('user', JSON.stringify(respone.data.user))
+        localStorage.setItem('code', respone.data.code)
+        localStorage.setItem('expired', respone.data.expired)
+        dispatch(registerSuccess())
         navigate(`/verify/register`)
     } catch (error) {
         dispatch(registerFailure())
+    }
+}
+
+export const createUser = async (user, dispatch, navigate) => {
+    dispatch(verifyStart())
+    try {
+        const respone = await request.post('/user',  user )
+        localStorage.removeItem('user')
+        localStorage.removeItem('expired')
+        localStorage.removeItem('code')
+        dispatch(verifySuccess())
+        navigate('/login')
+    } catch (error) {
+        dispatch(verifyFailure())
     }
 }

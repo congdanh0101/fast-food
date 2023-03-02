@@ -33,13 +33,13 @@ class AuthService {
             )
         )
 
-        user['rewardPoint'] = 0
-        user['rank'] = 'bronze'
-        user['totalOrders'] = 0
-        user['successfulOrder'] = 0
-        user['percentageOfSuccessfulOrder'] = 0
-        user['softDeleted'] = false
-        user['refreshToken'] = null
+        // user['rewardPoint'] = 0
+        // user['rank'] = 'bronze'
+        // user['totalOrders'] = 0
+        // user['successfulOrder'] = 0
+        // user['percentageOfSuccessfulOrder'] = 0
+        // user['softDeleted'] = false
+        // user['refreshToken'] = null
         delete user.confirmPassword
         // const registerUser = new User(user)
         // const savedUser = await registerUser.save()

@@ -38,18 +38,10 @@ const productSchema = new Schema({
     },
     combo: [
         {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: 'Product',
+            type: Map,
             default: [],
         },
-        {
-            
-        }
     ],
-})
-
-productSchema.virtual('id').get(function () {
-    return this._id.toHexString()
 })
 
 productSchema.set('toJSON', {

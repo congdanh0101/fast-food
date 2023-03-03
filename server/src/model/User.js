@@ -58,21 +58,16 @@ const userSchema = new Schema({
             type: mongoose.Schema.Types.ObjectId,
             ref: 'Role',
         },
-        
     ],
     softDeleted: {
         type: Boolean,
         require: true,
-        default:false
+        default: false,
     },
     refreshToken: {
         type: String,
         default: null,
     },
-})
-
-userSchema.virtual('id').get(function () {
-    return this._id.toHexString()
 })
 
 userSchema.set('toJSON', {

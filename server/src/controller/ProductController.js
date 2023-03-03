@@ -36,8 +36,6 @@ class ProductController {
         const product = await ProductService.getProductById(id)
         if (!product)
             return next(new ResourceNotFoundException('Product', 'id', id))
-        console.log(product)
-
         return res.send(product)
     }
 

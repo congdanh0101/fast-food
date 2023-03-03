@@ -35,7 +35,7 @@ class ProductService {
     }
 
     async getAllProduct(filter) {
-        return await Product.find(filter).populate('category').populate('combo')
+        return await Product.find(filter).populate('category')
     }
 
     async deleteProduct(id) {

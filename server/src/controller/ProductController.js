@@ -1,7 +1,6 @@
 const createHttpError = require('http-errors')
 const ProductService = require('../service/ProductService')
 const ResourceNotFoundException = require('../exception/ResourceNotFoundException')
-const { json } = require('body-parser')
 
 class ProductController {
     async createProduct(req, res, next) {
@@ -15,16 +14,20 @@ class ProductController {
         }
         const result = await ProductService.createProduct(product)
         if (!result) return next(createHttpError.BadRequest())
-        if (result === `category`)
-            return next(
-                new ResourceNotFoundException(
-                    'Category',
-                    'id',
-                    product['category']
+        if (typeof result === 'string') {
+            if (result === `category`)
+                return next(
+                    new ResourceNotFoundException(
+                        'Category',
+                        'id',
+                        product['category']
+                    )
                 )
-            )
-        if (result === `product`)
-            return next(createHttpError.NotFound(`Product not found`))
+            else
+                return next(
+                    new ResourceNotFoundException('Product', 'id', result)
+                )
+        }
         return res.status(201).json(result)
     }
 
@@ -33,7 +36,9 @@ class ProductController {
         const product = await ProductService.getProductById(id)
         if (!product)
             return next(new ResourceNotFoundException('Product', 'id', id))
-        return res.json(product)
+        console.log(product)
+
+        return res.send(product)
     }
 
     async getAllProducts(req, res, next) {

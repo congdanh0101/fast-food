@@ -1,22 +1,22 @@
 const { default: mongoose } = require('mongoose')
 const Product = require('../model/Product')
 const Category = require('../model/Category')
-const { deleteProduct } = require('../controller/ProductController')
 
 class ProductService {
     async createProduct(product) {
         if (!mongoose.isValidObjectId(product['category'])) return `category`
         const category = await Category.findById(product['category'])
         if (!category) return `category`
-        const listProduct = product['combo']
-        if (listProduct) {
+        const combo = product['combo']
+        if (combo) {
             let price = 0
-            for (let index = 0; index < listProduct.length; index++) {
-                if (!mongoose.isValidObjectId(listProduct[index]))
-                    return `product`
-                const existProduct = await Product.findById(listProduct[index])
-                if (!existProduct) return `product`
-                price += existProduct['price']
+            for (let index = 0; index < combo.length; index++) {
+                const id = combo[index]['product']
+                const quantity = combo[index]['quantity']
+                if (!mongoose.isValidObjectId(id)) return id
+                const existProduct = await Product.findById(id)
+                if (!existProduct) return id
+                price += existProduct['price'] * quantity
             }
             product['price'] = price
         }
@@ -31,11 +31,11 @@ class ProductService {
             id,
             { $inc: { view: 1 } },
             { new: true }
-        )
+        ).populate('category')
     }
 
     async getAllProduct(filter) {
-        return await Product.find(filter).populate('category')
+        return await Product.find(filter).populate('category').populate('combo')
     }
 
     async deleteProduct(id) {

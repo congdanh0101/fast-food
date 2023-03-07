@@ -31,8 +31,6 @@ const Register = () => {
         }
         console.log(userRegister)
         registerUser(userRegister, dispatch, navigate)
-        const res = await request.get('/category')
-        console.log(res.data)
     }
 
     return (

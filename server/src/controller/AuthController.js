@@ -47,20 +47,20 @@ class AuthController {
                 )
             )
         const registerVerificationCode = result
-        // Utils.setCookie(
-        //     res,
-        //     'registerVerificationCode',
-        //     registerVerificationCode,
-        //     process.env.VERIFICATION_CODE_EXPIRED
-        // )
+        Utils.setCookie(
+            res,
+            'registerVerificationCode',
+            registerVerificationCode,
+            process.env.VERIFICATION_CODE_EXPIRED
+        )
         console.log(registerUser)
-        // Utils.setCookie(res, 'timeVerificationCode', timeVerificationCode)
-        // Utils.setCookie(
-        //     res,
-        //     'user',
-        //     registerUser,
-        //     process.env.VERIFICATION_CODE_EXPIRED
-        // )
+        Utils.setCookie(
+            res,
+            'user',
+            registerUser,
+            process.env.VERIFICATION_CODE_EXPIRED
+        )
+
         return res.status(200).json({
             message: `Verification code is sent to your email.`,
             code: registerVerificationCode,

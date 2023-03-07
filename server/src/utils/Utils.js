@@ -22,7 +22,7 @@ class Utils {
             httpOnly: true,
             secure: false,
             path: '/',
-            sameSite: 'none',
+            sameSite: 'strict',
             // expires: age === 0 ? 0 : new Date(Date.now() + age),
             maxAge: age === 0 ? null : age * 1000,
         })

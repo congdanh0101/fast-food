@@ -26,10 +26,22 @@ export const registerUser = async (user, dispatch, navigate) => {
     dispatch(registerStart())
     try {
         const respone = await request.post(`/auth/register`, user)
-        console.log(respone.data)
-        localStorage.setItem('user', JSON.stringify(respone.data.user))
-        localStorage.setItem('code', respone.data.code)
-        localStorage.setItem('expired', respone.data.expired)
+        // request
+        //     .post('/auth/register', user)
+        //     .then((data) => {
+        //         const setCookieHeader = data.headers['set-cookie']
+        //         if (setCookieHeader instanceof Array) {
+        //             console.log('Cookies:')
+        //             setCookieHeader.forEach((cookie) => console.log(cookie))
+        //         } else console.log('Cookie:', setCookieHeader)
+        //     })
+        //     .catch((error) => console.log(error))
+
+        // console.log(respone.data)
+        // console.log(`cookie ${respone.headers['Set-Cookie']}`)
+        // localStorage.setItem('user', JSON.stringify(respone.data.user))
+        // localStorage.setItem('code', respone.data.code)
+        // localStorage.setItem('expired', respone.data.expired)
         dispatch(registerSuccess())
         navigate(`/verify/register`)
     } catch (error) {
@@ -40,10 +52,25 @@ export const registerUser = async (user, dispatch, navigate) => {
 export const createUser = async (user, dispatch, navigate) => {
     dispatch(verifyStart())
     try {
-        const respone = await request.post('/user',  user )
+        const respone = await request.post('/user', user)
         localStorage.removeItem('user')
         localStorage.removeItem('expired')
         localStorage.removeItem('code')
+        dispatch(verifySuccess())
+        navigate('/login')
+    } catch (error) {
+        dispatch(verifyFailure())
+    }
+}
+
+export const verifyRegisterUser = async (code, dispatch, navigate) => {
+    dispatch(verifyStart())
+    try {
+        const respone = await request.post('/auth/verify/register', { code })
+
+        // localStorage.removeItem('user')
+        // localStorage.removeItem('expired')
+        // localStorage.removeItem('code')
         dispatch(verifySuccess())
         navigate('/login')
     } catch (error) {

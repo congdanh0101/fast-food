@@ -6,19 +6,32 @@ const userSchema = new Schema({
     fullName: {
         type: String,
         require: true,
+        defaultL: null,
     },
     dob: {
         type: Date,
         require: true,
+        defaultL: null,
     },
     gender: {
         type: Boolean,
         require: true,
+        defaultL: null,
     },
-    address: {
-        type: String,
-        require: true,
-    },
+    // address: [
+    //     {
+    //         type: Map,
+    //         require: true,
+    //         defaultL: [],
+    //     },
+    // ],
+    address: [
+        {
+            type: String,
+            require: true,
+            defaultL: [],
+        },
+    ],
     phoneNumber: {
         type: Number,
         require: true,

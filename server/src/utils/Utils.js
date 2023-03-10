@@ -2,6 +2,8 @@ const jwt = require('jsonwebtoken')
 require('dotenv').config()
 const createError = require('http-errors')
 const uuid = require('uuid')
+const { default: mongoose } = require('mongoose')
+const Product = require('../model/Product')
 class Utils {
     generateAccessToken = (payload) =>
         jwt.sign(payload, process.env.API_SECRET_ACCESS_KEY, {
@@ -26,6 +28,32 @@ class Utils {
             // expires: age === 0 ? 0 : new Date(Date.now() + age),
             maxAge: age === 0 ? null : age * 1000,
         })
+    }
+
+    getPriceOfCombo = async (combo) => {
+        let price = 0
+        let position = []
+        for (let index = 0; index < combo.length; index++) {
+            const id = combo[index]['product']
+            const quantity = combo[index]['quantity']
+            if (!id || !quantity) {
+                //push index to array position
+                position.push(index)
+                continue
+            }
+            //valid id
+            if (!mongoose.isValidObjectId(id)) return id
+            //find product
+            const existProduct = await Product.findById(id)
+            if (!existProduct) return id
+            //calculate price of combo
+            price += existProduct['price'] * quantity
+        }
+        //set null for element of combo does not have id or quantity
+        position.forEach((index) => (combo[index] = null))
+        //get combo with item not null
+        combo = combo.filter((item) => item !== null)
+        return [price, combo]
     }
 }
 

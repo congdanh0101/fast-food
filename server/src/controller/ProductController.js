@@ -55,7 +55,32 @@ class ProductController {
 
     async getAllProductByCategory(req, res, next) {}
 
-    async updateProductById(req, res, next) {}
+    async updateProductById(req, res, next) {
+        const data = req.body
+        const id = req.params.id
+        const product = {
+            name: data.name,
+            price: data.price,
+            category: data.category,
+            combo: data.combo,
+            img: data.img,
+        }
+        const result = await ProductService.updateProductById(id, product)
+
+        if (typeof result === 'string') {
+            if (result.includes('category')) {
+                return next(
+                    new ResourceNotFoundException(
+                        'Category',
+                        'id',
+                        product['category']
+                    )
+                )
+            } else
+                return next(new ResourceNotFoundException('Product', 'id', result))
+        }
+        return res.json(result)
+    }
 
     async deleteProduct(req, res, next) {
         const id = req.params.id

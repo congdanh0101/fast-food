@@ -53,6 +53,34 @@ class UserController {
         const data = req.body
         res.json(await UserService.createUser(data))
     }
+
+    async changePassword(req, res, next) {
+        const id = req.params.id
+        const data = req.body
+        const requestChangePassword = {
+            currentPassword: data.currentPassword,
+            newPassword: data.newPassword,
+            confirmPassword: data.confirmPassword,
+        }
+        const result = await UserService.changePassword(
+            id,
+            requestChangePassword
+        )
+        if (typeof result === 'string') {
+            if (result.includes('current'))
+                return next(
+                    createError.BadRequest(`Your current password is invalid!`)
+                )
+            else if (result.includes('confirm'))
+                return next(
+                    createError.BadRequest(
+                        `Your new password and confirm password is not match!`
+                    )
+                )
+            else return next(new ResourceNotFoundException('User', 'id', id))
+        }
+        return res.json(result)
+    }
 }
 
 module.exports = new UserController()

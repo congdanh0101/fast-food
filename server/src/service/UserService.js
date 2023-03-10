@@ -61,6 +61,17 @@ class UserService {
         if (!updateUser) return null
         return updateUser
     }
+
+    async changePassword(id, data) {
+        const user = await this.getUserById(id)
+        if (!user) return id
+        if (!bcrypt.compareSync(data['currentPassword'], user['password']))
+            return `current`
+        if (data['newPassword'] !== data['confirmPassword']) return `confirm`
+
+        user['password'] = bcrypt.hashSync(data['newPassword'], 10)
+        return await User.findByIdAndUpdate(id, user, { new: true })
+    }
 }
 
 module.exports = new UserService()

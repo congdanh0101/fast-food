@@ -13,5 +13,8 @@ router.delete('/:id', UserController.deleteUser)
 router.put('/:id', UserController.updateUser)
 //create new user
 router.post('/',UserController.createUser)
+//change password
+router.put('/pwd/:id',UserController.changePassword)
+
 
 module.exports = router

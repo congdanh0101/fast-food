@@ -1,15 +1,19 @@
 const createHttpError = require('http-errors')
 const ProductService = require('../service/ProductService')
 const ResourceNotFoundException = require('../exception/ResourceNotFoundException')
-
+const { uploadOptions } = require('../utils/multer.config')
 class ProductController {
     async createProduct(req, res, next) {
         const data = req.body
+        const file = req.file
+        const fileName = file.filename;
+        const basePath = `${req.protocol}://${req.get('host')}/public/`
         const product = {
             name: data.name,
             category: data.category,
             price: data.price,
-            img: data.img,
+            // img: data.img,
+            img:`${basePath}${fileName}`,
             combo: data.combo,
         }
         const result = await ProductService.createProduct(product)

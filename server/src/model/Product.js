@@ -27,11 +27,13 @@ const productSchema = new Schema({
         type: Array,
         default: [],
     },
-    img: {
-        type: String,
-        default: null,
-        require: true,
-    },
+    img: [
+        {
+            type: String,
+            default: null,
+            require: true,
+        },
+    ],
     softDeleted: {
         type: Boolean,
         default: false,

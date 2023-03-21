@@ -10,6 +10,7 @@ class Authenticate {
         verifyAccessToken(req, res, async () => {
             const userID = req.user.userID
             const user = await UserService.getUserById(userID)
+            req.userID = userID
             if (!user)
                 return next(new ResourceNotFoundException(`User`, `id`, userID))
             var rolesID = user['roles']

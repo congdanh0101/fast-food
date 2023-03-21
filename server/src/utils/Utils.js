@@ -18,6 +18,8 @@ class Utils {
     generateVerificationCode = () => uuid.v4().split('-')[0].toUpperCase()
     generateRandomResetPassword = () =>
         uuid.v4().split('-')[0] + uuid.v4().split('-')[4]
+    
+    // generateVoucherCode = () => uuid.v4().
 
     setCookie = (res, key, value, age = 0) => {
         res.cookie(key, value, {
@@ -42,10 +44,10 @@ class Utils {
                 continue
             }
             //valid id
-            if (!mongoose.isValidObjectId(id)) return id
+            if (!mongoose.isValidObjectId(id)) return [id,[]]
             //find product
             const existProduct = await Product.findById(id)
-            if (!existProduct) return id
+            if (!existProduct) return [id,[]]
             //calculate price of combo
             price += existProduct['price'] * quantity
         }

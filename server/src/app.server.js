@@ -13,7 +13,9 @@ const cors = require('cors')
 app.use(morgan('dev'))
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
+app.use('/public', express.static(__dirname + '/public'))
 app.use(cookieParser())
+
 app.use(
     cors({
         credentials: true,
@@ -22,7 +24,6 @@ app.use(
         optionsSuccessStatus: 200,
     })
 )
-
 app.use(function (req, res, next) {
     res.header('Content-Type', 'application/json;charset=UTF-8')
     res.header('Access-Control-Allow-Credentials', true)
@@ -47,3 +48,4 @@ db.connectMongoDB()
 router(app)
 const PORT = process.env.PORT || 2001
 app.listen(PORT, () => console.log(`App listening at port ${PORT}`))
+

@@ -30,31 +30,21 @@ const voucherSchema = new Schema({
             type: String,
         },
     ],
-    userId: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'User',
-        default:null
-    },
     discount: {
         type: Number,
         require: true,
         default: 0,
+        min:0,
+        max:100
     },
-    minDiscount: {
+    minOrder: {
         type: Number,
     },
     maxDiscount: {
         type: Number,
     },
-    type:{
-        type:String,
-        default:'Percentage'
-    }
 })
 
 
-voucherSchema.set('toJSON', {
-    virtuals: true,
-})
 
 module.exports = mongoose.model('Voucher', voucherSchema)

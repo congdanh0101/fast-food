@@ -43,6 +43,7 @@ const userSchema = new Schema({
     },
     rank: {
         type: String,
+        enum:['Bronze','Silver','Gold','Platinum','Diamond'],
         default: 'Bronze',
     },
     totalOrders: {
@@ -81,10 +82,14 @@ const userSchema = new Schema({
         type: String,
         default: null,
     },
+    voucher:[{
+        type:mongoose.Schema.Types.ObjectId,
+        ref:'Voucher'
+    }]
 })
 
-userSchema.set('toJSON', {
-    virtuals: true,
-})
+// userSchema.set('toJSON', {
+//     virtuals: true,
+// })
 
 module.exports = mongoose.model('User', userSchema)

@@ -40,14 +40,21 @@ const productSchema = new Schema({
     },
     combo: [
         {
-            type: Map,
-            default: [],
+            product: {
+                type: mongoose.Schema.Types.ObjectId,
+                ref: 'Product',
+            },
+            quantity: {
+                type: Number,
+                require: true,
+                min: 1,
+            },
         },
     ],
 })
 
-productSchema.set('toJSON', {
-    virtuals: true,
-})
+// productSchema.set('toJSON', {
+//     virtuals: true,
+// })
 
 module.exports = mongoose.model('Product', productSchema)

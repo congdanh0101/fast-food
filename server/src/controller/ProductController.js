@@ -6,14 +6,14 @@ class ProductController {
     async createProduct(req, res, next) {
         const data = req.body
         const file = req.file
-        const fileName = file.filename;
+        const fileName = file ? file.filename : null
         const basePath = `${req.protocol}://${req.get('host')}/public/`
         const product = {
             name: data.name,
             category: data.category,
             price: data.price,
             // img: data.img,
-            img:`${basePath}${fileName}`,
+            img: `${basePath}${fileName}`,
             combo: data.combo,
         }
         const result = await ProductService.createProduct(product)
@@ -44,6 +44,7 @@ class ProductController {
     }
 
     async getAllProducts(req, res, next) {
+        // let filter = req.query
         let filter = {}
         const softDeleted =
             req.query.softDeleted == 1 ? req.query.softDeleted : 0
@@ -51,6 +52,7 @@ class ProductController {
             filter['category'] = req.query.category.split(',')
         }
         filter['softDeleted'] = softDeleted
+        console.log(filter)
 
         const listProduct = await ProductService.getAllProduct(filter)
         if (!listProduct) return next(createHttpError.InternalServerError())
@@ -81,7 +83,9 @@ class ProductController {
                     )
                 )
             } else
-                return next(new ResourceNotFoundException('Product', 'id', result))
+                return next(
+                    new ResourceNotFoundException('Product', 'id', result)
+                )
         }
         return res.json(result)
     }

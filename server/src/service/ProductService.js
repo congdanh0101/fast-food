@@ -10,6 +10,7 @@ class ProductService {
         const category = await Category.findById(product['category'])
         if (!category) return `category`
         const combo = product['combo']
+        console.log(combo)
         if (combo && combo.length > 0) {
             let [priceResult, comboResult] = await Utils.getPriceOfCombo(combo)
             if (typeof priceResult === 'string') return priceResult
@@ -27,11 +28,15 @@ class ProductService {
             id,
             { $inc: { view: 1 } },
             { new: true }
-        ).populate('category')
+        )
+            .populate('category')
+            .populate('combo.product', 'name category price -_id')
     }
 
     async getAllProduct(filter) {
-        return await Product.find(filter).populate('category')
+        return await Product.find(filter)
+            .populate('category')
+            .populate('combo.product', 'name category price -_id')
     }
 
     async deleteProduct(id) {
@@ -39,7 +44,14 @@ class ProductService {
         return await Product.findByIdAndRemove(id)
     }
 
-    async softDeleteProductById(id) {}
+    async softDeleteProductById(id) {
+        if (!mongoose.isValidObjectId(id)) return null
+        return await Product.findByIdAndUpdate(
+            id,
+            { softDeleted: 1 },
+            { new: true }
+        )
+    }
 
     async updateProductById(id, product) {
         //valid id

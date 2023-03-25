@@ -4,6 +4,8 @@ const createError = require('http-errors')
 const uuid = require('uuid')
 const { default: mongoose } = require('mongoose')
 const Product = require('../model/Product')
+const ResourceNotFoundException = require('../exception/ResourceNotFoundException')
+
 class Utils {
     generateAccessToken = (payload) =>
         jwt.sign(payload, process.env.API_SECRET_ACCESS_KEY, {
@@ -18,8 +20,8 @@ class Utils {
     generateVerificationCode = () => uuid.v4().split('-')[0].toUpperCase()
     generateRandomResetPassword = () =>
         uuid.v4().split('-')[0] + uuid.v4().split('-')[4]
-    
-    // generateVoucherCode = () => uuid.v4().
+
+    generateVoucherCode = () => uuid.v4().split('-')[0].toUpperCase()
 
     setCookie = (res, key, value, age = 0) => {
         res.cookie(key, value, {
@@ -33,29 +35,86 @@ class Utils {
     }
 
     getPriceOfCombo = async (combo) => {
-        let price = 0
-        let position = []
-        for (let index = 0; index < combo.length; index++) {
-            const id = combo[index]['product']
-            const quantity = combo[index]['quantity']
-            if (!id || !quantity) {
-                //push index to array position
-                position.push(index)
-                continue
+        try {
+            let price = 0
+            let position = []
+            for (let index = 0; index < combo.length; index++) {
+                const id = combo[index]['product']
+                const quantity = combo[index]['quantity']
+                if (!id || !quantity) {
+                    //push index to array position
+                    position.push(index)
+                    continue
+                }
+                // valid id
+                if (!mongoose.isValidObjectId(id))
+                    throw new ResourceNotFoundException('Product', 'id', id)
+                //find product
+                const existProduct = await Product.findById(id)
+                if (!existProduct)
+                    throw new ResourceNotFoundException('Product', 'id', id)
+                //calculate price of combo
+                price += existProduct['price'] * quantity
             }
-            //valid id
-            if (!mongoose.isValidObjectId(id)) return [id,[]]
-            //find product
-            const existProduct = await Product.findById(id)
-            if (!existProduct) return [id,[]]
-            //calculate price of combo
-            price += existProduct['price'] * quantity
+            //set null for element of combo does not have id or quantity
+            position.forEach((index) => (combo[index] = null))
+            //get combo with item not null
+            combo = combo.filter((item) => item !== null)
+            return [price, combo]
+        } catch (error) {
+            throw error
         }
-        //set null for element of combo does not have id or quantity
-        position.forEach((index) => (combo[index] = null))
-        //get combo with item not null
-        combo = combo.filter((item) => item !== null)
-        return [price, combo]
+        // let price = 0
+        // let position = []
+        // for (let index = 0; index < combo.length; index++) {
+        //     const id = combo[index]['product']
+        //     const quantity = combo[index]['quantity']
+        //     if (!id || !quantity) {
+        //         //push index to array position
+        //         position.push(index)
+        //         continue
+        //     }
+        //     //valid id
+        //     if (!mongoose.isValidObjectId(id)) return [id, []]
+        //     //find product
+        //     const existProduct = await Product.findById(id)
+        //     if (!existProduct) return [id, []]
+        //     //calculate price of combo
+        //     price += existProduct['price'] * quantity
+        // }
+        // //set null for element of combo does not have id or quantity
+        // position.forEach((index) => (combo[index] = null))
+        // //get combo with item not null
+        // combo = combo.filter((item) => item !== null)
+        // return price, combo
+    }
+
+    upgradeRanking =  (point) => {
+        if (
+            point >= process.env.RANKING_SILVER &&
+            point < process.env.RANKING_GOLD
+        )
+            return 'Silver'
+        else if (
+            point >= process.env.RANKING_GOLD &&
+            point < process.env.RANKING_PLATINUM
+        )
+            return 'Gold'
+        else if (
+            point >= process.env.RANKING_PLATINUM &&
+            point < process.env.RANKING_DIAMOND
+        )
+            return 'Platinum'
+        else if (point >= process.env.RANKING_DIAMOND) return 'Diamond'
+        else return 'Bronze'
+    }
+
+    getDiscountRanking = (ranking) => {
+        if (ranking === 'Silver') return process.env.DISCOUNT_SILVER
+        else if (ranking === 'Gold') return process.env.DISCOUNT_GOLD
+        else if (ranking === 'Platinum') return process.env.DISCOUNT_PLATINUM
+        else if (ranking === 'DIAMOND') return process.env.DISCOUNT_DIAMOND
+        else return 0
     }
 }
 

@@ -41,9 +41,13 @@ const userSchema = new Schema({
         type: Number,
         default: 0,
     },
+    rankingPoint: {
+        type: Number,
+        default: 0,
+    },
     rank: {
         type: String,
-        enum:['Bronze','Silver','Gold','Platinum','Diamond'],
+        enum: ['Bronze', 'Silver', 'Gold', 'Platinum', 'Diamond'],
         default: 'Bronze',
     },
     totalOrders: {
@@ -65,7 +69,8 @@ const userSchema = new Schema({
     },
     password: {
         type: String,
-        require: true,
+        require: [true, 'Please enter password!'],
+        // select: false,
     },
     roles: [
         {
@@ -81,11 +86,14 @@ const userSchema = new Schema({
     refreshToken: {
         type: String,
         default: null,
+        select: false,
     },
-    voucher:[{
-        type:mongoose.Schema.Types.ObjectId,
-        ref:'Voucher'
-    }]
+    voucher: [
+        {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'Voucher',
+        },
+    ],
 })
 
 // userSchema.set('toJSON', {

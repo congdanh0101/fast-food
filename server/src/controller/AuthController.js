@@ -31,43 +31,34 @@ class AuthController {
             confirmPassword: data.confirmPassword,
             phoneNumber: data.phoneNumber,
         }
-        const result = await AuthService.register(registerUser)
-
-        if (result === `email`)
-            return next(createError.BadRequest('Please try another email!'))
-        if (result === `phone`)
-            return next(
-                createError.BadRequest('Please try another phone number!')
+        try {
+            const result = await AuthService.register(registerUser)
+            const registerVerificationCode = result
+            Utils.setCookie(
+                res,
+                'registerVerificationCode',
+                registerVerificationCode,
+                process.env.VERIFICATION_CODE_EXPIRED
             )
-        if (result === `password`)
-            return next(
-                createError.BadRequest(
-                    'Password does not match, please try again!'
-                )
+            console.log(registerUser)
+            Utils.setCookie(
+                res,
+                'user',
+                registerUser,
+                process.env.VERIFICATION_CODE_EXPIRED
             )
-        const registerVerificationCode = result
-        Utils.setCookie(
-            res,
-            'registerVerificationCode',
-            registerVerificationCode,
-            process.env.VERIFICATION_CODE_EXPIRED
-        )
-        console.log(registerUser)
-        Utils.setCookie(
-            res,
-            'user',
-            registerUser,
-            process.env.VERIFICATION_CODE_EXPIRED
-        )
 
-        return res.status(200).json({
-            message: `Verification code is sent to your email.`,
-            code: registerVerificationCode,
-            user: registerUser,
-            expired:
-                new Date().getTime() +
-                process.env.VERIFICATION_CODE_EXPIRED * 1000,
-        })
+            return res.status(200).json({
+                message: `Verification code is sent to your email.`,
+                code: registerVerificationCode,
+                user: registerUser,
+                expired:
+                    new Date().getTime() +
+                    process.env.VERIFICATION_CODE_EXPIRED * 1000,
+            })
+        } catch (error) {
+            return next(error)
+        }
     }
 
     async login(req, res, next) {
@@ -76,16 +67,14 @@ class AuthController {
             username: data.username,
             password: data.password,
         }
-        const token = await AuthService.login(loginRequest)
-        if (!token)
-            return next(createError.BadRequest('Invalid username or password'))
-        if (token === `deleted`)
-            return next(
-                createError.InternalServerError(`User had been deleted`)
-            )
-        //cookie configuration for refresh token
-        Utils.setCookie(res, 'refreshToken', token['refreshToken'])
-        return res.json({ accessToken: token['accessToken'] })
+        try {
+            const token = await AuthService.login(loginRequest)
+            //cookie configuration for refresh token
+            Utils.setCookie(res, 'refreshToken', token['refreshToken'])
+            return res.json({ accessToken: token['accessToken'] })
+        } catch (error) {
+            return next(error)
+        }
     }
 
     async refreshToken(req, res, next) {
@@ -115,7 +104,7 @@ class AuthController {
 
             return res.json({ accessToken: newToken['accessToken'] })
         } catch (error) {
-            next(error)
+            return next(error)
         }
     }
 
@@ -206,11 +195,14 @@ class AuthController {
 
     async logout(req, res, next) {
         const userID = req.user.userID
-        //clear refresh token in cookie and database
-        const result = await AuthService.logout(userID)
-        if (!result) return next()
-        res.clearCookie('refreshToken')
-        return res.json({ message: `Logout successfully` })
+        try {
+            await AuthService.logout(userID)
+            //clear refresh token in cookie and database
+            res.clearCookie('refreshToken')
+            return res.json({ message: `Logout successfully` })
+        } catch (error) {
+            return next(error)
+        }
     }
 }
 

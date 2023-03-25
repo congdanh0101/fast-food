@@ -3,45 +3,78 @@ const Product = require('../model/Product')
 const Category = require('../model/Category')
 const CategoryService = require('./CategoryService')
 const Utils = require('../utils/Utils')
+const ResourceNotFoundException = require('../exception/ResourceNotFoundException')
+const createHttpError = require('http-errors')
 
 class ProductService {
     async createProduct(product) {
-        if (!mongoose.isValidObjectId(product['category'])) return `category`
-        const category = await Category.findById(product['category'])
-        if (!category) return `category`
-        const combo = product['combo']
-        console.log(combo)
-        if (combo && combo.length > 0) {
-            let [priceResult, comboResult] = await Utils.getPriceOfCombo(combo)
-            if (typeof priceResult === 'string') return priceResult
-            product['price'] = priceResult
-            product['combo'] = comboResult
-        }
+        try {
+            const category = await CategoryService.getCategoryById(
+                product['category']
+            )
+            if (!category)
+                throw new ResourceNotFoundException(
+                    'Category',
+                    'id',
+                    product['category']
+                )
+            const combo = product['combo']
+            console.log(combo)
+            if (combo && combo.length > 0) {
+                let [priceResult, comboResult] = await Utils.getPriceOfCombo(
+                    combo
+                )
+                product['price'] = priceResult
+                product['combo'] = comboResult
+            }
 
-        const p = new Product(product)
-        return await p.save()
+            const p = new Product(product)
+            return await p.save()
+        } catch (error) {
+            throw error
+        }
     }
 
     async getProductById(id) {
-        if (!mongoose.isValidObjectId(id)) return null
-        return await Product.findByIdAndUpdate(
-            id,
-            { $inc: { view: 1 } },
-            { new: true }
-        )
-            .populate('category')
-            .populate('combo.product', 'name category price -_id')
+        try {
+            if (!mongoose.isValidObjectId(id))
+                throw new ResourceNotFoundException('Product', 'id', id)
+            const product = await Product.findByIdAndUpdate(
+                id,
+                { $inc: { view: 1 } },
+                { new: true }
+            )
+                .populate('category')
+                .populate('combo.product', 'name category price -_id')
+            if (!product)
+                throw new ResourceNotFoundException('Product', 'id', id)
+            return product
+        } catch (error) {
+            throw error
+        }
     }
 
-    async getAllProduct(filter) {
-        return await Product.find(filter)
-            .populate('category')
-            .populate('combo.product', 'name category price -_id')
+    async getAllProduct(filter = {}) {
+        try {
+            const listProduct = await Product.find(filter)
+                .populate('category')
+                .populate('combo.product', 'name category price -_id')
+            return listProduct
+        } catch (error) {
+            throw error
+        }
     }
 
     async deleteProduct(id) {
-        if (!mongoose.isValidObjectId(id)) return null
-        return await Product.findByIdAndRemove(id)
+        try {
+            if (!mongoose.isValidObjectId(id))
+                throw new ResourceNotFoundException('Product', 'id', id)
+            const product = await Product.findByIdAndRemove(id)
+            if (!product)
+                throw new ResourceNotFoundException('Product', 'id', id)
+        } catch (error) {
+            throw error
+        }
     }
 
     async softDeleteProductById(id) {
@@ -54,40 +87,39 @@ class ProductService {
     }
 
     async updateProductById(id, product) {
-        //valid id
-        if (!mongoose.isValidObjectId(product['category'])) return `category`
-        if (!mongoose.isValidObjectId(id)) return id
-        //Check category has in db
-        const cate = await CategoryService.getCategoryById(product['category'])
-        if (!cate) return `category`
-        //check combo not null
-        const combo = product['combo']
-        // if (combo && combo.length > 0) {
-        //     //Calculate price of product
-        //     let price = 0
-        //     for (let index = 0; index < combo.length; index++) {
-        //         const id = combo[index]['product']
-        //         const quantity = combo[index]['quantity']
-        //         if (!mongoose.isValidObjectId(id)) return id
-        //         const existProduct = await Product.findById(id)
-        //         if (!existProduct) return id
-        //         price += existProduct['price'] * quantity
-        //     }
-        //     product['price'] = price
-        // }
+        try {
+            const category = await CategoryService.getCategoryById(
+                product['category']
+            )
+            if (!category)
+                throw new ResourceNotFoundException(
+                    'Category',
+                    'id',
+                    product['category']
+                )
+            //check combo not null
+            const combo = product['combo']
+            if (combo && combo.length > 0) {
+                let [priceResult, comboResult] = await Utils.getPriceOfCombo(
+                    combo
+                )
+                product['price'] = priceResult
+                product['combo'] = comboResult
+            }
 
-        if (combo && combo.length > 0) {
-            let [priceResult, comboResult] = await Utils.getPriceOfCombo(combo)
-            if (typeof priceResult === 'string') return priceResult
-            product['price'] = priceResult
-            product['combo'] = comboResult
+            const updatedProduct = await Product.findByIdAndUpdate(
+                id,
+                product,
+                {
+                    new: true,
+                }
+            )
+            if (!updatedProduct)
+                throw new Error('Product not found or something went wrong')
+            return updatedProduct
+        } catch (error) {
+            throw error
         }
-
-        const updatedProduct = await Product.findByIdAndUpdate(id, product, {
-            new: true,
-        })
-        if (!updatedProduct) return `product`
-        return updatedProduct
     }
 }
 

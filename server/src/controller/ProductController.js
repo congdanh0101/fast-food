@@ -13,34 +13,25 @@ class ProductController {
             category: data.category,
             price: data.price,
             // img: data.img,
-            img: `${basePath}${fileName}`,
+            img: fileName ? `${basePath}${fileName}` : null,
             combo: data.combo,
         }
-        const result = await ProductService.createProduct(product)
-        if (!result) return next(createHttpError.BadRequest())
-        if (typeof result === 'string') {
-            if (result === `category`)
-                return next(
-                    new ResourceNotFoundException(
-                        'Category',
-                        'id',
-                        product['category']
-                    )
-                )
-            else
-                return next(
-                    new ResourceNotFoundException('Product', 'id', result)
-                )
+        try {
+            const result = await ProductService.createProduct(product)
+            return res.status(201).json(result)
+        } catch (error) {
+            return next(error)
         }
-        return res.status(201).json(result)
     }
 
     async getProductById(req, res, next) {
         const id = req.params.id
-        const product = await ProductService.getProductById(id)
-        if (!product)
-            return next(new ResourceNotFoundException('Product', 'id', id))
-        return res.send(product)
+        try {
+            const product = await ProductService.getProductById(id)
+            return res.status(200).json(product)
+        } catch (error) {
+            return next(error)
+        }
     }
 
     async getAllProducts(req, res, next) {
@@ -53,10 +44,13 @@ class ProductController {
         }
         filter['softDeleted'] = softDeleted
         console.log(filter)
-
-        const listProduct = await ProductService.getAllProduct(filter)
-        if (!listProduct) return next(createHttpError.InternalServerError())
-        return res.json(listProduct)
+        // filter = req.query
+        try {
+            const listProduct = await ProductService.getAllProduct(filter)
+            return res.json(listProduct)
+        } catch (error) {
+            return next(error)
+        }
     }
 
     async getAllProductByCategory(req, res, next) {}
@@ -64,41 +58,36 @@ class ProductController {
     async updateProductById(req, res, next) {
         const data = req.body
         const id = req.params.id
+        const file = req.file
+        const fileName = file ? file.filename : null
+        const basePath = `${req.protocol}://${req.get('host')}/public/`
         const product = {
             name: data.name,
             price: data.price,
             category: data.category,
             combo: data.combo,
-            img: data.img,
+            img: fileName ? `${basePath}${fileName}` : null,
         }
-        const result = await ProductService.updateProductById(id, product)
 
-        if (typeof result === 'string') {
-            if (result.includes('category')) {
-                return next(
-                    new ResourceNotFoundException(
-                        'Category',
-                        'id',
-                        product['category']
-                    )
-                )
-            } else
-                return next(
-                    new ResourceNotFoundException('Product', 'id', result)
-                )
+        try {
+            const result = await ProductService.updateProductById(id, product)
+            return res.status(200).json(result)
+        } catch (error) {
+            return next(error)
         }
-        return res.json(result)
     }
 
     async deleteProduct(req, res, next) {
         const id = req.params.id
-        const result = await ProductService.deleteProduct(id)
-        if (!result)
-            return next(new ResourceNotFoundException('Product', 'id', id))
-        return res.json({
-            status: `success`,
-            message: `Product with id=${id} has been deleted!`,
-        })
+        try {
+            const result = await ProductService.deleteProduct(id)
+            return res.json({
+                status: `success`,
+                message: `Product with id=${id} has been deleted!`,
+            })
+        } catch (error) {
+            return next(error)
+        }
     }
 }
 

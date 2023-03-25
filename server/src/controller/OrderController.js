@@ -14,9 +14,12 @@ class OrderController {
             deliveryMethod: data.deliveryMethod,
             payment: data.payment,
         }
-        const result = await OrderService.createOrder(order)
-        if (!result) return next(createHttpError.BadRequest())
-        return res.json(result)
+        try {
+            const result = await OrderService.createOrder(order)
+            return res.json(result)
+        } catch (error) {
+            return next(error)
+        }
     }
 
     async getOrderById(req, res, next) {
@@ -44,13 +47,12 @@ class OrderController {
             status: data.status,
         }
 
-        const [status, orderUpdated] = await OrderService.updateOrderById(
-            id,
-            order
-        )
-        if (status === 404)
-            return next(new ResourceNotFoundException('Order', 'id', id))
-        return res.status(status).json(orderUpdated)
+        try {
+            const orderUpdated = await OrderService.updateOrderById(id, order)
+            return res.json(orderUpdated)
+        } catch (error) {
+            return next(error)
+        }
     }
 
     async updateStatusOrder(req, res, next) {

@@ -8,93 +8,137 @@ const EmailService = require('./EmailService')
 const UserService = require('./UserService')
 const Utils = require('../utils/Utils')
 const { default: mongoose } = require('mongoose')
+const ResourceNotFoundException = require('../exception/ResourceNotFoundException')
+const createHttpError = require('http-errors')
 
 class AuthService {
     async register(user) {
-        //Check email exist
-        const existEmail = await User.findOne({ email: user['email'] })
-        //Check phone number exist
-        const existPhoneNumber = await User.findOne({
-            phoneNumber: user['phoneNumber'],
-        })
-        if (existEmail) return `email`
-        if (existPhoneNumber) return `phone`
+        try {
+            //Check email exist
+            const existEmail = await User.findOne({ email: user['email'] })
+            //Check phone number exist
+            const existPhoneNumber = await User.findOne({
+                phoneNumber: user['phoneNumber'],
+            })
+            if (existEmail)
+                throw createHttpError.BadRequest(
+                    'Email was existed, please try another email!'
+                )
+            if (existPhoneNumber)
+                throw createHttpError.BadRequest(
+                    'Phone number was existed, please try another phone number!'
+                )
 
-        if (user['confirmPassword'] !== user['password']) return `password`
+            if (user['confirmPassword'] !== user['password'])
+                throw new Error('Password does not match, please try again!')
 
-        const randomCode = Utils.generateVerificationCode()
+            const randomCode = Utils.generateVerificationCode()
 
-        await EmailService.sendEmail(
-            user['email'],
-            'email verfication code'.toUpperCase(),
-            EmailService.htmlEmailVerificationCodeRegister(
-                randomCode,
-                user['fullName']
+            await EmailService.sendEmail(
+                user['email'],
+                'email verfication code'.toUpperCase(),
+                EmailService.htmlEmailVerificationCodeRegister(
+                    randomCode,
+                    user['fullName']
+                )
             )
-        )
 
-        // user['rewardPoint'] = 0
-        // user['rank'] = 'bronze'
-        // user['totalOrders'] = 0
-        // user['successfulOrder'] = 0
-        // user['percentageOfSuccessfulOrder'] = 0
-        // user['softDeleted'] = false
-        // user['refreshToken'] = null
-        delete user.confirmPassword
-        // const registerUser = new User(user)
-        // const savedUser = await registerUser.save()
-        // return savedUser
-        return randomCode
-        // return await UserService.createUser(user)
+            // user['rewardPoint'] = 0
+            // user['rank'] = 'bronze'
+            // user['totalOrders'] = 0
+            // user['successfulOrder'] = 0
+            // user['percentageOfSuccessfulOrder'] = 0
+            // user['softDeleted'] = false
+            // user['refreshToken'] = null
+            delete user.confirmPassword
+            // const registerUser = new User(user)
+            // const savedUser = await registerUser.save()
+            // return savedUser
+            return randomCode
+            // return await UserService.createUser(user)
+        } catch (error) {
+            throw error
+        }
     }
 
     async login(request) {
-        const user = await User.findOne({ email: request['username'] })
-        if (!user || !bcrypt.compareSync(request['password'], user['password']))
-            return null
-        if (user['softDeleted']) return `deleted`
-        const accessToken = Utils.generateAccessToken({ userID: user['_id'] })
-        var refreshToken = Utils.generateRefreshToken({ userID: user['_id'] })
-        user['refreshToken'] =
-            (user['refreshToken'] !== null && user['refreshToken']!==undefined) ? user['refreshToken'] : refreshToken
-        refreshToken = user['refreshToken']
+        try {
+            const user = await User.findOne({ email: request['username'] })
+            if (
+                !user ||
+                !bcrypt.compareSync(request['password'], user['password'])
+            )
+                throw new Error(
+                    'Invalid username or password, please try again!'
+                )
+            if (user['softDeleted']) throw new Error('User is restricted')
+            const accessToken = Utils.generateAccessToken({
+                userID: user['_id'],
+            })
+            var refreshToken = Utils.generateRefreshToken({
+                userID: user['_id'],
+            })
+            user['refreshToken'] =
+                user['refreshToken'] !== null &&
+                user['refreshToken'] !== undefined
+                    ? user['refreshToken']
+                    : refreshToken
+            refreshToken = user['refreshToken']
 
-        await User.findByIdAndUpdate(user['id'], user, { new: true })
-        return { accessToken, refreshToken }
+            await User.findByIdAndUpdate(user['id'], user, { new: true })
+            return { accessToken, refreshToken }
+        } catch (error) {
+            throw error
+        }
     }
 
     async refreshAccessToken(userID) {
-        const user = await UserService.getUserById(userID)
-        if (!user) return null
-        const accessToken = Utils.generateAccessToken({ userID: userID })
-        var refreshToken = Utils.generateRefreshToken({ userID: userID })
-        user['refreshToken'] = refreshToken
-        await User.findByIdAndUpdate(user['id'], user, { new: true })
-        return { accessToken, refreshToken }
+        try {
+            const user = await UserService.getUserById(userID)
+            if (!user) throw new ResourceNotFoundException('User', 'id', userID)
+            const accessToken = Utils.generateAccessToken({ userID: userID })
+            var refreshToken = Utils.generateRefreshToken({ userID: userID })
+            user['refreshToken'] = refreshToken
+            await User.findByIdAndUpdate(user['id'], user, { new: true })
+            return { accessToken, refreshToken }
+        } catch (error) {
+            throw error
+        }
     }
 
     async logout(userID) {
-        if (!mongoose.isValidObjectId(userID)) return null
-        return await User.findByIdAndUpdate(
-            userID,
-            { refreshToken: null },
-            { new: true }
-        )
+        try {
+            if (!mongoose.isValidObjectId(userID))
+                throw new ResourceNotFoundException('User', 'id', userID)
+            const user = await User.findByIdAndUpdate(
+                userID,
+                { refreshToken: null },
+                { new: true }
+            )
+            if (!user) throw new ResourceNotFoundException('User', 'id', userID)
+        } catch (error) {
+            throw error
+        }
     }
 
     async forgotPassword(email) {
-        const user = await User.findOne({ email: email })
-        if (!user) return null
-        const randomCode = Utils.generateVerificationCode()
-        await EmailService.sendEmail(
-            email,
-            `email verfication code`.toUpperCase(),
-            EmailService.htmlEmailVerificationCodeForgotPasswor(
-                randomCode,
-                user['fullName']
+        try {
+            const user = await User.findOne({ email: email })
+            if (!user)
+                throw new ResourceNotFoundException('User', 'email', email)
+            const randomCode = Utils.generateVerificationCode()
+            await EmailService.sendEmail(
+                email,
+                `email verfication code`.toUpperCase(),
+                EmailService.htmlEmailVerificationCodeForgotPasswor(
+                    randomCode,
+                    user['fullName']
+                )
             )
-        )
-        return randomCode
+            return randomCode
+        } catch (error) {
+            throw error
+        }
     }
 
     async resetPassword(email) {

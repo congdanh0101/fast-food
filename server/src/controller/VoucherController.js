@@ -6,15 +6,18 @@ class VoucherController {
     async createVoucher(req, res, next) {
         const data = req.body
         const voucher = {
+            code:data.code,
             description: data.description,
-            minDiscount: data.minDiscount,
+            minOrder: data.minOrder,
             maxDiscount: data.maxDiscount,
             discount: data.discount,
-            type: data.type,
         }
-        const result = await VoucherService.createVoucher(voucher)
-        if (!result) return next(createHttpError.InternalServerError())
-        return res.json(result)
+        try {
+            const result = await VoucherService.createVoucher(voucher)
+            return res.status(201).json(result)
+        } catch (error) {
+            return next(error)
+        }
     }
 
     async getAllVoucher(req, res, next) {

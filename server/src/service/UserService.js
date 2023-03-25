@@ -4,6 +4,8 @@ const RoleService = require('./RoleService')
 require('dotenv').config()
 const mongoose = require('mongoose')
 const errorHandler = require('../middleware/ErrorHandler')
+const ResourceNotFoundException = require('../exception/ResourceNotFoundException')
+const createHttpError = require('http-errors')
 
 class UserService {
     async createUser(user) {
@@ -33,44 +35,72 @@ class UserService {
     }
 
     async getUserById(id) {
-        if (!mongoose.isValidObjectId(id)) return null
-        const user = await User.findById(id)
-        if (!user) return null
-        return user
+        // if (!mongoose.isValidObjectId(id)) return null
+        // const user = await User.findById(id)
+        // if (!user) return null
+        // return user
+
+        try {
+            const user = await User.findById(id)
+            if (!user) throw new ResourceNotFoundException('User', 'id', id)
+            return user
+        } catch (error) {
+            throw error
+        }
     }
 
-    async getAllUser(filter) {
-        return await User.find({ softDeleted: filter })
+    async getAllUser(filter = {}) {
+        try {
+            const listUser = await User.find(filter)
+            return listUser
+        } catch (error) {
+            throw error
+        }
     }
 
     async deleteUserById(id) {
-        const user = await this.getUserById(id)
-        if (!user) return null
-        user['softDeleted'] = true
-        user['refreshToken'] = null
-        const softDeleted = await User.findByIdAndUpdate(id, user, {
-            new: true,
-        })
-        if (!softDeleted) return null
-        return softDeleted
+        try {
+            const user = await this.getUserById(id)
+            if (!user) throw new ResourceNotFoundException('User', 'id', id)
+            user['softDeleted'] = true
+            user['refreshToken'] = null
+            const softDeleted = await User.findByIdAndUpdate(id, user, {
+                new: true,
+            })
+            if (!softDeleted) throw new createHttpError.InternalServerError()
+            return softDeleted
+        } catch (error) {
+            throw error
+        }
     }
 
     async updateUserById(id, data) {
-        if (!mongoose.isValidObjectId(id)) return null
-        var updateUser = await User.findByIdAndUpdate(id, data, { new: true })
-        if (!updateUser) return null
-        return updateUser
+        try {
+            const user = await User.findByIdAndUpdate(id, data, { new: true })
+            if (!user) throw new Error(`User cannot be updated with id: ${id}`)
+            return user
+        } catch (error) {
+            throw error
+        }
     }
 
     async changePassword(id, data) {
-        const user = await this.getUserById(id)
-        if (!user) return id
-        if (!bcrypt.compareSync(data['currentPassword'], user['password']))
-            return `current`
-        if (data['newPassword'] !== data['confirmPassword']) return `confirm`
-
-        user['password'] = bcrypt.hashSync(data['newPassword'], 10)
-        return await User.findByIdAndUpdate(id, user, { new: true })
+        try {
+            const user = await this.getUserById(id)
+            if (!user) throw new ResourceNotFoundException('User', 'id', id)
+            if (!bcrypt.compareSync(data['currentPassword'], user['password']))
+                throw new Error('Your password is invalid, please try again!')
+            if (data['newPassword'] !== data['confirmPassword'])
+                throw new Error('Your password is invalid, please try again!')
+            user['password'] = bcrypt.hashSync(data['newPassword'], 10)
+            const updatedUser = await User.findByIdAndUpdate(id, user, {
+                new: true,
+            })
+            if (!updatedUser) throw new Error('User cannot change password')
+            return updatedUser
+        } catch (error) {
+            throw error
+        }
     }
 }
 

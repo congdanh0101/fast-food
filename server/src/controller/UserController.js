@@ -4,22 +4,33 @@ const createError = require('http-errors')
 
 class UserController {
     async getUserById(req, res, next) {
-        const user = await UserService.getUserById(req.params.id)
-        if (!user)
-            return next(
-                new ResourceNotFoundException(`User`, 'id', req.params.id)
-            )
-        return res.json(user)
+        // const user = await UserService.getUserById(req.params.id)
+        // if (!user)
+        //     return next(
+        //         new ResourceNotFoundException(`User`, 'id', req.params.id)
+        //     )
+        // return res.json(user)
+        const id = req.params.id
+        try {
+            const user = await UserService.getUserById(id)
+            return res.status(200).json(user)
+        } catch (error) {
+            return next(error)
+        }
     }
 
     async getAllUser(req, res, next) {
-        const filter = req.query.softDeleted == 1 ? req.query.softDeleted : 0
-        const listUser = await UserService.getAllUser(filter)
-        if (!listUser) return next(createError(500, 'Something went wrong'))
-        return res.json(listUser)
+        const filter = req.query
+        try {
+            const listUser = await UserService.getAllUser(filter)
+            return res.json(listUser)
+        } catch (error) {
+            return next(error)
+        }
     }
 
     async updateUser(req, res, next) {
+        const id = req.params.id
         const data = req.body
         const user = {
             fullName: data.fullName,
@@ -27,26 +38,41 @@ class UserController {
             email: data.email,
             phoneNumber: data.phoneNumber,
         }
-        const updateUser = await UserService.updateUserById(req.params.id, user)
-        if (!updateUser)
-            return next(
-                createError.InternalServerError(
-                    `User can not be updated with id: ${req.params.id}`
-                )
-            )
-        return res.json(updateUser)
+        // const updateUser = await UserService.updateUserById(req.params.id, user)
+        // if (!updateUser)
+        //     return next(
+        //         createError.InternalServerError(
+        //             `User can not be updated with id: ${req.params.id}`
+        //         )
+        //     )
+        // return res.json(updateUser)
+
+        try {
+            const updatedUser = await UserService.updateUserById(id, user)
+            return res.status(200).json(updatedUser)
+        } catch (error) {
+            return next(error)
+        }
     }
 
     async deleteUser(req, res, next) {
-        const user = await UserService.deleteUserById(req.params.id)
-        if (!user)
-            return next(
-                new ResourceNotFoundException(`User`, 'id', req.params.id)
-            )
-        return res.json({
-            success: true,
-            message: `User with id ${req.params.id} has been deleted`,
-        })
+        // const user = await UserService.deleteUserById(req.params.id)
+        // if (!user)
+        //     return next(
+        //         new ResourceNotFoundException(`User`, 'id', req.params.id)
+        //     )
+        // return res.json({
+        //     success: true,
+        //     message: `User with id ${req.params.id} has been deleted`,
+        // })
+
+        try {
+            const id = req.params.id
+            const user = await UserService.deleteUserById(id)
+            return res.status(200).json(user)
+        } catch (error) {
+            return next(error)
+        }
     }
 
     async createUser(req, res, next) {
@@ -62,24 +88,28 @@ class UserController {
             newPassword: data.newPassword,
             confirmPassword: data.confirmPassword,
         }
-        const result = await UserService.changePassword(
-            id,
-            requestChangePassword
-        )
-        if (typeof result === 'string') {
-            if (result.includes('current'))
-                return next(
-                    createError.BadRequest(`Your current password is invalid!`)
-                )
-            else if (result.includes('confirm'))
-                return next(
-                    createError.BadRequest(
-                        `Your new password and confirm password is not match!`
-                    )
-                )
-            else return next(new ResourceNotFoundException('User', 'id', id))
+        try {
+            const result = await UserService.changePassword(
+                id,
+                requestChangePassword
+            )
+            return res.json(result)
+        } catch (error) {
+            throw error
         }
-        return res.json(result)
+        // if (typeof result === 'string') {
+        //     if (result.includes('current'))
+        //         return next(
+        //             createError.BadRequest(`Your current password is invalid!`)
+        //         )
+        //     else if (result.includes('confirm'))
+        //         return next(
+        //             createError.BadRequest(
+        //                 `Your new password and confirm password is not match!`
+        //             )
+        //         )
+        //     else return next(new ResourceNotFoundException('User', 'id', id))
+        // }
     }
 }
 

@@ -1,12 +1,24 @@
 const { default: mongoose } = require('mongoose')
 const Voucher = require('../model/Voucher')
+const Utils = require('../utils/Utils')
 
 class VoucherService {
     async createVoucher(data) {
-        const voucher = new Voucher(data)
-        const savedVoucher = await voucher.save()
-        if (!savedVoucher) return null
-        return savedVoucher
+        try {
+            if (!data['code']) data['code'] = Utils.generateVoucherCode()
+            const voucher = new Voucher(data)
+            return await voucher.save()
+        } catch (error) {
+            if (
+                error.code === 11000 &&
+                error.keyPattern &&
+                error.keyPattern.code === 1
+            ) {
+                data['code'] = Utils.generateVoucherCode()
+                return await this.createVoucher(data)
+            }
+            throw error
+        }
     }
 
     async getVoucherById(id) {

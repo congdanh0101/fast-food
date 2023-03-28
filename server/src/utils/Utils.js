@@ -34,7 +34,7 @@ class Utils {
         })
     }
 
-    getPriceOfCombo = async (combo) => {
+    getPriceOfItems = async (combo) => {
         try {
             let price = 0
             let position = []
@@ -64,57 +64,52 @@ class Utils {
         } catch (error) {
             throw error
         }
-        // let price = 0
-        // let position = []
-        // for (let index = 0; index < combo.length; index++) {
-        //     const id = combo[index]['product']
-        //     const quantity = combo[index]['quantity']
-        //     if (!id || !quantity) {
-        //         //push index to array position
-        //         position.push(index)
-        //         continue
-        //     }
-        //     //valid id
-        //     if (!mongoose.isValidObjectId(id)) return [id, []]
-        //     //find product
-        //     const existProduct = await Product.findById(id)
-        //     if (!existProduct) return [id, []]
-        //     //calculate price of combo
-        //     price += existProduct['price'] * quantity
-        // }
-        // //set null for element of combo does not have id or quantity
-        // position.forEach((index) => (combo[index] = null))
-        // //get combo with item not null
-        // combo = combo.filter((item) => item !== null)
-        // return price, combo
     }
 
-    upgradeRanking =  (point) => {
-        if (
-            point >= process.env.RANKING_SILVER &&
-            point < process.env.RANKING_GOLD
-        )
-            return 'Silver'
-        else if (
-            point >= process.env.RANKING_GOLD &&
-            point < process.env.RANKING_PLATINUM
-        )
-            return 'Gold'
-        else if (
-            point >= process.env.RANKING_PLATINUM &&
-            point < process.env.RANKING_DIAMOND
-        )
-            return 'Platinum'
-        else if (point >= process.env.RANKING_DIAMOND) return 'Diamond'
+    upgradeRanking = (point) => {
+        // if (
+        //     point >= process.env.RANKING_SILVER &&
+        //     point < process.env.RANKING_GOLD
+        // )
+        //     return 'Silver'
+        // else if (
+        //     point >= process.env.RANKING_GOLD &&
+        //     point < process.env.RANKING_PLATINUM
+        // )
+        //     return 'Gold'
+        // else if (
+        //     point >= process.env.RANKING_PLATINUM &&
+        //     point < process.env.RANKING_DIAMOND
+        // )
+        //     return 'Platinum'
+        // else if (point >= process.env.RANKING_DIAMOND) return 'Diamond'
+        // else return 'Bronze'
+
+        if (point >= process.env.RANKING_DIAMOND) return 'Diamond'
+        else if (point >= process.env.RANKING_PLATINUM) return 'Platinum'
+        else if (point >= process.env.RANKING_GOLD) return 'Gold'
+        else if (point >= process.env.RANKING_SILVER) return 'Silver'
         else return 'Bronze'
     }
 
     getDiscountRanking = (ranking) => {
-        if (ranking === 'Silver') return process.env.DISCOUNT_SILVER
-        else if (ranking === 'Gold') return process.env.DISCOUNT_GOLD
-        else if (ranking === 'Platinum') return process.env.DISCOUNT_PLATINUM
-        else if (ranking === 'DIAMOND') return process.env.DISCOUNT_DIAMOND
-        else return 0
+        // if (ranking === 'Silver') return process.env.DISCOUNT_SILVER
+        // else if (ranking === 'Gold') return process.env.DISCOUNT_GOLD
+        // else if (ranking === 'Platinum') return process.env.DISCOUNT_PLATINUM
+        // else if (ranking === 'DIAMOND') return process.env.DISCOUNT_DIAMOND
+        // else return 0
+        switch (ranking) {
+            case 'Silver':
+                return process.env.DISCOUNT_SILVER
+            case 'Gold':
+                return process.env.DISCOUNT_GOLD
+            case 'Platinum':
+                return process.env.DISCOUNT_PLATINUM
+            case 'Diamond':
+                return process.env.DISCOUNT_DIAMOND
+            default:
+                return 0
+        }
     }
 }
 

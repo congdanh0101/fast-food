@@ -1,6 +1,4 @@
-const createHttpError = require('http-errors')
 const OrderService = require('../service/OrderService')
-const ResourceNotFoundException = require('../exception/ResourceNotFoundException')
 
 class OrderController {
     async createOrder(req, res, next) {
@@ -13,6 +11,7 @@ class OrderController {
             isPaid: data.isPaid,
             deliveryMethod: data.deliveryMethod,
             payment: data.payment,
+            voucher: data.voucher,
         }
         try {
             const result = await OrderService.createOrder(order)
@@ -24,17 +23,22 @@ class OrderController {
 
     async getOrderById(req, res, next) {
         const id = req.params.id
-        const order = await OrderService.getOrderById(id)
-        if (!order)
-            return next(new ResourceNotFoundException('Order', 'id', id))
-        return res.json(order)
+        try {
+            const order = await OrderService.getOrderById(id)
+            return res.json(order)
+        } catch (error) {
+            return next(error)
+        }
     }
 
     async getAllOrder(req, res, next) {
         const filter = req.query
-        const orders = await OrderService.getAllOrder(filter)
-        if (!orders) return next(createHttpError.InternalServerError())
-        return res.json(orders)
+        try {
+            const orders = await OrderService.getAllOrder(filter)
+            return res.json(orders)
+        } catch (error) {
+            return next(error)    
+        }
     }
 
     async updateOrder(req, res, next) {

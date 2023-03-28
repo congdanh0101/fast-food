@@ -1,7 +1,9 @@
 const { default: mongoose } = require('mongoose')
 const Voucher = require('../model/Voucher')
 const Utils = require('../utils/Utils')
-
+const ResourceNotFoundException = require('../exception/ResourceNotFoundException')
+const moment = require('moment')
+const createHttpError = require('http-errors')
 class VoucherService {
     async createVoucher(data) {
         try {
@@ -22,9 +24,29 @@ class VoucherService {
     }
 
     async getVoucherById(id) {
-        if (!mongoose.isValidObjectId(id)) return null
-        return await Voucher.findById(id)
+        try {
+            if (!mongoose.isValidObjectId(id))
+                throw new ResourceNotFoundException('Voucher', 'id', id)
+            const voucher = await Voucher.findById(id)
+            if (!voucher)
+                throw new ResourceNotFoundException('Voucher', 'id', id)
+            return voucher
+        } catch (error) {
+            throw error
+        }
     }
+
+    async getVoucherByCode(code) {
+        try {
+            const voucher = await Voucher.findOne({ code: code })
+            if (!voucher)
+                throw new ResourceNotFoundException('Voucher', 'code', code)
+            return voucher
+        } catch (error) {
+            throw error
+        }
+    }
+
     async getAllVoucher(filter) {
         return await Voucher.find(filter)
     }
@@ -39,12 +61,22 @@ class VoucherService {
 
     async deleteVoucher(id) {}
 
-    async isAvailableVoucher(id) {
-        const voucher = this.getVoucherById(id)
-        if (!voucher) return null
-        const now = new Date().getTime()
+    // async isAvailableVoucher(id) {
+    //     const voucher = this.getVoucherById(id)
+    //     if (!voucher) return null
+    //     const now = new Date().getTime()
+    //     if (
+    //         now > voucher['expired'] ||
+    //         voucher['isActive'] === true ||
+    //         voucher['isExpired'] === true
+    //     )
+    //         return false
+    //     return true
+    // }
+    isAvailableVoucher(voucher) {
+        const current = moment()
         if (
-            now > voucher['expired'] ||
+            current.isAfter(voucher['expiryDate']) ||
             voucher['isActive'] === true ||
             voucher['isExpired'] === true
         )
@@ -52,20 +84,22 @@ class VoucherService {
         return true
     }
 
-    async checkDiscount(id, price) {
-        const voucher = this.getVoucherById(id)
-        if (!voucher) return null
-        let discount = 0
-        //Discount by percentage
-        if (voucher['minDiscount'] > price) return null
-        if (voucher['type'] === 'Percentage') {
+    checkDiscount(voucher, price) {
+        try {
+            let discount = 0
+            //Discount by percentage
+            if (voucher['minOrder'] > price)
+                throw createHttpError.BadRequest(
+                    'Your order does not have enough condition to use voucher'
+                )
             discount = (price * voucher['discount']) / 100
-            if (discount > voucher['max']) discount = voucher['max']
-        } else {
-            discount = price - voucher['discount']
-            if (discount > voucher['max']) discount = voucher['max']
+            if (discount > voucher['maxDiscount'])
+                discount = voucher['maxDiscount']
+            // return [price, discount, price - discount]
+            return discount
+        } catch (error) {
+            throw error
         }
-        return [price, discount, price - discount]
     }
 }
 

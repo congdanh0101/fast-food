@@ -1,7 +1,9 @@
 const redis = require('redis')
 const client = redis.createClient({
-    port: 6379,
-    host: 'http://localhost',
+    // port: 6379,
+    // host: 'localhost',
+    url: 'redis://redis:6379',
+    // legacyMode: true,
 })
 
 client.on('connect', () => {
@@ -19,5 +21,4 @@ client.on('end', () => {
 })
 
 process.on('SIGINT', () => client.quit())
-
 module.exports = client

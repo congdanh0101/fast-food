@@ -8,38 +8,31 @@ require('dotenv').config()
 class Authenticate {
     async AuthorizationUSER(req, res, next) {
         verifyAccessToken(req, res, async () => {
-            const userID = req.user.userID
-            const user = await UserService.getUserById(userID)
-            req.userID = userID
-            if (!user)
-                return next(new ResourceNotFoundException(`User`, `id`, userID))
-            var rolesID = user['roles']
-            const roleList = []
-            for (let i = 0; i < rolesID.length; i++) {
-                const role = rolesID[i]
-                const r = await RoleService.getRoleById(role)
-                roleList.push(r['name'])
+            try {
+                const userID = req.user.userID
+                const user = await UserService.getUserById(userID)
+                req.userID = userID
+                const role = user['roles']
+                console.log(`Role ${role}`)
+                if (role.includes('USER')) return next()
+                return next(createHttpError.Forbidden(`Access denied!`))
+            } catch (error) {
+                return next(error)
             }
-            if (roleList.includes('USER')) return next()
-            return next(createHttpError.Forbidden(`Access denied!`))
         })
     }
 
     async AuthorizationADMIN(req, res, next) {
         verifyAccessToken(req, res, async () => {
-            const userID = req.user.userID
-            const user = await UserService.getUserById(userID)
-            if (!user)
-                return next(new ResourceNotFoundException(`User`, `id`, userID))
-            var rolesID = user['roles']
-            const roleList = []
-            for (let i = 0; i < rolesID.length; i++) {
-                const role = rolesID[i]
-                const r = await RoleService.getRoleById(role)
-                roleList.push(r['name'])
+            try {
+                const userID = req.user.userID
+                const user = await UserService.getUserById(userID)
+                const role = user['roles']
+                if (role.includes('ADMIN')) return next()
+                return next(createHttpError.Forbidden(`Access denied!`))
+            } catch (error) {
+                return next(error)
             }
-            if (roleList.includes('ADMIN')) return next()
-            return next(createHttpError.Forbidden(`Access denied!`))
         })
     }
 }
@@ -65,7 +58,6 @@ const verifyAccessToken = (req, res, next) => {
         }
     )
 }
-
 
 module.exports = new Authenticate()
 

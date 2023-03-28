@@ -74,8 +74,11 @@ const userSchema = new Schema({
     },
     roles: [
         {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: 'Role',
+            // type: mongoose.Schema.Types.ObjectId,
+            // ref: 'Role',
+            type: String,
+            enum: ['USER', 'ADMIN'],
+            default: 'USER',
         },
     ],
     softDeleted: {

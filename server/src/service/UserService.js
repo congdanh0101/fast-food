@@ -9,38 +9,22 @@ const createHttpError = require('http-errors')
 
 class UserService {
     async createUser(user) {
-        console.log(user)
-        // user['rewardPoint'] = 0
-        // user['rank'] = 'bronze'
-        // user['totalOrders'] = 0
-        // user['successfulOrder'] = 0
-        // user['percentageOfSuccessfulOrder'] = 0
-        // user['softDeleted'] = false
-        // user['refreshToken'] = null
         delete user['confirmPassword']
         user['password'] = bcrypt.hashSync(user['password'], 10)
-        const roleUser = await RoleService.getRoleByName('USER')
-        user['roles'] = roleUser
+        user['roles'] = ['USER']
         return await new User(user).save()
     }
 
     async createAdmin(user) {
         user['password'] = bcrypt.hashSync(user['password'], 10)
-        const roleUser = await RoleService.getRoleByName('USER')
-        const roleAdmin = await RoleService.getRoleByName('ADMIN')
-        var role = [roleUser, roleAdmin]
-
-        user['roles'] = role
+        user['roles'] = ['USER', 'ADMIN']
         return await new User(user).save()
     }
 
     async getUserById(id) {
-        // if (!mongoose.isValidObjectId(id)) return null
-        // const user = await User.findById(id)
-        // if (!user) return null
-        // return user
-
         try {
+            if (!mongoose.isValidObjectId(id))
+                throw new ResourceNotFoundException('User', 'id', id)
             const user = await User.findById(id)
             if (!user) throw new ResourceNotFoundException('User', 'id', id)
             return user
@@ -61,14 +45,9 @@ class UserService {
     async deleteUserById(id) {
         try {
             const user = await this.getUserById(id)
-            if (!user) throw new ResourceNotFoundException('User', 'id', id)
             user['softDeleted'] = true
             user['refreshToken'] = null
-            const softDeleted = await User.findByIdAndUpdate(id, user, {
-                new: true,
-            })
-            if (!softDeleted) throw new createHttpError.InternalServerError()
-            return softDeleted
+            return await user.save()
         } catch (error) {
             throw error
         }
@@ -87,7 +66,6 @@ class UserService {
     async changePassword(id, data) {
         try {
             const user = await this.getUserById(id)
-            if (!user) throw new ResourceNotFoundException('User', 'id', id)
             if (!bcrypt.compareSync(data['currentPassword'], user['password']))
                 throw new Error('Your password is invalid, please try again!')
             if (data['newPassword'] !== data['confirmPassword'])

@@ -21,7 +21,7 @@ class ProductService {
             const combo = product['combo']
             console.log(combo)
             if (combo && combo.length > 0) {
-                let [priceResult, comboResult] = await Utils.getPriceOfCombo(
+                let [priceResult, comboResult] = await Utils.getPriceOfItems(
                     combo
                 )
                 product['price'] = priceResult
@@ -100,7 +100,7 @@ class ProductService {
             //check combo not null
             const combo = product['combo']
             if (combo && combo.length > 0) {
-                let [priceResult, comboResult] = await Utils.getPriceOfCombo(
+                let [priceResult, comboResult] = await Utils.getPriceOfItems(
                     combo
                 )
                 product['price'] = priceResult

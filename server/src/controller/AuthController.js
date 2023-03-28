@@ -99,10 +99,7 @@ class AuthController {
                 }
             )
             const user = await UserService.getUserById(userID)
-            if (
-                (await client.GET(userID)) === refreshToken ||
-                user['refreshToken'] === refreshToken
-            ) {
+            if ((await client.GET(userID)) === refreshToken) {
                 //generate new access token + refresh token
                 const newToken = await AuthService.refreshAccessToken(userID)
                 //cookie configuration for refresh token

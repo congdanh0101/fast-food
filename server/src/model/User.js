@@ -86,11 +86,11 @@ const userSchema = new Schema({
         require: true,
         default: false,
     },
-    refreshToken: {
-        type: String,
-        default: null,
-        // select: false,
-    },
+    // refreshToken: {
+    //     type: String,
+    //     default: null,
+    //     // select: false,
+    // },
     voucher: [
         {
             type: mongoose.Schema.Types.ObjectId,

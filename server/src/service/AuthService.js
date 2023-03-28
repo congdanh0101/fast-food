@@ -79,14 +79,14 @@ class AuthService {
             var refreshToken = await Utils.generateRefreshToken({
                 userID: user['_id'],
             })
-            user['refreshToken'] =
-                user['refreshToken'] !== null &&
-                user['refreshToken'] !== undefined
-                    ? user['refreshToken']
-                    : refreshToken
-            refreshToken = user['refreshToken']
+            // user['refreshToken'] =
+            //     user['refreshToken'] !== null &&
+            //     user['refreshToken'] !== undefined
+            //         ? user['refreshToken']
+            //         : refreshToken
+            // refreshToken = user['refreshToken']
 
-            await User.findByIdAndUpdate(user['id'], user, { new: true })
+            // await User.findByIdAndUpdate(user['id'], user, { new: true })
             return { accessToken, refreshToken }
         } catch (error) {
             throw error
@@ -101,8 +101,8 @@ class AuthService {
             var refreshToken = await Utils.generateRefreshToken({
                 userID: userID,
             })
-            user['refreshToken'] = refreshToken
-            await User.findByIdAndUpdate(user['id'], user, { new: true })
+            // user['refreshToken'] = refreshToken
+            // await User.findByIdAndUpdate(user['id'], user, { new: true })
             return { accessToken, refreshToken }
         } catch (error) {
             throw error
@@ -113,18 +113,18 @@ class AuthService {
         try {
             const user = await UserService.getUserById(userID)
             const redisToken = await client.GET(userID.toString())
-            // if (!redisToken || !user['refreshToken'])
-            //     throw createHttpError.InternalServerError(
-            //         'User has been logout'
-            //     )
-            user['refreshToken'] = null
+            if (!redisToken )
+                throw createHttpError.InternalServerError(
+                    'User has been logout'
+                )
+            // user['refreshToken'] = null
             await client.DEL(userID.toString(), (err, data) => {
                 if (err) {
                     console.log(err)
                     throw createHttpError.InternalServerError()
                 }
             })
-            return await user.save()
+            return
         } catch (error) {
             throw error
         }

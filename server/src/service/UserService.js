@@ -46,7 +46,7 @@ class UserService {
         try {
             const user = await this.getUserById(id)
             user['softDeleted'] = true
-            user['refreshToken'] = null
+            // user['refreshToken'] = null
             return await user.save()
         } catch (error) {
             throw error

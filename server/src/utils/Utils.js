@@ -5,6 +5,8 @@ const uuid = require('uuid')
 const { default: mongoose } = require('mongoose')
 const Product = require('../model/Product')
 const ResourceNotFoundException = require('../exception/ResourceNotFoundException')
+const client = require('./redis.config')
+
 
 class Utils {
     generateAccessToken = (payload) =>
@@ -12,11 +14,34 @@ class Utils {
             expiresIn: '1m',
             algorithm: 'HS512',
         })
-    generateRefreshToken = (payload) =>
-        jwt.sign(payload, process.env.API_SECRET_REFRESH_KEY, {
+    generateRefreshToken = async (payload) => {
+        const token = jwt.sign(payload, process.env.API_SECRET_REFRESH_KEY, {
             expiresIn: '365d',
             algorithm: 'HS512',
         })
+        console.log(payload.userID.toString())
+        // await client.connect()
+
+        // await client.set(
+        //     payload.userID.toString(),
+        //     token,
+        //     'ex',
+        //     365 * 24 * 60 * 60,
+        //     (err, data) => {
+        //         if (err) console.log(err)
+        //     }
+        // )
+        await client.SETEX(
+            payload.userID.toString(),
+            365 * 24 * 60 * 60,
+            token,
+            (err, data) => {
+                if (err) console.log(err)
+            }
+        )
+        return token
+    }
+
     generateVerificationCode = () => uuid.v4().split('-')[0].toUpperCase()
     generateRandomResetPassword = () =>
         uuid.v4().split('-')[0] + uuid.v4().split('-')[4]

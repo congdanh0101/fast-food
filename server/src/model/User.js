@@ -89,7 +89,7 @@ const userSchema = new Schema({
     refreshToken: {
         type: String,
         default: null,
-        select: false,
+        // select: false,
     },
     voucher: [
         {

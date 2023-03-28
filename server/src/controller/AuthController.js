@@ -5,6 +5,7 @@ const Utils = require('../utils/Utils')
 const jwt = require('jsonwebtoken')
 const UserService = require('../service/UserService')
 const ResourceNotFoundException = require('../exception/ResourceNotFoundException')
+const client = require('../utils/redis.config')
 
 class AuthController {
     hello(req, res, next) {
@@ -97,12 +98,17 @@ class AuthController {
                     userID = payload['userID']
                 }
             )
-            //generate new access token + refresh token
-            const newToken = await AuthService.refreshAccessToken(userID)
-            //cookie configuration for refresh token
-            Utils.setCookie(res, 'refreshToken', newToken['refreshToken'])
-
-            return res.json({ accessToken: newToken['accessToken'] })
+            const user = await UserService.getUserById(userID)
+            if (
+                (await client.GET(userID)) === refreshToken ||
+                user['refreshToken'] === refreshToken
+            ) {
+                //generate new access token + refresh token
+                const newToken = await AuthService.refreshAccessToken(userID)
+                //cookie configuration for refresh token
+                Utils.setCookie(res, 'refreshToken', newToken['refreshToken'])
+                return res.json({ accessToken: newToken['accessToken'] })
+            } else return next(createError.InternalServerError())
         } catch (error) {
             return next(error)
         }

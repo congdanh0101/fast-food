@@ -9,6 +9,7 @@ const UserService = require('./UserService')
 const Utils = require('../utils/Utils')
 const { default: mongoose } = require('mongoose')
 const ResourceNotFoundException = require('../exception/ResourceNotFoundException')
+const client = require('../utils/redis.config')
 const createHttpError = require('http-errors')
 
 class AuthService {
@@ -75,7 +76,7 @@ class AuthService {
             const accessToken = Utils.generateAccessToken({
                 userID: user['_id'],
             })
-            var refreshToken = Utils.generateRefreshToken({
+            var refreshToken = await Utils.generateRefreshToken({
                 userID: user['_id'],
             })
             user['refreshToken'] =
@@ -97,7 +98,9 @@ class AuthService {
             const user = await UserService.getUserById(userID)
             if (!user) throw new ResourceNotFoundException('User', 'id', userID)
             const accessToken = Utils.generateAccessToken({ userID: userID })
-            var refreshToken = Utils.generateRefreshToken({ userID: userID })
+            var refreshToken = await Utils.generateRefreshToken({
+                userID: userID,
+            })
             user['refreshToken'] = refreshToken
             await User.findByIdAndUpdate(user['id'], user, { new: true })
             return { accessToken, refreshToken }
@@ -108,14 +111,20 @@ class AuthService {
 
     async logout(userID) {
         try {
-            if (!mongoose.isValidObjectId(userID))
-                throw new ResourceNotFoundException('User', 'id', userID)
-            const user = await User.findByIdAndUpdate(
-                userID,
-                { refreshToken: null },
-                { new: true }
-            )
-            if (!user) throw new ResourceNotFoundException('User', 'id', userID)
+            const user = await UserService.getUserById(userID)
+            const redisToken = await client.GET(userID.toString())
+            // if (!redisToken || !user['refreshToken'])
+            //     throw createHttpError.InternalServerError(
+            //         'User has been logout'
+            //     )
+            user['refreshToken'] = null
+            await client.DEL(userID.toString(), (err, data) => {
+                if (err) {
+                    console.log(err)
+                    throw createHttpError.InternalServerError()
+                }
+            })
+            return await user.save()
         } catch (error) {
             throw error
         }

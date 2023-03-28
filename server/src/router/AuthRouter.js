@@ -12,8 +12,8 @@ router.post(
     AuthController.register
 )
 router.post('/login', AuthController.login)
-router.post('/refreshtoken', AuthController.refreshToken)
-router.post('/logout', Authenticate.AuthorizationUSER, AuthController.logout)
+router.put('/refreshtoken', AuthController.refreshToken)
+router.delete('/logout', Authenticate.AuthorizationUSER, AuthController.logout)
 router.post('/verify/**', AuthController.verifyEmailCode)
 router.post('/forgot', AuthController.forgotPassword)
 

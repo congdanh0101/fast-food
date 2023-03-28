@@ -113,7 +113,7 @@ class AuthService {
         try {
             const user = await UserService.getUserById(userID)
             const redisToken = await client.GET(userID.toString())
-            if (!redisToken )
+            if (!redisToken)
                 throw createHttpError.InternalServerError(
                     'User has been logout'
                 )
@@ -151,16 +151,24 @@ class AuthService {
     }
 
     async resetPassword(email) {
-        const newPassword = Utils.generateRandomResetPassword()
-        console.log(newPassword)
-        await EmailService.sendEmail(
-            email,
-            `email verfication code`.toUpperCase(),
-            EmailService.htmlResetPassword(newPassword)
-        )
-        const user = await User.findOne({ email })
-        user['password'] = bcrypt.hashSync(newPassword, 10)
-        return await user.save()
+        try {
+            const newPassword = Utils.generateRandomResetPassword()
+            console.log(newPassword)
+            await EmailService.sendEmail(
+                email,
+                `email verfication code`.toUpperCase(),
+                EmailService.htmlResetPassword(newPassword)
+            )
+            const user = await User.findOneAndUpdate(
+                { email: email },
+                { password: bcrypt.hashSync(newPassword, 10) },
+                { new: true, runValidators: true }
+            )
+            if (!user) throw createHttpError.InternalServerError()
+            return user
+        } catch (error) {
+            throw error
+        }
     }
 }
 

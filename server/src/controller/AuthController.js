@@ -112,88 +112,73 @@ class AuthController {
     }
 
     async verifyEmailCode(req, res, next) {
-        const codeInput = req.body.code
-        // const expired = process.env.VERIFICATION_CODE_EXPIRED
-        // const now = new Date().getTime()
-        const path = req.path
-        // const timeVerificationCode = req.cookies.timeVerificationCode
-        //Check time expired
-        // if (now - timeVerificationCode > expired) {
-        //     return res.status(406).json({
-        //         success: false,
-        //         message: `Token is expired`,
-        //     })
-        // } else {
-        if (path.includes('register')) {
-            //get email verification code
-
-            const emailVerficationCode = req.cookies.registerVerificationCode
-
-            console.log(emailVerficationCode)
-
-            //check token
-            if (codeInput === emailVerficationCode) {
-                const user = await UserService.createUser(req.cookies.user)
-                res.clearCookie('registerVerificationCode')
-                res.clearCookie('user')
-                if (!user) return next(createError.InternalServerError())
-                return res.json(user)
-            } else if (emailVerficationCode == undefined)
-                return res.status(406).json({
-                    success: false,
-                    message: `Token is expired`,
-                })
-            else
-                return next(
-                    createError.BadRequest(`Invalid email verification code`)
-                )
-        } else if (path.includes('forgot')) {
-            const emailVerficationCode = req.cookies.forgotVerificationCode
-            const email = req.cookies.email
-            if (codeInput === emailVerficationCode) {
-                const user = await AuthService.resetPassword(email)
-                res.clearCookie('email')
-                res.clearCookie('forgotVerificationCode')
-                return res.json(user)
-            } else if (emailVerficationCode == undefined)
-                return res.status(406).json({
-                    success: false,
-                    message: `Token is expired`,
-                })
-            else
-                return next(
-                    createError.BadRequest(`Invalid email verification code`)
-                )
-        } else {
-            return next(createError.NotFound())
+        try {
+            const codeInput = req.body.code
+            const path = req.path
+            if (path.includes('register')) {
+                const emailVerficationCode =
+                    req.cookies.registerVerificationCode
+                //check token
+                if (codeInput === emailVerficationCode) {
+                    const user = await UserService.createUser(req.cookies.user)
+                    res.clearCookie('registerVerificationCode')
+                    res.clearCookie('user')
+                    return res.json(user)
+                } else
+                    return next(
+                        createError.BadRequest(
+                            'Invalid code or token is expired!'
+                        )
+                    )
+            } else if (path.includes('forgot')) {
+                const emailVerficationCode = req.cookies.forgotVerificationCode
+                const email = req.cookies.email
+                if (codeInput === emailVerficationCode) {
+                    const user = await AuthService.resetPassword(email)
+                    res.clearCookie('email')
+                    res.clearCookie('forgotVerificationCode')
+                    return res.json(user)
+                } else
+                    return next(
+                        createError.BadRequest(
+                            'Invalid code or token is expired!'
+                        )
+                    )
+            } else {
+                return next(createError.NotFound())
+            }
+        } catch (error) {
+            return next(error)
         }
     }
 
     async forgotPassword(req, res, next) {
-        const email = req.body.email
-        const result = await AuthService.forgotPassword(email)
-        if (!result)
-            return next(new ResourceNotFoundException(`User`, `email`, email))
-        const timeVerificationCode = new Date().getTime()
-        const forgotVerificationCode = result
-        // Utils.setCookie(res, 'timeVerificationCode', timeVerificationCode)
-        Utils.setCookie(
-            res,
-            'forgotVerificationCode',
-            forgotVerificationCode,
-            process.env.VERIFICATION_CODE_EXPIRED
-        )
-        Utils.setCookie(
-            res,
-            'email',
-            email,
-            process.env.VERIFICATION_CODE_EXPIRED
-        )
-        return res.status(200).json({
-            message: `Verification code is sent to your email.`,
-            code: forgotVerificationCode,
-            email: email,
-        })
+        try {
+            const email = req.body.email
+            const result = await AuthService.forgotPassword(email)
+            const timeVerificationCode = new Date().getTime()
+            const forgotVerificationCode = result
+            // Utils.setCookie(res, 'timeVerificationCode', timeVerificationCode)
+            Utils.setCookie(
+                res,
+                'forgotVerificationCode',
+                forgotVerificationCode,
+                process.env.VERIFICATION_CODE_EXPIRED
+            )
+            Utils.setCookie(
+                res,
+                'email',
+                email,
+                process.env.VERIFICATION_CODE_EXPIRED
+            )
+            return res.status(200).json({
+                message: `Verification code is sent to your email.`,
+                code: forgotVerificationCode,
+                email: email,
+            })
+        } catch (error) {
+            return next(error)
+        }
     }
 
     async logout(req, res, next) {

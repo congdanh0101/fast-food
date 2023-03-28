@@ -9,10 +9,16 @@ const createHttpError = require('http-errors')
 
 class UserService {
     async createUser(user) {
-        delete user['confirmPassword']
-        user['password'] = bcrypt.hashSync(user['password'], 10)
-        user['roles'] = ['USER']
-        return await new User(user).save()
+        try {
+            delete user['confirmPassword']
+            user['password'] = bcrypt.hashSync(user['password'], 10)
+            user['roles'] = ['USER']
+            const savedUser = await new User(user).save()
+            if (!savedUser) throw createHttpError.InternalServerError()
+            return savedUser
+        } catch (error) {
+            throw error
+        }
     }
 
     async createAdmin(user) {

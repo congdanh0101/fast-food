@@ -1,78 +1,49 @@
+const PaymentService = require('../service/PaymentService')
 const Utils = require('../utils/Utils')
-
+const moment = require('moment')
 require('dotenv').config()
+const responeCode = require('../utils/vnpay.statuscode')
+const createHttpError = require('http-errors')
 
 class PaymentController {
     async CreatePaymentURL(req, res, next) {
-        console.log(req.body)
-
         var ipAddr =
             req.headers['x-forwarded-for'] ||
             req.connection.remoteAddress ||
             req.socket.remoteAddress ||
             req.connection.socket.remoteAddress
-        console.log(`ip ${ipAddr}`)
-
-        var dateFormat = require('dateformat')
-
-        var tmnCode = process.env.vnp_TmnCode
-        var secretKey = process.env.vnp_HashSecret
-        var vnpUrl = process.env.vnp_Url
-        var returnUrl = process.env.vnp_ReturnUrl
-
-        var date = new Date()
-        console.log(`date ${date}`)
-
-        var createDate = dateFormat(date, 'yyyymmddHHmmss')
-        var orderId = dateFormat(date, 'HHmmss')
-        var amount = req.body.amount
-        var bankCode = req.body.bankCode
-        var expiredDate = dateFormat(
-            date.getTime() + 15 * 60 * 1000,
-            'yyyymmddHHmmss'
-        )
-        var orderInfo = req.body.orderDescription
-        var orderType = req.body.orderType
-        var locale = req.body.language
-        if (locale === null || locale === '') {
-            locale = 'vn'
-        }
-        var currCode = 'VND'
-        var vnp_Params = {}
-        console.log(`expired ${expiredDate}`)
-
-        vnp_Params['vnp_ExpireDate'] = expiredDate
-        vnp_Params['vnp_Version'] = '2.1.0'
-        vnp_Params['vnp_Command'] = 'pay'
-        // vnp_Params['vnp_Command'] = 'querydr'
-        vnp_Params['vnp_TmnCode'] = tmnCode
-        // vnp_Params['vnp_Merchant'] = ''
-        vnp_Params['vnp_Locale'] = locale
-        vnp_Params['vnp_CurrCode'] = currCode
-        vnp_Params['vnp_TxnRef'] = orderId
-        vnp_Params['vnp_OrderInfo'] = orderInfo
-        vnp_Params['vnp_OrderType'] = orderType
-        vnp_Params['vnp_Amount'] = amount * 100
-        vnp_Params['vnp_ReturnUrl'] = returnUrl
-        vnp_Params['vnp_IpAddr'] = ipAddr
-        vnp_Params['vnp_CreateDate'] = createDate
-        if (bankCode !== null && bankCode !== '') {
-            vnp_Params['vnp_BankCode'] = bankCode
+        const data = req.body
+        const paymentRequest = {
+            ipAddr: ipAddr,
+            bankCode: null,
+            locale: data.language,
+            orderID:data.orderID
         }
 
-        vnp_Params = Utils.sortObject(vnp_Params)
+        try {
+            const payment = await PaymentService.createPaymentUrl(
+                paymentRequest
+            )
+            res.json({ payment })
+        } catch (error) {
+            return next(error)
+        }
+    }
 
-        var querystring = require('qs')
-        var signData = querystring.stringify(vnp_Params, { encode: false })
-        var crypto = require('crypto')
-        var hmac = crypto.createHmac('sha512', secretKey)
-        var signed = hmac
-            .update(new Buffer.from(signData, 'utf-8'))
-            .digest('hex')
-        vnp_Params['vnp_SecureHash'] = signed
-        vnpUrl += '?' + querystring.stringify(vnp_Params, { encode: false })
-        console.log(vnpUrl)
-        res.send({ vnpUrl })
+    async vnpayReturn(req, res, next) {
+        try {
+            let vnp_Params = req.query
+            const result = await PaymentService.vnpayReturn(vnp_Params)
+
+            if (result.code === '00') {
+                const code = result.code
+                const message = result.message
+                const order = result.updateOrder
+                return res.json({ code, message, order })
+            } else throw createHttpError.InternalServerError(result.message)
+        } catch (error) {
+            return next(error)
+        }
     }
 }
 

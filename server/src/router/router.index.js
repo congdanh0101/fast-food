@@ -5,6 +5,7 @@ const categoryRouter = require('./CategoryRouter')
 const productRouter = require('./ProductRouter')
 const voucherRouter = require('./VoucherRouter')
 const orderRouter = require('./OrderRouter')
+const paymentRouter = require('./PaymentRouter')
 const api = process.env.BASE_API_URL
 const express = require('express')
 // const app = express()
@@ -17,6 +18,7 @@ function router(app) {
     app.use(`${api}product`, productRouter)
     app.use(`${api}voucher`, voucherRouter)
     app.use(`${api}order`, orderRouter)
+    app.use(`${api}payment`,paymentRouter)
     app.use(errorHandle)
 }
 

@@ -6,6 +6,8 @@ const client = redis.createClient({
     // legacyMode: true,
 })
 
+client.connect()
+
 client.on('connect', () => {
     console.log(`Client connected to redis`)
 })

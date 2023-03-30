@@ -10,9 +10,8 @@ const cors = require('cors')
 const Voucher = require('./model/Voucher')
 const cron = require('node-cron')
 const moment = require('moment')
-const client = require('./utils/redis.config')
 
-client.connect()
+
 
 //HTTP logger
 app.use(morgan('dev'))

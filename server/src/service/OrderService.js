@@ -40,7 +40,7 @@ class OrderService {
                 )
                 order['voucher'] = voucher['_id']
                 user['voucher'] = voucher['_id']
-                
+
                 //active the voucher
                 voucher['isActive'] = true
                 //update voucher
@@ -84,9 +84,12 @@ class OrderService {
     async updateOrderById(id, data) {
         try {
             const order = await this.getOrderById(id)
-            if (!order) throw new ResourceNotFoundException('Order', 'id', id)
-            if (order['status'] === 'Failed' || order['status'] === 'Succeeded')
+            if (
+                (order['status'] === 'Failed' && order['isPaid'] === true) ||
+                (order['status'] === 'Succeeded' && order['isPaid'] === true)
+            )
                 throw createHttpError.BadRequest('Order cannot be updated')
+
             const userID = order['user']['_id']
             const user = await UserService.getUserById(userID)
             if (!user) throw new ResourceNotFoundException('User', 'id', userID)
@@ -121,9 +124,12 @@ class OrderService {
                     'Something went wrong'
                 )
             order['status'] = data['status']
-            order['isPaid'] = data['isPaid']
+            if (order['isPaid'] != true) {
+                order['isPaid'] = data['isPaid']
+                order['payment'] = data['payment']
+            }
             order['payment'] = data['payment']
-            order['deliveryMethod'] = data['deliveryMethod']
+            // order['deliveryMethod'] = data['deliveryMethod']
 
             // const updatedOrder = await order.save()
             const updatedOrder = await Order.findOneAndUpdate(

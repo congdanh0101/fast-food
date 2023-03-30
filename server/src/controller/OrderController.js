@@ -8,7 +8,6 @@ class OrderController {
         const order = {
             items: data.items,
             user: userID,
-            isPaid: data.isPaid,
             deliveryMethod: data.deliveryMethod,
             payment: data.payment,
             voucher: data.voucher,

@@ -16,7 +16,7 @@ class PaymentController {
         const paymentRequest = {
             ipAddr: ipAddr,
             bankCode: null,
-            locale: data.language,
+            locale: null,
             orderID:data.orderID
         }
 

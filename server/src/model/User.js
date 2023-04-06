@@ -33,9 +33,11 @@ const userSchema = new Schema({
         },
     ],
     phoneNumber: {
-        type: Number,
+        type: String,
         require: true,
-        unique: true,
+        // unique: true,
+        // index: { unique: true, sparse: true },
+        // default: null,
     },
     rewardPoint: {
         type: Number,

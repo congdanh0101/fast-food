@@ -35,8 +35,9 @@ class UserController {
         const user = {
             fullName: data.fullName,
             address: data.address,
-            email: data.email,
             phoneNumber: data.phoneNumber,
+            dob: data.dob,
+            gender: data.gender,
         }
         // const updateUser = await UserService.updateUserById(req.params.id, user)
         // if (!updateUser)

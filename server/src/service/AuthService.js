@@ -18,17 +18,21 @@ class AuthService {
             //Check email exist
             const existEmail = await User.findOne({ email: user['email'] })
             //Check phone number exist
-            const existPhoneNumber = await User.findOne({
-                phoneNumber: user['phoneNumber'],
-            })
+            let existPhoneNumber;
+            if(user['phoneNumber']){
+                existPhoneNumber = await User.findOne({
+                    phoneNumber: user['phoneNumber'],
+                })
+            }
+            let err = {}
             if (existEmail)
-                throw createHttpError.BadRequest(
-                    'Email was existed, please try another email!'
-                )
+                err['email'] = 'Email was existed, please try another email!'
             if (existPhoneNumber)
-                throw createHttpError.BadRequest(
+                err['phoneNumber'] =
                     'Phone number was existed, please try another phone number!'
-                )
+
+            if (Object.keys(err).length !== 0)
+                throw createHttpError.BadRequest(err)
 
             if (user['confirmPassword'] !== user['password'])
                 throw new Error('Password does not match, please try again!')

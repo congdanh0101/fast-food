@@ -8,6 +8,8 @@ class ProductController {
         const file = req.file
         const fileName = file ? file.filename : null
         const basePath = `${req.protocol}://${req.get('host')}/public/`
+        console.log(basePath)
+
         const product = {
             name: data.name,
             category: data.category,

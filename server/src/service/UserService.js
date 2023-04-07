@@ -62,19 +62,19 @@ class UserService {
     async updateUserById(id, data) {
         try {
             //Check phone number exist
-            // let existPhoneNumber
-            // if (data['phoneNumber']) {
-            //     existPhoneNumber = await User.findOne({
-            //         phoneNumber: data['phoneNumber'],
-            //     })
-            // }
-            // let err = {}
-            // if (existPhoneNumber)
-            //     err['phoneNumber'] =
-            //         'Phone number was existed, please try another phone number!'
+            let existPhoneNumber
+            if (data['phoneNumber']) {
+                existPhoneNumber = await User.findOne({
+                    phoneNumber: data['phoneNumber'],
+                })
+            }
+            let err = {}
+            if (existPhoneNumber['_id'] === id)
+                err['phoneNumber'] =
+                    'Phone number was existed, please try another phone number!'
 
-            // if (Object.keys(err).length !== 0)
-            //     throw createHttpError.BadRequest(err)
+            if (Object.keys(err).length !== 0)
+                throw createHttpError.BadRequest(err)
             const user = await User.findByIdAndUpdate(id, data, { new: true })
             if (!user) throw new Error(`User cannot be updated with id: ${id}`)
             return user

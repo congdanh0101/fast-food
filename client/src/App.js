@@ -7,7 +7,8 @@ import NavBar from './Components/NavBar/NavBar'
 import { useState } from 'react'
 import Email from './Components/EmailVerification/Email'
 import RegisterForm from './Components/Register/Registry'
-
+import Product from './Components/Product/Product'
+// import './dist/output.css'
 function App() {
     return (
         <Router>
@@ -16,8 +17,9 @@ function App() {
                 <Routes>
                     <Route path="/" element={<HomePage />} />
                     <Route path="/login" element={<Login />} />
-                    <Route path="/register" element={<RegisterForm />} />
+                    <Route path="/register" element={<Register />} />
                     <Route path="/verify/register" element={<Email />} />
+                    <Route path="/product" element={<Product />} />
                 </Routes>
             </div>
         </Router>

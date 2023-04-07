@@ -10,6 +10,11 @@ import {
     verifyStart,
     verifySuccess,
 } from './authSlice'
+import {
+    getProductFailure,
+    getProductStart,
+    getProductSuccess,
+} from './productSlice'
 
 export const loginUser = async (user, dispatch, navigate) => {
     dispatch(loginStart())
@@ -75,5 +80,20 @@ export const verifyRegisterUser = async (code, dispatch, navigate) => {
         navigate('/login')
     } catch (error) {
         dispatch(verifyFailure())
+    }
+}
+
+export const getProductById = async (id, dispatch, navigate) => {
+    console.log(id)
+
+    dispatch(getProductStart())
+    try {
+        const respone = await request.get(`/product/${id}`)
+        // console.log(respone.data);
+        
+        dispatch(getProductSuccess(respone.data))
+        navigate(`/product/${id}`)
+    } catch (error) {
+        dispatch(getProductFailure())
     }
 }

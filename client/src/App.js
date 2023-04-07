@@ -6,6 +6,7 @@ import Register from './Components/Register/Register'
 import NavBar from './Components/NavBar/NavBar'
 import { useState } from 'react'
 import Email from './Components/EmailVerification/Email'
+import RegisterForm from './Components/Register/Registry'
 
 function App() {
     return (
@@ -15,7 +16,7 @@ function App() {
                 <Routes>
                     <Route path="/" element={<HomePage />} />
                     <Route path="/login" element={<Login />} />
-                    <Route path="/register" element={<Register />} />
+                    <Route path="/register" element={<RegisterForm />} />
                     <Route path="/verify/register" element={<Email />} />
                 </Routes>
             </div>

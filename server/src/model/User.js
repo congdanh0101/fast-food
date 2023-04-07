@@ -37,7 +37,7 @@ const userSchema = new Schema({
         require: true,
         // unique: true,
         // index: { unique: true, sparse: true },
-        // default: null,
+        default: null,
     },
     rewardPoint: {
         type: Number,
@@ -100,6 +100,11 @@ const userSchema = new Schema({
         },
     ],
 })
+
+// userSchema.index(
+//     { phoneNumber: 1 },
+//     { unique: true, partialFilterExpression: { exampleField: { $ne: null } } }
+// )
 
 // userSchema.set('toJSON', {
 //     virtuals: true,

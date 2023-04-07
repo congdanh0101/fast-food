@@ -8,6 +8,7 @@ import {
 } from '@ant-design/icons'
 import { useEffect, useState } from 'react'
 import request from '../../utils/axiosConfig'
+import Product from '../Product/Product'
 function getItem(label, key, icon, children, type) {
     return {
         key,
@@ -18,27 +19,28 @@ function getItem(label, key, icon, children, type) {
     }
 }
 const HomePage = () => {
-    const [category, setCategory] = useState([])
-    let items = []
-    useEffect(() => {
-        async function fetchDataCategory() {
-            const listCategory = await request.get('/category')
-            for (var x = 0; x < listCategory.data.length; x++) {
-                items.push(
-                    getItem(
-                        listCategory.data[x]['name'],
-                        listCategory.data[x]['_id']
-                    )
-                )
-                console.log(items)
-            }
-            setCategory(listCategory.data)
-        }
-        fetchDataCategory()
-        console.log(category)
-    }, [])
+    const [category, setCategory] = useState({ loading: true, data: [] })
 
-    category.map((x) => getItem(x['_id'], x['name']))
+    const fetchCategoryList = async () => {
+        setCategory({ ...category, loading: true })
+        try {
+            const cate = await request.get('/category')
+            setCategory({ data: cate.data, loading: false })
+        } catch (err) {
+            setCategory({ ...category, loading: false })
+        }
+    }
+
+    const fetchProductByCategoryList = async(categoryID) =>{
+
+    }
+
+    useEffect(() => {
+        fetchCategoryList()
+    }, [])
+    let items = []
+    category.data.forEach((x) => items.push(getItem(x['name'], x['_id'])))
+
     //DUMMY DATA
     const userData = [
         {
@@ -72,18 +74,19 @@ const HomePage = () => {
                 <Col span={1}></Col>
                 <Col span={4} style={{ backgroundColor: '#1234' }}>
                     <Menu
-                        defaultSelectedKeys={category[0]}
+                        defaultSelectedKeys={items[0]}
                         items={items}
-                        mode="inline"
-                        defaultOpenKeys={category[0]}
-                        onClick={(e) => console.log(e)}
+                        onClick={(e) => console.log(e.key)}
+                        defaultOpenKeys={items[0]}
                     ></Menu>
                 </Col>
                 <Col span={1}></Col>
 
                 <Col span={18}>
                     <Row gutter={[48, 24]}>
-                        <Col span={6}>1</Col>
+                        <Col span={6}>
+                          {/* <Product></Product> */}1
+                        </Col>
                         <Col span={6}>2</Col>
                         <Col span={6}>3</Col>
                         <Col span={6}>4</Col>

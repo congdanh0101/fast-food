@@ -50,6 +50,7 @@ const Product = (props) => {
                     variant="top"
                     // src="http://localhost:2001/public/48218354716_6b13703983_o.jpg-1680891895623.jpeg"
                     src={product['img']}
+                    
                 />
             </Card.Link>
             <Card.Body>

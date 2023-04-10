@@ -15,7 +15,7 @@ import Cart from './Components/Cart/Cart'
 function App() {
     return (
         <Router>
-            <NavBar />
+            <NavBar></NavBar>
             <div className="App">
                 <Routes>
                     <Route path="/" element={<HomePage />} />

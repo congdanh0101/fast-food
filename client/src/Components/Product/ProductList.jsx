@@ -1,19 +1,90 @@
-// import { Card } from "antd";
-import React, { Component, useEffect, useState } from 'react'
-import { Card, Button, Container, Form } from 'react-bootstrap'
-import { getProductById } from '../../redux/apiRequest'
-import { useDispatch, useSelector } from 'react-redux'
-import { Link, useNavigate } from 'react-router-dom'
+
+import React, {  useEffect, useLayoutEffect, useState } from 'react'
+import { Card } from 'react-bootstrap'
+// import { getProductById } from '../../redux/apiRequest'
+// import { useDispatch, useSelector } from 'react-redux'
+import { Link} from 'react-router-dom'
 import request from '../../utils/axiosConfig'
 import { ShoppingCartOutlined } from '@ant-design/icons'
-// import request from '../../utils/axiosConfig'
-import ImageResizer from 'react-image-resizer'
-import Product from './Product'
 import { Col, Row } from 'antd'
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom'
-import ProductDetail from './ProductDetail'
+// import { BrowserRouter as Router, Route, Routes } from 'react-router-dom'
+import { EyeOutlined } from '@ant-design/icons'
+import { useMediaQuery } from 'react-responsive'
+
+const ProductCard = ({ item,width}) => {
+    return (
+        <Link to={`/product/${item['_id']}`}>
+            <Card
+                // style={{ width: '19rem' }}
+                border="dark"
+                bg="light"
+                // onClick={handleCardClick}
+                className="card-product"
+            >
+                <div className="image-container" style={{width:`${width}%`}}>
+                    <img src={item['img']} />
+                </div>
+
+                <Card.Body style={{ marginTop: 24 }}>
+                    <div
+                        className="view-sold"
+                        style={{
+                            fontSize: '150%',
+                        }}
+                    >
+                        <div style={{left:0}}>
+                            <ShoppingCartOutlined />{' '}
+                            {item['sold'] >= 1000
+                                ? `${(item['sold'] / 1000).toFixed(2)}K`
+                                : item['sold']}
+                        </div>
+                        <div style={{right:0}}>
+                            <EyeOutlined />{' '}
+                            {item['view'] >= 1000
+                                ? `${(item['view'] / 1000).toFixed(2)}K`
+                                : item['view']}
+                        </div>
+                    </div>
+                    <Card.Link
+                        href="/product"
+                        style={{ textDecoration: 'none' }}
+                    >
+                        <Card.Title>
+                            <h2>{item['name']}</h2>
+                        </Card.Title>
+                    </Card.Link>
+                    <Card.Text style={{ color: 'red' }}>
+                        <h2>
+                            {item['price'].toLocaleString('it-IT', {
+                                style: 'currency',
+                                currency: 'VND',
+                            })}
+                        </h2>
+                    </Card.Text>
+                </Card.Body>
+            </Card>
+        </Link>
+    )
+}
 
 const ProductList = (props) => {
+    const isDesktop = useMediaQuery({
+        minWidth: 1366,
+        maxWidth: 1919,
+    })
+    const isMobile = useMediaQuery({
+        minWidth: 360,
+        maxWidth: 640,
+    })
+    const isTablet = useMediaQuery({
+        minWidth: 641,
+        maxWidth: 960,
+    })
+    const isLaptop = useMediaQuery({
+        minWidth:961,
+        maxWidth:1365
+    })
+    const isBigScreen = useMediaQuery({ minWidth: 1920 })
     const [productList, setProductList] = useState([])
     const [categoryId, setCategoryId] = useState(props.category)
     const [detail, setDetail] = useState(false)
@@ -35,7 +106,7 @@ const ProductList = (props) => {
         fetchDataProductList()
     }, [categoryId])
 
-    useEffect(() => {
+    useLayoutEffect(() => {
         setCategoryId(props.category)
     }, [props.category])
 
@@ -45,14 +116,37 @@ const ProductList = (props) => {
     }
 
     return (
-        <Row gutter={[48, 24]}>
-            {productList?.map((item) => (
-                <Col span={6}>
-                    <Link to={`/product/${item['_id']}`}>
-                        <Product id={item['_id']} />
-                    </Link>
-                </Col>
-            ))}
+        <Row gutter={[40, 24]}>
+            {isDesktop &&
+                productList?.map((item) => (
+                    <Col span={8}>
+                        <ProductCard item={item} width={100}/>
+                    </Col>
+                ))}
+            {isBigScreen &&
+                productList?.map((item) => (
+                    <Col span={6}>
+                        <ProductCard item={item} width={100}/>
+                    </Col>
+                ))}
+            {isTablet &&
+                productList?.map((item) => (
+                    <Col span={12}>
+                        <ProductCard item={item} width={100}/>
+                    </Col>
+                ))}
+                {isLaptop &&
+                productList?.map((item) => (
+                    <Col span={8}>
+                        <ProductCard item={item} width={110}/>
+                    </Col>
+                ))}
+            {isMobile &&
+                productList?.map((item) => (
+                    <Col span={24}>
+                        <ProductCard item={item} width={90}/>
+                    </Col>
+                ))}
         </Row>
     )
 }

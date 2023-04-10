@@ -41,12 +41,12 @@ const ProductDetail = () => {
 
     return (
         <div style={{ marginTop: '5%' }}>
-            <Row gutter={[48, 24]}>
-                <Col span={4}></Col>
-                <Col span={8}>
+            <Row>
+                <Col span={3}></Col>
+                <Col span={11}>
                     <img src={product['img']} width={'70%'} height={'120%'} />
                 </Col>
-                <Col span={12} style={{ marginTop: '5%' }}>
+                <Col span={10} style={{ marginTop: '5%' }}>
                     <h1 style={{ fontSize: '3rem' }}>{product.name}</h1>
                     <br />
                     <div style={{ fontSize: '1.5rem' }}>
@@ -58,7 +58,7 @@ const ProductDetail = () => {
                         <br />
                         <QuantityPicker
                             onChange={(value) => setQuantity(value)}
-                            min={quantity}
+                            min={1}
                             value={quantity}
                             max={99}
                             smooth

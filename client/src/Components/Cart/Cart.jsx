@@ -1,12 +1,17 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { Badge, Button, List } from 'antd'
 import { ShoppingCartOutlined } from '@ant-design/icons'
 
 const Cart = ({ onClearCart, onRemoveItem }) => {
-    const items = JSON.parse(localStorage.getItem('items'))
+    const [items, setItems] = useState(
+        JSON.parse(localStorage.getItem('items')) || []
+    )
 
-    const handleRemove = (e) =>{
-        
+    const handleRemove = (e) => {
+        const itemsClone = items.filter((item) => item !== e)
+        localStorage.setItem('items', JSON.stringify(itemsClone))
+        setItems(items.filter((item) => item !== e))
+        window.location.reload()
     }
 
     return (
@@ -17,8 +22,8 @@ const Cart = ({ onClearCart, onRemoveItem }) => {
                     <List.Item
                         actions={[
                             <Button
-                                type="link"
-                                onClick={() => onRemoveItem(item)}
+                                type="dashed"
+                                onClick={() => handleRemove(item)}
                             >
                                 Remove
                             </Button>,
@@ -28,9 +33,8 @@ const Cart = ({ onClearCart, onRemoveItem }) => {
                             title={`Name ${item.product.name}`}
                             description={`Quantity: ${item.quantity}`}
                         />
-                        
+
                         <div>${item.product.price * item.quantity}</div>
-                    
                     </List.Item>
                 )}
             />

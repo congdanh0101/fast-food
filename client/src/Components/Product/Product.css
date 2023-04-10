@@ -1,7 +1,7 @@
 .image-container {
     position: relative;
-    width: 300px;
-    height: 300px;
+    width: 250px;
+    height: 250px;
 }
 
 .image-container img {
@@ -15,7 +15,7 @@
 }
 
 .image-container:hover img {
-    transform: scale(1.1);
+    transform: scale(1.2);
     cursor: pointer;
 }
 
@@ -23,3 +23,4 @@
     display: flex;
     justify-content: space-between;
 }
+

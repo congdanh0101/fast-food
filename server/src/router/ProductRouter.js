@@ -7,6 +7,6 @@ router.post('/', uploadOptions.single('img'), ProductController.createProduct)
 router.get('/:id', ProductController.getProductById)
 router.get('/', ProductController.getAllProducts)
 router.delete('/:id', ProductController.deleteProduct)
-router.put('/:id', ProductController.updateProductById)
+router.put('/:id',uploadOptions.single('img'), ProductController.updateProductById)
 
 module.exports = router

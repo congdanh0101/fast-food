@@ -51,6 +51,9 @@ const productSchema = new Schema({
             },
         },
     ],
+    description: {
+        type: String,
+    },
 })
 
 // productSchema.set('toJSON', {

@@ -94,7 +94,7 @@ class ProductService {
             if (!category)
                 throw new ResourceNotFoundException(
                     'Category',
-                    'id',
+                    'id',   
                     product['category']
                 )
             //check combo not null

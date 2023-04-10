@@ -8,6 +8,8 @@ import { useState } from 'react'
 import Email from './Components/EmailVerification/Email'
 import RegisterForm from './Components/Register/Registry'
 import Product from './Components/Product/Product'
+import ProductList from './Components/Product/ProductList'
+import ProductDetail from './Components/Product/ProductDetail'
 // import './dist/output.css'
 function App() {
     return (
@@ -17,9 +19,9 @@ function App() {
                 <Routes>
                     <Route path="/" element={<HomePage />} />
                     <Route path="/login" element={<Login />} />
-                    <Route path="/register" element={<Register />} />
+                    <Route path="/register" element={<RegisterForm />} />
                     <Route path="/verify/register" element={<Email />} />
-                    <Route path="/product" element={<Product />} />
+                    <Route path="/product/:id" element={<ProductDetail />}/>
                 </Routes>
             </div>
         </Router>

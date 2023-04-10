@@ -21,6 +21,9 @@ export const loginUser = async (user, dispatch, navigate) => {
     try {
         const respone = await request.post(`/auth/login`, user)
         dispatch(loginSuccess(respone.data))
+        localStorage.setItem('accessToken', respone.data['accessToken'])
+        localStorage.setItem('refreshToken', respone.data['refreshToken'])
+        localStorage.setItem('userID', respone.data['user']['_id'])
         navigate('/')
     } catch (error) {
         dispatch(loginFailure())
@@ -90,7 +93,7 @@ export const getProductById = async (id, dispatch, navigate) => {
     try {
         const respone = await request.get(`/product/${id}`)
         // console.log(respone.data);
-        
+
         dispatch(getProductSuccess(respone.data))
         navigate(`/product/${id}`)
     } catch (error) {

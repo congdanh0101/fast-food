@@ -18,8 +18,8 @@ class AuthService {
             //Check email exist
             const existEmail = await User.findOne({ email: user['email'] })
             //Check phone number exist
-            let existPhoneNumber;
-            if(user['phoneNumber']){
+            let existPhoneNumber
+            if (user['phoneNumber']) {
                 existPhoneNumber = await User.findOne({
                     phoneNumber: user['phoneNumber'],
                 })
@@ -68,7 +68,9 @@ class AuthService {
 
     async login(request) {
         try {
-            const user = await User.findOne({ email: request['username'] })
+            const user = await User.findOne({
+                email: request['username'],
+            })
             if (
                 !user ||
                 !bcrypt.compareSync(request['password'], user['password'])
@@ -91,7 +93,7 @@ class AuthService {
             // refreshToken = user['refreshToken']
 
             // await User.findByIdAndUpdate(user['id'], user, { new: true })
-            return { accessToken, refreshToken }
+            return { accessToken, refreshToken, user }
         } catch (error) {
             throw error
         }

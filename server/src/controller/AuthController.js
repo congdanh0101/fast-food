@@ -72,7 +72,11 @@ class AuthController {
             const token = await AuthService.login(loginRequest)
             //cookie configuration for refresh token
             Utils.setCookie(res, 'refreshToken', token['refreshToken'])
-            return res.json({ accessToken: token['accessToken'] })
+            return res.json({
+                accessToken: token['accessToken'],
+                refreshToken: token['refreshToken'],
+                user: token['user'],
+            })
         } catch (error) {
             return next(error)
         }

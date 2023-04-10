@@ -11,7 +11,7 @@ class UserService {
     async createUser(user) {
         try {
             delete user['confirmPassword']
-            user['password'] = bcrypt.hashSync(user['password'], 10)
+            // user['password'] = bcrypt.hashSync(user['password'], 10)
             user['roles'] = ['USER']
             const savedUser = await new User(user).save()
             if (!savedUser) throw createHttpError.InternalServerError()

@@ -17,6 +17,7 @@ class ProductController {
             // img: data.img,
             img: fileName ? `${basePath}${fileName}` : null,
             combo: data.combo,
+            description: data.description,
         }
         try {
             const result = await ProductService.createProduct(product)
@@ -69,6 +70,7 @@ class ProductController {
             category: data.category,
             combo: data.combo,
             img: fileName ? `${basePath}${fileName}` : null,
+            description:data.description,
         }
 
         try {

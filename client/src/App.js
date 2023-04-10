@@ -10,6 +10,7 @@ import RegisterForm from './Components/Register/Registry'
 import Product from './Components/Product/Product'
 import ProductList from './Components/Product/ProductList'
 import ProductDetail from './Components/Product/ProductDetail'
+import Cart from './Components/Cart/Cart'
 // import './dist/output.css'
 function App() {
     return (
@@ -21,7 +22,11 @@ function App() {
                     <Route path="/login" element={<Login />} />
                     <Route path="/register" element={<RegisterForm />} />
                     <Route path="/verify/register" element={<Email />} />
-                    <Route path="/product/:id" element={<ProductDetail />}/>
+                    <Route path="/product/:id" element={<ProductDetail />} />
+                    <Route
+                        path="/cart"
+                        element={<Cart />}
+                    />
                 </Routes>
             </div>
         </Router>

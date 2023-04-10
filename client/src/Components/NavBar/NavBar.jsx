@@ -6,7 +6,6 @@ import { Badge } from 'antd'
 import { ShoppingCartOutlined } from '@ant-design/icons'
 import CartIcon from '../Cart/CartIcon'
 const NavBar = () => {
-
     // const [user, setUSer] = useState(null)
     const badgeQuantity = (JSON.parse(localStorage.getItem('items')) || [])
         .length
@@ -23,7 +22,15 @@ const NavBar = () => {
             {refreshToken != null ? (
                 <>
                     <p className="navbar-user">
-                        Hi, <span> {localStorage.getItem('userID')} </span>{' '}
+                        Hi,{' '}
+                        <span>
+                            {' '}
+                            {
+                                JSON.parse(localStorage.getItem('user'))[
+                                    'fullName'
+                                ]
+                            }{' '}
+                        </span>{' '}
                     </p>
                     <Link to="/logout" className="navbar-logout">
                         {' '}
@@ -36,10 +43,10 @@ const NavBar = () => {
                         {' '}
                         Login{' '}
                     </Link>
-                    <Link to="/register" className="navbar-register">
+                    {/* <Link to="/register" className="navbar-register">
                         {' '}
                         Register
-                    </Link>
+                    </Link> */}
                 </>
             )}
         </nav>

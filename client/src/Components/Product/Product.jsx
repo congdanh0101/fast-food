@@ -62,7 +62,7 @@ const Product = (props) => {
                 onClick={handleCardClick}
             >
                 <div className="image-container">
-                    <img src={product['img']} width={300} height={250} />
+                    <img src={product['img']} width={250} height={200} />
                 </div>
 
                 <Card.Body style={{ marginTop: 24 }}>

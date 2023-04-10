@@ -24,6 +24,7 @@ export const loginUser = async (user, dispatch, navigate) => {
         localStorage.setItem('accessToken', respone.data['accessToken'])
         localStorage.setItem('refreshToken', respone.data['refreshToken'])
         localStorage.setItem('userID', respone.data['user']['_id'])
+        localStorage.setItem('user', JSON.stringify(respone.data['user']))
         navigate('/')
     } catch (error) {
         dispatch(loginFailure())

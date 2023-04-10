@@ -6,7 +6,7 @@ import { Link } from 'react-router-dom'
 const CartIcon = ({ count }) => {
     return (
         <Badge count={count}>
-            <Link to="/">
+            <Link to="/cart">
                 <ShoppingCartOutlined style={{ fontSize: '3rem' }} />
             </Link>
         </Badge>

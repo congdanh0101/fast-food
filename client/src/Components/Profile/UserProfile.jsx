@@ -1,80 +1,106 @@
-import { Avatar, Button, Divider, Form, Input, Radio, Space, Typography } from 'antd';
-import { UserOutlined } from '@ant-design/icons';
+import {
+    Avatar,
+    Button,
+    Col,
+    Divider,
+    Form,
+    Input,
+    Menu,
+    Radio,
+    Row,
+    Space,
+    Typography,
+} from 'antd'
+import {
+    UserOutlined,
+    MailOutlined,
+    LockOutlined,
+    InfoCircleOutlined,
+    PlusCircleOutlined,
+    PhoneOutlined,
+    TransactionOutlined,
+} from '@ant-design/icons'
+import { useState } from 'react'
+import { FormLabel } from 'react-bootstrap'
+import UserInformation from './UserInformation'
 
-const { Title, Text } = Typography;
+const { Title, Text } = Typography
 
-function UserProfile(props) {
-  const { name, email, avatar } = props;
-
-  const onFinish = (values) => {
-    console.log('Received values of form: ', values);
-  };
-
-  return (
-    <div style={{ textAlign: 'center' }}>
-      <Avatar size={128} icon={<UserOutlined />} src={avatar} />
-      <Title level={3}>{name}</Title>
-      <Text>{email}</Text>
-      <Divider />
-      <Form
-        name="profile"
-        onFinish={onFinish}
-        initialValues={{
-          fullname: '',
-          telephone: '',
-          gender: '',
-          dob: '',
-          address: '',
-        }}
-      >
-        <Form.Item
-          label="Full Name"
-          name="fullname"
-          rules={[{ required: true, message: 'Please input your full name!' }]}
-        >
-          <Input />
-        </Form.Item>
-
-        <Form.Item
-          label="Telephone"
-          name="telephone"
-          rules={[{ required: true, message: 'Please input your telephone number!' }]}
-        >
-          <Input />
-        </Form.Item>
-
-        <Form.Item label="Gender" name="gender" rules={[{ required: true }]}>
-          <Radio.Group>
-            <Radio value="male">Male</Radio>
-            <Radio value="female">Female</Radio>
-            <Radio value="other">Other</Radio>
-          </Radio.Group>
-        </Form.Item>
-
-        <Form.Item
-          label="Date of Birth"
-          name="dob"
-          rules={[{ required: true, message: 'Please input your date of birth!' }]}
-        >
-          <Input />
-        </Form.Item>
-
-        <Form.Item
-          label="Address"
-          name="address"
-          rules={[{ required: true, message: 'Please input your address!' }]}
-        >
-          <Input />
-        </Form.Item>
-
-        <Form.Item>
-          <Button type="primary" htmlType="submit">
-            Save Changes
-          </Button>
-        </Form.Item>
-      </Form>
-    </div>
-  );
+function getItem(label, key, icon, children, type) {
+    return {
+        key,
+        icon,
+        children,
+        label,
+        type,
+    }
 }
 
-export default UserProfile;
+const items = [
+    getItem(
+        'Information',
+        'info',
+        <InfoCircleOutlined style={{ fontSize: '150%' }} />
+    ),
+    getItem(
+        'Security',
+        'security',
+        <LockOutlined style={{ fontSize: '150%' }} />
+    ),
+    getItem(
+        'Reward',
+        'reward',
+        <PlusCircleOutlined style={{ fontSize: '150%' }} />
+    ),
+    getItem(
+        'Transaction History',
+        'trans',
+        <TransactionOutlined style={{ fontSize: '150%' }} />
+    ),
+]
+
+function UserProfile(props) {
+    const [form] = Form.useForm()
+    const [isLoading, setIsLoading] = useState(false)
+
+    const [key, setKey] = useState('info')
+
+    const onFinish = (values) => {
+        console.log('Received values of form: ', values)
+    }
+
+    const validatePhoneNumber = (rule, value) => {
+        const phoneNumberRegex = /^[0-9]{10}$/ // match 10 digits
+        if (value && !phoneNumberRegex.test(value)) {
+            return Promise.reject('Phone number must be 10 digits')
+        }
+        return Promise.resolve()
+    }
+
+    const handleSubmit = () => {}
+
+    const handleMenuChanged = (e) => {
+        setKey(e.key)
+    }
+
+    return (
+        <div>
+            {items.length > 0 && (
+                <Menu
+                    items={items}
+                    defaultSelectedKeys={[items[0]?.key]}
+                    mode="horizontal"
+                    style={{
+                        fontSize: '100%',
+                        fontWeight: 'bold',
+                        marginTop: '3rem',
+                    }}
+                    onClick={handleMenuChanged}
+                ></Menu>
+            )}
+            <UserInformation name="Bui Cong Danh" email="abc@gmail.com" />
+        </div>
+    )
+}
+
+export default UserProfile

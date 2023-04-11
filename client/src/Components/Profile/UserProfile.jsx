@@ -59,7 +59,7 @@ const items = [
     ),
 ]
 
-function UserProfile(props) {
+function UserProfile({user}) {
     const [form] = Form.useForm()
     const [isLoading, setIsLoading] = useState(false)
 
@@ -98,7 +98,7 @@ function UserProfile(props) {
                     onClick={handleMenuChanged}
                 ></Menu>
             )}
-            <UserInformation name="Bui Cong Danh" email="abc@gmail.com" />
+            <UserInformation user={user} />
         </div>
     )
 }

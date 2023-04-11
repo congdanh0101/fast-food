@@ -31,9 +31,10 @@ function App() {
                         path="/profile"
                         element={
                             <UserProfile
-                                name="John Doe"
-                                email="johndoe@example.com"
-                                avatar="https://i.pravatar.cc/128"
+                                user={
+                                    JSON.parse(localStorage.getItem('user')) ||
+                                    null
+                                }
                             />
                         }
                     />

@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Form, Input, Button, Row, Col } from 'antd'
+import { Form, Input, Button, Row, Col, Select } from 'antd'
 import { UserOutlined, MailOutlined, LockOutlined } from '@ant-design/icons'
 import { registerUser } from '../../redux/apiRequest'
 import { useDispatch } from 'react-redux'
@@ -44,6 +44,7 @@ const RegisterForm = () => {
                 >
                     <Form.Item
                         style={{ flex: '1' }}
+                        label="Full name"
                         name="fullName"
                         rules={[
                             {
@@ -59,8 +60,29 @@ const RegisterForm = () => {
                     </Form.Item>
 
                     <Form.Item
+                        name="gender"
+                        label="Gender"
+                        rules={[
+                            {
+                                required: true,
+                                message: 'Please select your gender!',
+                            },
+                        ]}
+                    >
+                        <Select
+                            placeholder="Select your gender"
+                            style={{ width: '125%' }}
+                        >
+                            <Select.Option></Select.Option>
+                            <Select.Option value={true}>Male</Select.Option>
+                            <Select.Option value={false}>Female</Select.Option>
+                        </Select>
+                    </Form.Item>
+
+                    <Form.Item
                         style={{ flex: '1' }}
                         name="email"
+                        label="Email address"
                         rules={[
                             {
                                 required: true,
@@ -81,6 +103,7 @@ const RegisterForm = () => {
                     <Form.Item
                         style={{ flex: '1' }}
                         name="password"
+                        label="Password"
                         rules={[
                             {
                                 required: true,
@@ -102,6 +125,7 @@ const RegisterForm = () => {
                     <Form.Item
                         style={{ flex: '1' }}
                         name="confirmPassword"
+                        label="Confirm password"
                         rules={[
                             {
                                 required: true,

@@ -25,13 +25,38 @@ const userSchema = new Schema({
     //         defaultL: [],
     //     },
     // ],
-    address: [
-        {
+    address: {
+        add: {
             type: String,
             require: true,
-            defaultL: [],
+            defaultL: null,
         },
-    ],
+        ward: {
+            code: {
+                type: String,
+                require: true,
+                defaultL: null,
+            },
+            name: {
+                type: String,
+                require: true,
+                defaultL: null,
+            },
+        },
+        district: {
+            code: {
+                type: String,
+                require: true,
+                defaultL: null,
+            },
+            name: {
+                type: String,
+                require: true,
+                defaultL: null,
+            },
+        },
+    },
+
     phoneNumber: {
         type: String,
         require: true,

@@ -16,7 +16,7 @@ const Cart = ({ onClearCart, onRemoveItem }) => {
 
     return (
         <div>
-            <List
+            {/* <List
                 dataSource={items}
                 renderItem={(item) => (
                     <List.Item
@@ -40,7 +40,7 @@ const Cart = ({ onClearCart, onRemoveItem }) => {
             />
             <div style={{ marginTop: '1rem', textAlign: 'right' }}>
                 <Button onClick={onClearCart}>Clear Cart</Button>
-            </div>
+            </div> */}
         </div>
     )
 }

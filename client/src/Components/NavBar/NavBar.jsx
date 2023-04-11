@@ -4,8 +4,14 @@ import './navbar.css'
 import { useSelector } from 'react-redux'
 import { Badge } from 'antd'
 import { ShoppingCartOutlined } from '@ant-design/icons'
-import CartIcon from '../Cart/CartIcon'
-const NavBar = () => {
+import CartIcon from './CartIcon'
+import { Button } from 'antd'
+import { Container, Nav, NavDropdown, Navbar } from 'react-bootstrap'
+import HomeIcon from './HomeIcon'
+import LogoutIcon from './Logout'
+import LoginIcon from './LoginIcon'
+import UserIcon from './UserIcon'
+const NavBar = ({ itemsCount }) => {
     // const [user, setUSer] = useState(null)
     const badgeQuantity = (JSON.parse(localStorage.getItem('items')) || [])
         .length
@@ -14,39 +20,16 @@ const NavBar = () => {
     const refreshToken = localStorage.getItem('refreshToken')
     return (
         <nav className="navbar-container">
+            <HomeIcon />
             <CartIcon count={badgeQuantity} />
-            <Link to="/" className="navbar-home">
-                {' '}
-                Home{' '}
-            </Link>
-            {refreshToken != null ? (
+            {refreshToken ? (
                 <>
-                    <p className="navbar-user">
-                        Hi,{' '}
-                        <span>
-                            {' '}
-                            {
-                                JSON.parse(localStorage.getItem('user'))[
-                                    'fullName'
-                                ]
-                            }{' '}
-                        </span>{' '}
-                    </p>
-                    <Link to="/logout" className="navbar-logout">
-                        {' '}
-                        Log out
-                    </Link>
+                    <UserIcon user={JSON.parse(localStorage.getItem('user'))} />
+                    <LogoutIcon />
                 </>
             ) : (
                 <>
-                    <Link to="/login" className="navbar-login">
-                        {' '}
-                        Login{' '}
-                    </Link>
-                    {/* <Link to="/register" className="navbar-register">
-                        {' '}
-                        Register
-                    </Link> */}
+                    <LoginIcon />
                 </>
             )}
         </nav>

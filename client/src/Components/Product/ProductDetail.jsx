@@ -1,16 +1,18 @@
-import { useEffect, useState } from 'react'
+import { createContext, useContext, useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import request from '../../utils/axiosConfig'
 import { Button, Col, Row } from 'antd'
 import ReactHtmlParser from 'react-html-parser'
 import { QuantityPicker } from 'react-qty-picker'
 import { ShoppingCartOutlined } from '@ant-design/icons'
+// import CartContext from '../../context/CartContext'
 const ProductDetail = () => {
     const [product, setProduct] = useState({})
     const [price, setPrice] = useState(0)
     const [quantity, setQuantity] = useState(1)
     const [items, setItems] = useState([])
     const id = useParams()
+    // const [itemsCount, setItemsCount] = useContext(CartContext)
 
     const fetchDataProduct = async () => {
         const p = await request.get(`/product/${id.id}`)
@@ -25,14 +27,39 @@ const ProductDetail = () => {
     }
 
     const handleAddToCart = (e) => {
-        // localStorage.setItem('order', [])
-        // const order = localStorage.getItem('order')
-        const item = { product: product, quantity: quantity }
-        setItems([...items, item])
-        const existingItems = JSON.parse(localStorage.getItem('items')) || []
-        // console.log('existing item: ', existingItems)
-        localStorage.setItem('items', JSON.stringify([...existingItems, item]))
-        window.location.reload()
+        // debugger
+        let item = { product: product, quantity: quantity }
+        let existingItems = JSON.parse(localStorage.getItem('items')) || []
+        // const prevItemsCount = parseInt(localStorage.getItem('itemsCount'))
+        const isDuplicate = existingItems.find(
+            (it) => it.product._id === item.product._id
+        )
+        // duplicate
+        if (isDuplicate) {
+            existingItems.forEach((it) =>
+                it.product._id === item.product._id
+                    ? (it.quantity += item.quantity)
+                    : it.quantity
+            )
+            localStorage.setItem('items', JSON.stringify(existingItems))
+            // const itemsLength = (
+            //     JSON.parse(localStorage.getItem('items')) || []
+            // ).length
+            // localStorage.setItem('itemsCount', itemsLength)
+            setItems(existingItems)
+        } else {
+            localStorage.setItem(
+                'items',
+                JSON.stringify([...existingItems, item])
+            )
+            // const itemsLength = (
+            //     JSON.parse(localStorage.getItem('items')) || []
+            // ).length
+            // localStorage.setItem('itemsCount', itemsLength)
+            // setItemsCount(itemsLength)
+            setItems([...existingItems, item])
+            window.location.reload()
+        }
     }
 
     useEffect(() => {

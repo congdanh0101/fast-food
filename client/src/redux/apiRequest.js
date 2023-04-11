@@ -26,6 +26,7 @@ export const loginUser = async (user, dispatch, navigate) => {
         localStorage.setItem('userID', respone.data['user']['_id'])
         localStorage.setItem('user', JSON.stringify(respone.data['user']))
         navigate('/')
+        window.location.reload()
     } catch (error) {
         dispatch(loginFailure())
     }

@@ -4,18 +4,21 @@ import { BrowserRouter as Router, Route, Routes } from 'react-router-dom'
 import Login from './Components/Login/Login'
 import Register from './Components/Register/Register'
 import NavBar from './Components/NavBar/NavBar'
-import { useState } from 'react'
+import { createContext, useEffect, useState } from 'react'
 import Email from './Components/EmailVerification/Email'
 import RegisterForm from './Components/Register/Registry'
 import Product from './Components/Product/Product'
 import ProductList from './Components/Product/ProductList'
 import ProductDetail from './Components/Product/ProductDetail'
 import Cart from './Components/Cart/Cart'
+import Page from './Components/Cart/CartClone'
+import UserProfile from './Components/Profile/UserProfile'
 // import './dist/output.css'
+
 function App() {
     return (
         <Router>
-            <NavBar></NavBar>
+            <NavBar />
             <div className="App">
                 <Routes>
                     <Route path="/" element={<HomePage />} />
@@ -23,9 +26,16 @@ function App() {
                     <Route path="/register" element={<RegisterForm />} />
                     <Route path="/verify/register" element={<Email />} />
                     <Route path="/product/:id" element={<ProductDetail />} />
+                    <Route path="/cart" element={<Page />} />
                     <Route
-                        path="/cart"
-                        element={<Cart />}
+                        path="/profile"
+                        element={
+                            <UserProfile
+                                name="John Doe"
+                                email="johndoe@example.com"
+                                avatar="https://i.pravatar.cc/128"
+                            />
+                        }
                     />
                 </Routes>
             </div>

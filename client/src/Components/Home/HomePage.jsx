@@ -12,6 +12,7 @@ import request from '../../utils/axiosConfig'
 import ProductList from '../Product/ProductList'
 import Category from '../Category/Category'
 import { useMediaQuery } from 'react-responsive'
+import NavBar from '../NavBar/NavBar'
 
 function getItem(label, key, icon, children, type) {
     return {
@@ -67,7 +68,9 @@ const HomePage = () => {
 
 
     return (
-        <div style={{ marginTop: 50 }}>
+        <div>
+            {/* <NavBar></NavBar> */}
+            <div style={{ marginTop: 50 }}>
             {(isDesktop || isBigScreen || isLaptop) && (
                 <Row>
                     <Col span={1}></Col>
@@ -129,6 +132,8 @@ const HomePage = () => {
                 </div>
             )}
         </div>
+        </div>
+        
     )
 }
 

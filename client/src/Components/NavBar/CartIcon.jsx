@@ -5,11 +5,12 @@ import { Link } from 'react-router-dom'
 
 const CartIcon = ({ count }) => {
     return (
-        <Badge count={count}>
-            <Link to="/cart">
+        <Link to="/cart">
+                Giỏ hàng
+            <Badge count={count}>
                 <ShoppingCartOutlined style={{ fontSize: '3rem' }} />
-            </Link>
-        </Badge>
+            </Badge>
+        </Link>
     )
 }
 

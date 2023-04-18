@@ -43,27 +43,31 @@ const UserInformation = ({ user }) => {
     const [gender, setGender] = useState(user.gender)
     const [dob, setDOB] = useState(user.dob)
     const [email, setEmail] = useState(user.email)
-    const [address, setAddress] = useState(user.address)
+    const [address, setAddress] = useState(user.address || '')
+    const [userDistrict, setUserDistrict] = useState(user.address?.district)
+    const [userWard, setUserWard] = useState(user.address?.ward)
 
     const [districtList, setDistrictList] = useState(
-        JSON.parse(localStorage.getItem('districtList')) || []
+        JSON.parse(localStorage.getItem('districtList'))
     )
     const [wardList, setWardList] = useState(
-        JSON.parse(localStorage.getItem('wardList')) || []
+        JSON.parse(localStorage.getItem('wardList'))
     )
 
-    const [idDistrict, setIdDistrict] = useState()
-    const [idWard, setIdWard] = useState()
+    const [idDistrict, setIdDistrict] = useState(user.address?.district?.code)
+    const [idWard, setIdWard] = useState(user.address?.ward?.code)
 
     const fetchDistrictData = async () => {
         const endpointDistrict =
             'https://api.mysupership.vn/v1/partner/areas/district?province=79'
-
         try {
             const response = await axios.get(endpointDistrict, {
                 withCredentials: false,
             })
-            localStorage.setItem('districtList', JSON.stringify(response.data.results))
+            localStorage.setItem(
+                'districtList',
+                JSON.stringify(response.data.results)
+            )
             setDistrictList(response.data.results)
         } catch (error) {
             console.log(error)
@@ -76,7 +80,10 @@ const UserInformation = ({ user }) => {
             const response = await axios.get(endpointWard + `${idDistrict}`, {
                 withCredentials: false,
             })
-            localStorage.setItem('wardList', JSON.stringify(response.data.results))
+            localStorage.setItem(
+                'wardList',
+                JSON.stringify(response.data.results)
+            )
             setWardList(response.data.results)
         } catch (error) {
             console.log(error)
@@ -85,13 +92,16 @@ const UserInformation = ({ user }) => {
 
     useEffect(() => {
         fetchDistrictData()
+        // fetchWardData()
     }, [])
 
     useEffect(() => {
         fetchWardData()
     }, [idDistrict])
 
-    const handleUpdateData = () => {}
+    const handleUpdateData = () => {
+        console.log(phoneNumber)
+    }
     const handleDistrictChange = (e) => {
         localStorage.setItem('idDistrict', e)
         setIdDistrict(e)
@@ -118,6 +128,9 @@ const UserInformation = ({ user }) => {
                                     type="text"
                                     defaultValue={fullName}
                                     style={{ fontSize: '1.25rem' }}
+                                    onChange={(e) =>
+                                        setFullName(e.target.value)
+                                    }
                                 />
                             </Form.Item>
                         </Col>
@@ -140,9 +153,11 @@ const UserInformation = ({ user }) => {
                                 <Input
                                     prefix={<PhoneOutlined />}
                                     placeholder="Phone number"
-                                    // defaultValue={props.email}
                                     style={{ fontSize: '1.25rem' }}
                                     defaultValue={phoneNumber}
+                                    onChange={(e) =>
+                                        setPhoneNumber(e.target.value)
+                                    }
                                 />
                             </Form.Item>
                         </Col>
@@ -180,18 +195,36 @@ const UserInformation = ({ user }) => {
                                     {
                                         required: true,
                                         message:
-                                            'Please input your phone number!',
+                                            'Please input your date of birth!',
                                     },
                                 ]}
                             >
-                                <Input
-                                    prefix={<HeartOutlined />}
-                                    placeholder="Phone number"
-                                    // defaultValue={props.email}
-                                    style={{ fontSize: '1.25rem' }}
-                                    type="date"
-                                    disabled={dob ? true : false}
-                                />
+                                {dob ? (
+                                    <>
+                                        <Input
+                                            prefix={<HeartOutlined />}
+                                            placeholder="Date of birth"
+                                            // defaultValue={props.email}
+                                            style={{ fontSize: '1.25rem' }}
+                                            disabled
+                                            defaultValue={`${new Date(
+                                                dob
+                                            ).getDate()}/${
+                                                new Date(dob).getMonth() + 1
+                                            }/${new Date(dob).getFullYear()}`}
+                                        />
+                                    </>
+                                ) : (
+                                    <>
+                                        <Input
+                                            prefix={<HeartOutlined />}
+                                            placeholder="Date of birth"
+                                            // defaultValue={props.email}
+                                            style={{ fontSize: '1.25rem' }}
+                                            type="date"
+                                        />
+                                    </>
+                                )}
                             </Form.Item>
                         </Col>
                     </Row>
@@ -200,11 +233,11 @@ const UserInformation = ({ user }) => {
                     <Col span={23}>
                         <FormLabel>Email:</FormLabel>
                         <Form.Item
-                            name="dob"
+                            name="email"
                             rules={[
                                 {
                                     required: true,
-                                    message: 'Please input your phone number!',
+                                    message: 'Please input your email!',
                                 },
                             ]}
                         >
@@ -228,7 +261,7 @@ const UserInformation = ({ user }) => {
                             rules={[
                                 {
                                     required: true,
-                                    message: 'Please input your phone number!',
+                                    message: 'Please input your address!',
                                 },
                             ]}
                         >
@@ -237,7 +270,7 @@ const UserInformation = ({ user }) => {
                                 // defaultValue={props.email}
                                 style={{ fontSize: '1.25rem' }}
                                 type="text"
-                                defaultValue={address}
+                                defaultValue={address?.add}
                             />
                         </Form.Item>
                     </Col>
@@ -251,14 +284,14 @@ const UserInformation = ({ user }) => {
                                 rules={[
                                     {
                                         required: true,
-                                        message: 'Please enter your full name',
+                                        message: 'Please enter your district',
                                     },
                                 ]}
                             >
                                 <Space wrap>
                                     <Select
                                         onChange={handleDistrictChange}
-                                        style={{ width: '150px' }}
+                                        style={{ width: '200px' }}
                                         options={districtList?.map(
                                             (district) => ({
                                                 value: district.code,
@@ -266,23 +299,16 @@ const UserInformation = ({ user }) => {
                                             })
                                         )}
                                         defaultValue={
-                                            districtList.find(
+                                            userDistrict?.name ||
+                                            districtList?.find(
                                                 (d) =>
-                                                    d.code ==
+                                                    d.code ===
                                                     localStorage.getItem(
                                                         'idDistrict'
                                                     )
                                             )?.name
                                         }
-                                    >
-                                        {/* {districtList?.map((district) => (
-                                            <Select.Option
-                                                value={district.code}
-                                            >
-                                                {district.name}
-                                            </Select.Option>
-                                        ))} */}
-                                    </Select>
+                                    />
                                 </Space>
                             </Form.Item>
                         </Col>
@@ -294,8 +320,7 @@ const UserInformation = ({ user }) => {
                                 rules={[
                                     {
                                         required: true,
-                                        message:
-                                            'Please input your phone number!',
+                                        message: 'Please input your ward!',
                                     },
                                 ]}
                             >
@@ -305,14 +330,25 @@ const UserInformation = ({ user }) => {
                                             localStorage.setItem('idWard', e)
                                             setIdWard(e)
                                         }}
-                                        style={{ width: '170px' }}
-                                    >
-                                        {wardList?.map((ward) => (
-                                            <Select.Option value={ward.code}>
-                                                {ward.name}
-                                            </Select.Option>
-                                        ))}
-                                    </Select>
+                                        style={{
+                                            width: '250px',
+                                        }}
+                                        defaultValue={
+                                            userWard?.name ||
+                                            wardList?.find(
+                                                (w) =>
+                                                    w.code ===
+                                                    localStorage.getItem(
+                                                        'idWard'
+                                                    )?.name
+                                            )
+                                        }
+                                        options={wardList?.map((ward) => ({
+                                            value: ward.code,
+                                            label: ward.name,
+                                        }))}
+                                        // value={userWard?.name}
+                                    />
                                 </Space>
                             </Form.Item>
                         </Col>

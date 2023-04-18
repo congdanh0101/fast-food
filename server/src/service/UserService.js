@@ -69,9 +69,12 @@ class UserService {
                 })
             }
             let err = {}
-            if (existPhoneNumber['_id'] === id)
-                err['phoneNumber'] =
-                    'Phone number was existed, please try another phone number!'
+
+            if (existPhoneNumber) {
+                if (existPhoneNumber['_id'].toString() !== id)
+                    err['phoneNumber'] =
+                        'Phone number was existed, please try another phone number!'
+            }
 
             if (Object.keys(err).length !== 0)
                 throw createHttpError.BadRequest(err)

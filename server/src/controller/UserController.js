@@ -97,7 +97,7 @@ class UserController {
             )
             return res.json(result)
         } catch (error) {
-            throw error
+            return next(error)
         }
         // if (typeof result === 'string') {
         //     if (result.includes('current'))

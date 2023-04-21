@@ -29,9 +29,7 @@ const Email = () => {
                 setRemainingTime((prevTime) => prevTime - 1)
             }, 1000)
 
-            return () => {
-                clearInterval(intervalId)
-            }
+            return () => clearInterval(intervalId)
         }
     }, [remainingTime])
 

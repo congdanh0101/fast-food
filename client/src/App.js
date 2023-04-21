@@ -13,6 +13,7 @@ import ProductDetail from './Components/Product/ProductDetail'
 import Cart from './Components/Cart/Cart'
 import Page from './Components/Cart/CartClone'
 import UserProfile from './Components/Profile/UserProfile'
+import Logout from './Components/Logout/Logout'
 // import './dist/output.css'
 
 function App() {
@@ -27,6 +28,7 @@ function App() {
                     <Route path="/verify/register" element={<Email />} />
                     <Route path="/product/:id" element={<ProductDetail />} />
                     <Route path="/cart" element={<Page />} />
+                    {/* <Route path="/logout" element={<Logout />} /> */}
                     <Route
                         path="/profile"
                         element={

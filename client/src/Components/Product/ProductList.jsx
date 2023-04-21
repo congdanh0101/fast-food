@@ -1,17 +1,17 @@
-
-import React, {  useEffect, useLayoutEffect, useState } from 'react'
+import React, { useEffect, useLayoutEffect, useState } from 'react'
 import { Card } from 'react-bootstrap'
 // import { getProductById } from '../../redux/apiRequest'
 // import { useDispatch, useSelector } from 'react-redux'
-import { Link} from 'react-router-dom'
+import { Link } from 'react-router-dom'
 import request from '../../utils/axiosConfig'
 import { ShoppingCartOutlined } from '@ant-design/icons'
 import { Col, Row } from 'antd'
 // import { BrowserRouter as Router, Route, Routes } from 'react-router-dom'
 import { EyeOutlined } from '@ant-design/icons'
 import { useMediaQuery } from 'react-responsive'
+import axiosInstance from '../../utils/axiosInstance'
 
-const ProductCard = ({ item,width}) => {
+const ProductCard = ({ item, width }) => {
     return (
         <Link to={`/product/${item['_id']}`}>
             <Card
@@ -21,7 +21,7 @@ const ProductCard = ({ item,width}) => {
                 // onClick={handleCardClick}
                 className="card-product"
             >
-                <div className="image-container" style={{width:`${width}%`}}>
+                <div className="image-container" style={{ width: `${width}%` }}>
                     <img src={item['img']} />
                 </div>
 
@@ -32,13 +32,13 @@ const ProductCard = ({ item,width}) => {
                             fontSize: '150%',
                         }}
                     >
-                        <div style={{left:0}}>
+                        <div style={{ left: 0 }}>
                             <ShoppingCartOutlined />{' '}
                             {item['sold'] >= 1000
                                 ? `${(item['sold'] / 1000).toFixed(2)}K`
                                 : item['sold']}
                         </div>
-                        <div style={{right:0}}>
+                        <div style={{ right: 0 }}>
                             <EyeOutlined />{' '}
                             {item['view'] >= 1000
                                 ? `${(item['view'] / 1000).toFixed(2)}K`
@@ -67,7 +67,7 @@ const ProductCard = ({ item,width}) => {
     )
 }
 
-const ProductList = (props) => {
+const ProductList = ({ category }) => {
     const isDesktop = useMediaQuery({
         minWidth: 1366,
         maxWidth: 1919,
@@ -81,12 +81,12 @@ const ProductList = (props) => {
         maxWidth: 960,
     })
     const isLaptop = useMediaQuery({
-        minWidth:961,
-        maxWidth:1365
+        minWidth: 961,
+        maxWidth: 1365,
     })
     const isBigScreen = useMediaQuery({ minWidth: 1920 })
     const [productList, setProductList] = useState([])
-    const [categoryId, setCategoryId] = useState(props.category)
+    const [categoryId, setCategoryId] = useState(category)
     const [detail, setDetail] = useState(false)
 
     const fetchDataProductList = async () => {
@@ -104,11 +104,20 @@ const ProductList = (props) => {
 
     useEffect(() => {
         fetchDataProductList()
+
+        return () => {
+            console.log(`Clean product list `)
+            setProductList([])
+        }
     }, [categoryId])
 
-    useLayoutEffect(() => {
-        setCategoryId(props.category)
-    }, [props.category])
+    useEffect(() => {
+        setCategoryId(category)
+
+        return () => {
+            setProductList([])
+        }
+    }, [category])
 
     const handleOnClickProduct = (e) => {
         console.log(e)
@@ -120,31 +129,31 @@ const ProductList = (props) => {
             {isDesktop &&
                 productList?.map((item) => (
                     <Col span={8}>
-                        <ProductCard item={item} width={100}/>
+                        <ProductCard item={item} width={100} />
                     </Col>
                 ))}
             {isBigScreen &&
                 productList?.map((item) => (
                     <Col span={6}>
-                        <ProductCard item={item} width={100}/>
+                        <ProductCard item={item} width={100} />
                     </Col>
                 ))}
             {isTablet &&
                 productList?.map((item) => (
                     <Col span={12}>
-                        <ProductCard item={item} width={100}/>
+                        <ProductCard item={item} width={100} />
                     </Col>
                 ))}
-                {isLaptop &&
+            {isLaptop &&
                 productList?.map((item) => (
                     <Col span={8}>
-                        <ProductCard item={item} width={110}/>
+                        <ProductCard item={item} width={110} />
                     </Col>
                 ))}
             {isMobile &&
                 productList?.map((item) => (
                     <Col span={24}>
-                        <ProductCard item={item} width={90}/>
+                        <ProductCard item={item} width={90} />
                     </Col>
                 ))}
         </Row>

@@ -1,4 +1,4 @@
-import { Button, Col, Form, Input, Row } from 'antd'
+import { Button, Col, Form, Input, Row, notification } from 'antd'
 import { useForm } from 'antd/es/form/Form'
 import { useState } from 'react'
 import {
@@ -15,27 +15,34 @@ import request from '../../utils/axiosConfig'
 import axios from 'axios'
 import axiosInstance from '../../utils/axiosInstance'
 const Security = () => {
-    const [currentPassword, setCurrentPassword] = useState('')
-    const [newPassword, setNewPassword] = useState('')
-    const [confirmPassword, setConfirmPassword] = useState('')
+    // const [currentPassword, setCurrentPassword] = useState('')
+    // const [newPassword, setNewPassword] = useState('')
+    // const [confirmPassword, setConfirmPassword] = useState('')
 
-    const [error, setError] = useState(null)
+
 
     const [form] = Form.useForm()
 
-    const onFinish = async (values) => {
-        console.log(values)
+    const onFinish = async (requestChangePassword) => {
+        console.log(requestChangePassword)
         try {
             const response = await axiosInstance.put('/user/pwd', {
-                values,
+                currentPassword: requestChangePassword['currentPassword'],
+                newPassword: requestChangePassword['newPassword'],
+                confirmPassword: requestChangePassword['confirmPassword'],
             })
-            if(response.status!==200){
-                setError(response.data['message'])
-            }
+            notification.success({
+                message: 'Chang password successfully',
+                duration: 2,
+            })
         } catch (error) {
-            console.log(error);
+            console.log(error)
+            notification.error({
+                message: 'Change password failure',
+                description: error.response.data.message,
+                duration: 2,
+            })
         }
-        
     }
 
     return (

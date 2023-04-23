@@ -12,6 +12,7 @@ import {
     Select,
     Space,
     Typography,
+    notification,
 } from 'antd'
 import {
     UserOutlined,
@@ -26,9 +27,16 @@ import {
 import { useEffect, useState } from 'react'
 import { FormLabel } from 'react-bootstrap'
 import axios from 'axios'
+import SelectWard from './SelectWard'
+import SelectDistrict from './SelectDistrict'
+import axiosInstance from '../../utils/axiosInstance'
+import request from '../../utils/axiosConfig'
 require('dotenv').config()
-const UserInformation = ({ user }) => {
+
+const UserInfo = () => {
     const [form] = Form.useForm()
+
+    const [load, setLoad] = useState(true)
 
     const validatePhoneNumber = (rule, value) => {
         const phoneNumberRegex = /^[0-9]{10}$/ // match 10 digits
@@ -39,170 +47,73 @@ const UserInformation = ({ user }) => {
     }
 
     const [districtChange, setDistrictChange] = useState(false)
+    const [currentUser,setCurrentUser] = useState(JSON.parse(localStorage.getItem('user')))
+    const [fullName, setFullName] = useState(currentUser.fullName)
+    const [phoneNumber, setPhoneNumber] = useState(currentUser.phoneNumber)
+    const [gender, setGender] = useState(currentUser.gender)
+    const [dob, setDOB] = useState(currentUser.dob)
+    const [email, setEmail] = useState(currentUser.email)
+    const [address, setAddress] = useState(currentUser.address?.add || '')
+    const [userDistrict, setUserDistrict] = useState(currentUser.address?.district)
+    const [userWard, setUserWard] = useState(currentUser.address?.ward)
+    const [idDistrict, setIdDistrict] = useState(currentUser.address?.district?.code)
 
-    const [fullName, setFullName] = useState(user.fullName)
-    const [phoneNumber, setPhoneNumber] = useState(user.phoneNumber)
-    const [gender, setGender] = useState(user.gender)
-    const [dob, setDOB] = useState(user.dob)
-    const [email, setEmail] = useState(user.email)
-    const [address, setAddress] = useState(user.address || '')
-    const [userDistrict, setUserDistrict] = useState(user.address?.district)
-    const [userWard, setUserWard] = useState(user.address?.ward)
-
-    const [ghnDistrict, setGHNDistrict] = useState([])
-
-    const [ghnWard, setGHNWard] = useState([] || ghnDistrict[0].DistrictID)
-
-    // const [districtList, setDistrictList] = useState(
-    //     JSON.parse(localStorage.getItem('districtList'))
-    // )
-    // const [wardList, setWardList] = useState(
-    //     JSON.parse(localStorage.getItem('wardList'))
-    // )
-
-    const [currentWard, setCurrentWard] = useState(
-        JSON.parse(localStorage.getItem('currentWard')) || {}
-    )
-
-    const [idDistrict, setIdDistrict] = useState(
-        user.address?.district?.code || localStorage.getItem('idDistrict')
-    )
-    const [idWard, setIdWard] = useState(user.address?.ward?.code)
-
-    const fetchDistrictGHN = async () => {
+    const handleUpdateData = async () => {
         try {
-            const resp = await fetch(
-                `https://dev-online-gateway.ghn.vn/shiip/public-api/master-data/district?province_id=202`,
-                {
-                    method: 'GET',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        token: 'eab201ba-816f-11ed-a2ce-1e68bf6263c5',
+            const updateResponse = await axiosInstance.put('/user', {
+                fullName: fullName,
+                phoneNumber: phoneNumber,
+                dob: dob,
+                address: {
+                    add: address,
+                    district: {
+                        code: userDistrict.code.toString(),
+                        name: userDistrict.name,
                     },
-                }
-            )
-
-            const resjson = await resp.json()
-            const data = resjson.data
-            data.splice(0, 3)
-            data[3].NameExtension = ['Quận Thủ Đức']
-            setGHNDistrict(data)
-            return data
-        } catch (error) {
-            console.log(error)
-        }
-    }
-
-    const fetchWardGHN = async (value = idDistrict) => {
-        try {
-            const resp = await fetch(
-                `https://dev-online-gateway.ghn.vn/shiip/public-api/master-data/ward?district_id=${value}`,
-                {
-                    method: 'GET',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        token: 'eab201ba-816f-11ed-a2ce-1e68bf6263c5',
+                    ward: {
+                        code: userWard.code.toString(),
+                        name: userWard.name,
                     },
-                }
-            )
-            const resjson = await resp.json()
-            let data = resjson.data
-            data = data.filter((ward) => ward.NameExtension)
-            setGHNWard(data)
-            return data
-        } catch (error) {
-            console.log(error)
-        }
-    }
-
-    const fetchDistrictData = async () => {
-        const endpointDistrict =
-            'https://api.mysupership.vn/v1/partner/areas/district?province=79'
-        try {
-            const response = await axios.get(endpointDistrict, {
-                withCredentials: false,
+                },
             })
-            localStorage.setItem(
-                'districtList',
-                JSON.stringify(response.data.results)
-            )
-            // setDistrictList(response.data.results)
-        } catch (error) {
-            console.log(error)
-        }
-    }
-    const fetchWardData = async () => {
-        const endpointWard =
-            'https://api.mysupership.vn/v1/partner/areas/commune?district='
-        try {
-            const response = await axios.get(endpointWard + `${idDistrict}`, {
-                withCredentials: false,
+
+            localStorage.setItem('user', JSON.stringify(updateResponse.data))
+            setCurrentUser(updateResponse.data)
+            setAddress(updateResponse.data.address.add)
+            setUserDistrict(updateResponse.data.address.district)
+            setUserWard(updateResponse.data.address.ward)
+            notification.success({
+                message: 'Update successfully',
+                duration: 3,
             })
-            localStorage.setItem(
-                'wardList',
-                JSON.stringify(response.data.results)
-            )
-            // setWardList(response.data.results)
+            setTimeout(()=>window.location.reload(),700)
         } catch (error) {
-            console.log(error)
+            notification.error({
+                message: 'Update Failure',
+                description: error.response.data.message,
+                duration: 3,
+            })
         }
     }
-
-    useEffect(() => {
-        fetchDistrictGHN()
-        // fetchDistrictData()
-        // fetchWardData()
-        return () => setGHNDistrict([])
-    }, [])
-
-    useEffect(() => {
-        fetchWardGHN()
-        // fetchWardData()
-        return () => setGHNWard([])
-    }, [idDistrict])
-
-    const handleUpdateData = () => {
-        console.log(phoneNumber)
-        console.log(dob)
-    }
-    const handleDistrictChange = (e) => {
-        localStorage.setItem('idDistrict', e)
+    const handleDistrictChange = (e, current) => {
+        console.log('current district ', current)
+        const currentUserDistrict = {
+            code: current.DistrictID,
+            name: current.NameExtension[0],
+        }
+        setUserDistrict(currentUserDistrict)
         setIdDistrict(e)
-        fetchWardGHN(e).then((data) => {
-            console.log(data[0])
-            localStorage.setItem('idWard', data[0].WardCode)
-            localStorage.setItem(
-                'currentWard',
-                JSON.stringify({
-                    value: data[0].WardCode,
-                    label: data[0].WardName,
-                })
-            )
-            setCurrentWard({
-                value: data[0].WardCode,
-                label: data[0].WardName,
-            })
-            setIdWard(data[0].WardCode)
-        })
+        setLoad(false)
+        setDistrictChange(true)
     }
 
     const handleWardChange = (e) => {
-        localStorage.setItem('idWard', e)
-        fetchWardGHN(idDistrict).then((data) => {
-            const current = data.find((ward) => ward.WardCode.toString() === e)
-            localStorage.setItem(
-                'currentWard',
-                JSON.stringify({
-                    value: current.WardCode,
-                    label: current.WardName,
-                })
-            )
-            setCurrentWard({
-                value: current.WardCode,
-                label: current.WardName,
-            })
-        })
-        setIdWard(e)
+        console.log('ward ', e)
+        const userCurrentWard = {
+            code: e.WardCode,
+            name: e.NameExtension[0],
+        }
+        setUserWard(userCurrentWard)
     }
     return (
         <div
@@ -305,7 +216,7 @@ const UserInformation = ({ user }) => {
                                     },
                                 ]}
                             >
-                                {user.dob ? (
+                                {currentUser.dob ? (
                                     <>
                                         <Input
                                             prefix={<HeartOutlined />}
@@ -379,7 +290,8 @@ const UserInformation = ({ user }) => {
                                 // defaultValue={props.email}
                                 style={{ fontSize: '1.25rem' }}
                                 type="text"
-                                defaultValue={address?.add}
+                                defaultValue={address}
+                                onChange={(e) => setAddress(e.target.value)}
                             />
                         </Form.Item>
                     </Col>
@@ -399,42 +311,17 @@ const UserInformation = ({ user }) => {
                                     },
                                 ]}
                             >
-                                <Select
+                                <SelectDistrict
+                                    defaultValue={userDistrict?.name}
                                     onChange={handleDistrictChange}
-                                    // style={{ width: '200%' }}
-                                    // options={ghnDistrict?.map((district) => ({
-                                    //     value: district.DistrictID,
-                                    //     label: district.NameExtension[0],
-                                    // }))}
-                                    defaultValue={
-                                        userDistrict?.name ||
-                                        ghnDistrict?.find((d) => {
-                                            return (
-                                                d.DistrictID.toString() ===
-                                                localStorage.getItem(
-                                                    'idDistrict'
-                                                )
-                                            )
-                                        })?.NameExtension[0]
-                                    }
-                                >
-                                    {ghnDistrict?.map((district) => (
-                                        <Select.Option
-                                            key={district.DistrictID}
-                                        >
-                                            {district.NameExtension[0]}
-                                        </Select.Option>
-                                    ))}
-                                </Select>
+                                />
                             </Form.Item>
                         </Col>
 
                         <Col span={6} offset={1}>
                             <FormLabel>ward</FormLabel>
-
                             <Form.Item
                                 name="ward"
-                                // label="Ward"
                                 rules={[
                                     {
                                         required: true,
@@ -442,33 +329,13 @@ const UserInformation = ({ user }) => {
                                     },
                                 ]}
                             >
-                                {/* <Space wrap> */}
-                                <Select
+                                <SelectWard
+                                    district={idDistrict}
+                                    defaultValue={userWard?.name}
+                                    load={load}
+                                    change={districtChange}
                                     onChange={handleWardChange}
-                                    // style={{ width: '200%' }}
-                                    defaultValue={
-                                        userWard?.name ||
-                                        ghnWard?.find(
-                                            (w) =>
-                                                w.WardCode.toString() ===
-                                                localStorage.getItem('idWard')
-                                                    ?.WardName
-                                        )
-                                    }
-                                    options={ghnWard?.map((ward) => ({
-                                        value: ward.WardCode,
-                                        label: ward.WardName,
-                                    }))}
-                                    // value={userWard?.name}
-                                    // value={ghnWard?.find(
-                                    //     (w) =>
-                                    //         w.WardCode.toString() ===
-                                    //         localStorage.getItem('idWard')
-                                    //             ?.WardName
-                                    // )}
-                                    value={ghnWard}
                                 />
-                                {/* </Space> */}
                             </Form.Item>
                         </Col>
                     </Row>
@@ -492,4 +359,4 @@ const UserInformation = ({ user }) => {
     )
 }
 
-export default UserInformation
+export default UserInfo

@@ -24,6 +24,7 @@ import { useState } from 'react'
 import { FormLabel } from 'react-bootstrap'
 import UserInformation from './UserInformation'
 import Security from './Security'
+import UserInfo from './UserInfo'
 
 const { Title, Text } = Typography
 
@@ -60,7 +61,7 @@ const items = [
     ),
 ]
 
-function UserProfile({ user }) {
+function UserProfile() {
     const [form] = Form.useForm()
     const [isLoading, setIsLoading] = useState(false)
 
@@ -100,8 +101,8 @@ function UserProfile({ user }) {
                     onClick={handleMenuChanged}
                 ></Menu>
             )}
-            {key === 'info' && <UserInformation user={user} />}
-            {key === 'security' && <Security user={user} />}
+            {key === 'info' && <UserInfo  />}
+            {key === 'security' && <Security/>}
         </div>
     )
 }

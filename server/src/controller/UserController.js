@@ -30,7 +30,9 @@ class UserController {
     }
 
     async updateUser(req, res, next) {
-        const id = req.params.id
+        // const id = req.params.id
+        const id = req.userID
+
         const data = req.body
         const user = {
             fullName: data.fullName,
@@ -47,6 +49,8 @@ class UserController {
         //         )
         //     )
         // return res.json(updateUser)
+
+        console.log(user)
 
         try {
             const updatedUser = await UserService.updateUserById(id, user)

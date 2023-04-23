@@ -15,16 +15,14 @@ const NavBar = ({ itemsCount }) => {
     // const [user, setUSer] = useState(null)
     const badgeQuantity = (JSON.parse(localStorage.getItem('items')) || [])
         .length
-    const user = useSelector((state) => state.auth.login.currentUser)
-    console.log(user)
-    const refreshToken = localStorage.getItem('refreshToken')
+    const user = JSON.parse(localStorage.getItem('user'))
     return (
         <nav className="navbar-container">
             <HomeIcon />
             <CartIcon count={badgeQuantity} />
-            {refreshToken ? (
+            {user ? (
                 <>
-                    <UserIcon user={JSON.parse(localStorage.getItem('user'))} />
+                    <UserIcon user={user} />
                     <LogoutIcon />
                 </>
             ) : (

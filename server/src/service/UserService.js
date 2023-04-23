@@ -68,16 +68,13 @@ class UserService {
                     phoneNumber: data['phoneNumber'],
                 })
             }
-            let err = {}
 
             if (existPhoneNumber) {
                 if (existPhoneNumber['_id'].toString() !== id)
-                    err['phoneNumber'] =
+                    throw createHttpError.BadRequest(
                         'Phone number was existed, please try another phone number!'
+                    )
             }
-
-            if (Object.keys(err).length !== 0)
-                throw createHttpError.BadRequest(err)
             const user = await User.findByIdAndUpdate(id, data, { new: true })
             if (!user) throw new Error(`User cannot be updated with id: ${id}`)
             return user

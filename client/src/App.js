@@ -29,17 +29,7 @@ function App() {
                     <Route path="/product/:id" element={<ProductDetail />} />
                     <Route path="/cart" element={<Page />} />
                     {/* <Route path="/logout" element={<Logout />} /> */}
-                    <Route
-                        path="/profile"
-                        element={
-                            <UserProfile
-                                user={
-                                    JSON.parse(localStorage.getItem('user')) ||
-                                    null
-                                }
-                            />
-                        }
-                    />
+                    <Route path="/profile" element={<UserProfile />} />
                 </Routes>
             </div>
         </Router>

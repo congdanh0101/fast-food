@@ -56,6 +56,7 @@ const HomePage = () => {
 
     useEffect(() => {
         fetchCategoryList()
+        return () => setCategory([])
     }, [])
 
     const handleCategoryOnclick = (e) => {

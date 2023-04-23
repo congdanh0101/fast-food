@@ -24,19 +24,11 @@ export const loginUser = async (user, dispatch, navigate) => {
     try {
         const response = await request.post(`/auth/login`, user)
         dispatch(loginSuccess(response.data))
-        // localStorage.setItem('accessToken', response.data['accessToken'])
-        // localStorage.setItem('refreshToken', response.data['refreshToken'])
-        // localStorage.setItem('userID', response.data['user']['_id'])
-        // localStorage.setItem('user', JSON.stringify(response.data['user']))
         const accessToken = {
             accessToken: response.data['accessToken'],
         }
-        const refreshToken = {
-            refreshToken: response.data['refreshToken'],
-        }
         localStorage.setItem('accessToken', JSON.stringify(accessToken))
         localStorage.setItem('user', JSON.stringify(response.data['user']))
-        localStorage.setItem('refreshToken', JSON.stringify(refreshToken))
         notification.success({
             message: 'Login successfully',
             duration: 3,

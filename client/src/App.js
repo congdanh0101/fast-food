@@ -14,6 +14,7 @@ import Cart from './Components/Cart/Cart'
 import Page from './Components/Cart/CartClone'
 import UserProfile from './Components/Profile/UserProfile'
 import Logout from './Components/Logout/Logout'
+import ForgotPassword from './Components/ForgotPassword/ForgotPassword'
 // import './dist/output.css'
 
 function App() {
@@ -26,10 +27,13 @@ function App() {
                     <Route path="/login" element={<Login />} />
                     <Route path="/register" element={<RegisterForm />} />
                     <Route path="/verify/register" element={<Email />} />
+                    <Route path="/verify/forgot" element={<Email />} />
                     <Route path="/product/:id" element={<ProductDetail />} />
                     <Route path="/cart" element={<Page />} />
                     {/* <Route path="/logout" element={<Logout />} /> */}
                     <Route path="/profile" element={<UserProfile />} />
+                    <Route path="/forgot" element={<ForgotPassword />} />
+                    
                 </Routes>
             </div>
         </Router>

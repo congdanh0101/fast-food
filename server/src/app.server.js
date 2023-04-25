@@ -11,8 +11,6 @@ const Voucher = require('./model/Voucher')
 const cron = require('node-cron')
 const moment = require('moment')
 
-
-
 //HTTP logger
 app.use(morgan('dev'))
 app.use(express.json())
@@ -62,4 +60,3 @@ cron.schedule('0 0 * * *', async () => {})
 
 const nextMonth = moment().add(30, 'days').endOf('day').toDate()
 console.log(nextMonth)
-

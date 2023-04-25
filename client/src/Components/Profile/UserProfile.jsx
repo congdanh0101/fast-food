@@ -25,6 +25,8 @@ import { FormLabel } from 'react-bootstrap'
 import UserInformation from './UserInformation'
 import Security from './Security'
 import UserInfo from './UserInfo'
+import Reward from './Reward'
+import Transaction from './Transaction'
 
 const { Title, Text } = Typography
 
@@ -103,6 +105,8 @@ function UserProfile() {
             )}
             {key === 'info' && <UserInfo  />}
             {key === 'security' && <Security/>}
+            {key ==='reward' && <Reward />}
+            {key ==='trans' && <Transaction />}
         </div>
     )
 }

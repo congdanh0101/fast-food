@@ -27,6 +27,7 @@ export const loginUser = async (user, dispatch, navigate) => {
         const accessToken = {
             accessToken: response.data['accessToken'],
         }
+        localStorage.setItem('userID',response.data['user']['_id'])
         localStorage.setItem('accessToken', JSON.stringify(accessToken))
         localStorage.setItem('user', JSON.stringify(response.data['user']))
         notification.success({
@@ -108,10 +109,41 @@ export const verifyRegisterUser = async (code, dispatch, navigate) => {
         // localStorage.removeItem('user')
         // localStorage.removeItem('expired')
         // localStorage.removeItem('code')
-        dispatch(verifySuccess())
-        navigate('/login')
+        notification.success({
+            message: 'Register successfully',
+        })
+        setTimeout(() => {
+            dispatch(verifySuccess())
+            navigate('/login')
+        }, 500)
     } catch (error) {
         dispatch(verifyFailure())
+        notification.error({
+            message: 'Register failed',
+            description: error.response.data.message,
+        })
+    }
+}
+
+export const verifyForogotPassword = async (code, navigate) => {
+    try {
+        const response = await request.post('/auth/verify/forgot', {
+            code: code,
+        })
+        localStorage.removeItem('email')
+        notification.success({
+            message: 'Reset password successfully',
+            description:
+                'Your new password has been sent to your email address. Please check your email address!',
+        })
+
+        setTimeout(() => navigate('/login'), 500)
+    } catch (error) {
+        console.log(error)
+        notification.error({
+            message: 'Error',
+            description: error.response.data.message,
+        })
     }
 }
 

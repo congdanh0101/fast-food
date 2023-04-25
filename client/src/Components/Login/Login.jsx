@@ -15,6 +15,8 @@ const Login = () => {
     // console.log(`username: ${username}`);
     // console.log(`password ${password}`);
 
+    
+
     const handleLogin = async (e) => {
         e.preventDefault()
         const userLogin = {
@@ -41,6 +43,8 @@ const Login = () => {
                     placeholder="Enter your password"
                     onChange={(e) => setPassword(e.target.value)}
                 />
+
+                <Link to='/forgot'>Forgot password?</Link>
 
                 <button type="submit"> Continue </button>
             </form>

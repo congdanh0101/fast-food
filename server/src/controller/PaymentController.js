@@ -39,7 +39,8 @@ class PaymentController {
                 const code = result.code
                 const message = result.message
                 const order = result.updateOrder
-                return res.json({ code, message, order })
+                // return res.json({ code, message, order })
+                return res.redirect('http://localhost:3000/')
             } else throw createHttpError.InternalServerError(result.message)
         } catch (error) {
             return next(error)

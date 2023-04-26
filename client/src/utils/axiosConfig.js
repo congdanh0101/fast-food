@@ -1,6 +1,4 @@
 import axios from 'axios'
-import jwt_decode from 'jwt-decode'
-import dayjs from 'dayjs'
 
 axios.defaults.withCredentials = true
 
@@ -14,6 +12,5 @@ const request = axios.create({
         // 'Access-Control-Allow-Methods': 'GET,PUT,POST,DELETE,PATCH,OPTIONS',
     },
 })
-
 
 export default request

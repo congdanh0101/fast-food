@@ -190,6 +190,7 @@ class OrderService {
             const orders = await Order.find(filter)
                 .populate('items.product', 'name price -_id')
                 .populate('voucher')
+                .sort({dateOrder:'desc'})
             // console.log(orders)
             return orders
         } catch (error) {

@@ -71,9 +71,9 @@ class OrderService {
             if (!mongoose.isValidObjectId(id))
                 throw new ResourceNotFoundException('Order', 'id', id)
             const order = await Order.findById(id)
-                .populate('items.product', 'name price -_id')
+                .populate('items.product')
                 .populate('voucher')
-                .populate('user', '-password -refreshToken')
+                .populate('user', '-password')
             if (!order) throw new ResourceNotFoundException('Order', 'id', id)
             return order
         } catch (error) {

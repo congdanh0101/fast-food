@@ -1,4 +1,3 @@
-
 img {
   max-width: 100%;
   vertical-align: middle;
@@ -70,8 +69,8 @@ input {
   overflow: auto;
 }
 
-section.container{
-    width: 100%;
+section.container {
+  width: 100%;
 }
 
 /* --- HEADER --- */
@@ -107,7 +106,7 @@ header .count {
   border-top: 1px solid #ddd;
 }
 
-.products > li {
+.products>li {
   padding: 1rem 0;
   border-bottom: 1px solid #ddd;
 }
@@ -118,7 +117,9 @@ header .count {
   width: 100%;
 }
 
-.col, .quantity, .remove {
+.col,
+.quantity,
+.remove {
   float: left;
 }
 
@@ -151,7 +152,8 @@ header .count {
   font-size: 1.5rem;
 }
 
-.quantity, .remove {
+.quantity,
+.remove {
   width: 50%;
   text-align: center;
 }
@@ -161,7 +163,7 @@ header .count {
   height: 60px;
 }
 
-.quantity > input {
+.quantity>input {
   display: inline-block;
   width: 60px;
   height: 60px;
@@ -174,7 +176,8 @@ header .count {
   font: 600 1.5rem Helvetica, Arial, sans-serif;
 }
 
-.quantity > input:hover, .quantity > input:focus {
+.quantity>input:hover,
+.quantity>input:focus {
   border-color: #f58551;
 }
 
@@ -192,19 +195,21 @@ header .count {
 }
 
 /* --- SUMMARY --- */
-.promotion, .summary, .checkout {
+.promotion,
+.summary,
+.checkout {
   float: left;
   width: 100%;
   margin-top: 1.5rem;
 }
 
-.promotion > label {
+.promotion>label {
   float: left;
   width: 100%;
   margin-bottom: 1rem;
 }
 
-.promotion > input {
+.promotion>input {
   float: left;
   width: 80%;
   font-size: 1rem;
@@ -213,23 +218,25 @@ header .count {
   border-radius: 2rem 0 0 2rem;
 }
 
-.promotion:hover > input {
+.promotion:hover>input {
   border-color: #f58551;
 }
 
-.promotion > button {
-  float: left;
+.promotion>button {
+  float: right;
   width: 20%;
   padding: 0.5rem 0;
   border-radius: 0 2rem 2rem 0;
+  /* margin-bottom: 12px; */
+  margin-top: 12px;
 }
 
-.promotion:hover > button {
+.promotion:hover>button {
   border-color: #f58551;
   background-color: #f58551;
 }
 
-.promotion > button::after {
+.promotion>button::after {
   content: "\276f";
   font-size: 1rem;
 }
@@ -256,7 +263,7 @@ header .count {
   text-align: right;
 }
 
-.checkout > button {
+.checkout>button {
   font-size: 1.2rem;
   padding: 0.8rem 2.8rem;
   border-radius: 1.5rem;
@@ -266,9 +273,9 @@ header .count {
   text-align: center;
 }
 
-.empty-product > button {
-  font-size: 1.3rem; 
-  padding: 10px 30px; 
+.empty-product>button {
+  font-size: 1.3rem;
+  padding: 10px 30px;
   border-radius: 5px;
 }
 
@@ -277,13 +284,13 @@ header .count {
   .thumbnail img {
     display: none;
   }
-  
-  .quantity > input {
+
+  .quantity>input {
     width: 40px;
     height: 40px;
     left: calc(50% - 20px);
   }
-  
+
   .remove svg {
     width: 40px;
     height: 40px;
@@ -301,7 +308,8 @@ header .count {
     max-width: 960px;
   }
 
-  .thumbnail, .detail {
+  .thumbnail,
+  .detail {
     float: left;
   }
 
@@ -313,7 +321,8 @@ header .count {
     width: 65%;
   }
 
-  .promotion, .summary {
+  .promotion,
+  .summary {
     width: 50%;
   }
 
@@ -321,7 +330,8 @@ header .count {
     width: 100%;
   }
 
-  .checkout, .summary {
+  .checkout,
+  .summary {
     text-align: right;
   }
 }
@@ -331,4 +341,5 @@ header .count {
   html {
     font-size: 16px;
   }
+
 }

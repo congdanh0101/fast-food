@@ -101,6 +101,18 @@ class VoucherService {
             throw error
         }
     }
+
+    async useVoucher(request) {
+        try {
+            const voucher = await this.getVoucherByCode(request['code'].toUpperCase())
+            if (this.isAvailableVoucher(voucher) === true) {
+                return this.checkDiscount(voucher, request['value'])
+            }
+            throw createHttpError.BadRequest('Your voucher is not available')
+        } catch (error) {
+            throw error
+        }
+    }
 }
 
 module.exports = new VoucherService()

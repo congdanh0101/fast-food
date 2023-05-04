@@ -3,7 +3,6 @@ import './login.css'
 import { Link, useNavigate } from 'react-router-dom'
 import { loginUser } from '../../redux/apiRequest'
 import { useDispatch } from 'react-redux'
-import Notification from '../Message/Notification'
 import request from '../../utils/axiosConfig'
 import { notification } from 'antd'
 

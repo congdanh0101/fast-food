@@ -7,5 +7,6 @@ router.get('/:id',VoucherController.getVoucherById)
 router.get('/',VoucherController.getAllVoucher)
 router.put('/:id',VoucherController.updateVoucherById)
 router.delete('/:id',VoucherController.deleteVoucherById)
+router.post('/use',VoucherController.useVoucher)
 
 module.exports = router

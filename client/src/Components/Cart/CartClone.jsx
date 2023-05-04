@@ -1,8 +1,10 @@
-import { useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import './Cart.css'
 import { Link } from 'react-router-dom'
 import { QuantityPicker } from 'react-qty-picker'
 import ReactHtmlParser from 'react-html-parser'
+import { Button, notification } from 'antd'
+import axiosInstance from '../../utils/axiosInstance'
 
 function Header({ itemCount }) {
     return (
@@ -99,8 +101,11 @@ function ProductList({ products, onChangeProductQuantity, onRemoveProduct }) {
                                         smooth
                                     /> */}
                                     <QuantityPicker
-                                        onChange={(event) =>{
-                                            onChangeProductQuantity(index,event)
+                                        onChange={(event) => {
+                                            onChangeProductQuantity(
+                                                index,
+                                                event
+                                            )
                                         }}
                                         min={1}
                                         value={product.quantity}
@@ -137,15 +142,20 @@ function Summary({
     tax,
     onEnterPromoCode,
     checkPromoCode,
+    voucher,
 }) {
     const total = subTotal - discount + tax
+
+    // const checkPromoCode = (e)=>{
+    //     console.log(onEnterPromoCode);
+    // }
 
     return (
         <section className="container">
             <div className="promotion">
-                {/* <label htmlFor="promo-code">Have A Promo Code?</label>
+                <label htmlFor="promo-code">Have A Promo Code?</label>
                 <input type="text" onChange={onEnterPromoCode} />
-                <button type="button" onClick={checkPromoCode} /> */}
+                <button type="button" onClick={checkPromoCode} />
             </div>
 
             <div className="summary">
@@ -174,7 +184,6 @@ function Summary({
     )
 }
 
-
 const PROMOTIONS = [
     {
         code: 'SUMMER',
@@ -189,14 +198,15 @@ const PROMOTIONS = [
         discount: '30%',
     },
 ]
-const TAX = 5
+const TAX = 0
 
-function Page() {
+function Page({ buttonRef }) {
     const items = JSON.parse(localStorage.getItem('items'))
     const [products, setProducts] = useState(items)
     const [promoCode, setPromoCode] = useState('')
     const [discountPercent, setDiscountPercent] = useState(0)
-
+    const [discount, setDiscount] = useState(0)
+    const [voucher, setVoucher] = useState({})
     const itemCount =
         products?.reduce((quantity, product) => {
             return quantity + +product.quantity
@@ -205,12 +215,12 @@ function Page() {
         products?.reduce((total, product) => {
             return total + product.product.price * +product.quantity
         }, 0) || 0
-    const discount = (subTotal * discountPercent) / 100
+    // const discount = (subTotal * discountPercent) / 100
 
-    const onChangeProductQuantity = (index, event) => {
+    const onChangeProductQuantity = async (index, event) => {
         const cloneProducts = [...products]
         const value = event
-        console.log(index);
+        console.log(index)
 
         const valueInt = parseInt(value)
 
@@ -222,6 +232,23 @@ function Page() {
         }
         localStorage.setItem('items', JSON.stringify(cloneProducts))
         setProducts(cloneProducts)
+        if (promoCode !== '') {
+            const estimatedValue =
+                cloneProducts?.reduce((total, product) => {
+                    return total + product.product.price * +product.quantity
+                }, 0) || 0
+            try {
+                const response = await axiosInstance.post('/voucher/use', {
+                    code: promoCode,
+                    value: estimatedValue,
+                })
+                setDiscount(response.data.discount)
+                return
+            } catch (error) {
+                setDiscount(0)
+                console.log(error)
+            }
+        }
     }
 
     const onRemoveProduct = (i) => {
@@ -229,26 +256,36 @@ function Page() {
             return index !== i
         })
         localStorage.setItem('items', JSON.stringify(filteredProduct))
-        window.location.reload()
         setProducts(filteredProduct)
+        window.location.reload()
+        setPromoCode(promoCode)
     }
 
     const onEnterPromoCode = (event) => {
         setPromoCode(event.target.value)
     }
 
-    const checkPromoCode = () => {
-        for (var i = 0; i < PROMOTIONS.length; i++) {
-            if (promoCode === PROMOTIONS[i].code) {
-                setDiscountPercent(
-                    parseFloat(PROMOTIONS[i].discount.replace('%', ''))
-                )
-
-                return
-            }
+    const checkPromoCode = async () => {
+        try {
+            const response = await axiosInstance.post('/voucher/use', {
+                code: promoCode,
+                value: subTotal,
+            })
+            setDiscount(response.data.discount)
+            notification.success({
+                message: 'Promo Code',
+                description: 'Successfully',
+            })
+            return
+        } catch (error) {
+            setDiscount(0)
+            console.log(error)
+            notification.error({
+                message: 'Promo Code',
+                description: error.response.data.message,
+            })
         }
-
-        alert('Sorry, the Promotional code you entered is not valid!')
+        // alert('Sorry, the Promotional code you entered is not valid!')
     }
 
     return (
@@ -266,6 +303,7 @@ function Page() {
                     <Summary
                         subTotal={subTotal}
                         discount={discount}
+                        voucher={voucher}
                         tax={TAX}
                         onEnterPromoCode={onEnterPromoCode}
                         checkPromoCode={checkPromoCode}

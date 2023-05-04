@@ -6,7 +6,7 @@ class VoucherController {
     async createVoucher(req, res, next) {
         const data = req.body
         const voucher = {
-            code:data.code,
+            code: data.code,
             description: data.description,
             minOrder: data.minOrder,
             maxDiscount: data.maxDiscount,
@@ -37,14 +37,27 @@ class VoucherController {
         return res.json(voucher)
     }
 
-    async updateVoucherById(req,res,next){
+    async updateVoucherById(req, res, next) {
         const id = req.params.id
-        
     }
-    
-    async deleteVoucherById(req,res,next){
-        const id = req.params.id
 
+    async deleteVoucherById(req, res, next) {
+        const id = req.params.id
+    }
+
+    async useVoucher(req, res, next) {
+        const data = req.body
+        const using = {
+            code: data.code,
+            value: data.value,
+        }
+
+        try {
+            const result = await VoucherService.useVoucher(using)
+            return res.json({ discount: result })
+        } catch (error) {
+            return next(error)
+        }
     }
 }
 

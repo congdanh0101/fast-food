@@ -101,7 +101,7 @@ const VoucherCard = ({ item, width }) => {
                     />
                 </div>
                 <Card.Body style={{ marginTop: 24 }}>
-                    <Card.Title onClick={() => configModal(item)}>
+                    <Card.Title>
                         <h2>{item['code']}</h2>
                     </Card.Title>
                     <Card.Text>

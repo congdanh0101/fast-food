@@ -152,11 +152,11 @@ function Summary({
 
     return (
         <section className="container">
-            <div className="promotion">
+            {/* <div className="promotion">
                 <label htmlFor="promo-code">Have A Promo Code?</label>
                 <input type="text" onChange={onEnterPromoCode} />
                 <button type="button" onClick={checkPromoCode} />
-            </div>
+            </div> */}
 
             <div className="summary">
                 <ul>
@@ -232,23 +232,6 @@ function Page({ buttonRef }) {
         }
         localStorage.setItem('items', JSON.stringify(cloneProducts))
         setProducts(cloneProducts)
-        if (promoCode !== '') {
-            const estimatedValue =
-                cloneProducts?.reduce((total, product) => {
-                    return total + product.product.price * +product.quantity
-                }, 0) || 0
-            try {
-                const response = await axiosInstance.post('/voucher/use', {
-                    code: promoCode,
-                    value: estimatedValue,
-                })
-                setDiscount(response.data.discount)
-                return
-            } catch (error) {
-                setDiscount(0)
-                console.log(error)
-            }
-        }
     }
 
     const onRemoveProduct = (i) => {

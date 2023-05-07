@@ -5,7 +5,11 @@ import { Button, Col, Row } from 'antd'
 import ReactHtmlParser from 'react-html-parser'
 import { QuantityPicker } from 'react-qty-picker'
 import { ShoppingCartOutlined } from '@ant-design/icons'
+import CartIcon from '../NavBar/CartIcon'
 // import CartContext from '../../context/CartContext'
+
+export const CartCountItemContext = createContext()
+
 const ProductDetail = () => {
     const [product, setProduct] = useState({})
     const [price, setPrice] = useState(0)
@@ -58,7 +62,7 @@ const ProductDetail = () => {
             // localStorage.setItem('itemsCount', itemsLength)
             // setItemsCount(itemsLength)
             setItems([...existingItems, item])
-            window.location.reload()
+            // window.location.reload()
         }
     }
 
@@ -72,46 +76,54 @@ const ProductDetail = () => {
     }, [id])
 
     return (
-        <div style={{ marginTop: '5%' }}>
-            <Row>
-                <Col span={3}></Col>
-                <Col span={11}>
-                    <img src={product['img']} width={'70%'} height={'120%'} />
-                </Col>
-                <Col span={10} style={{ marginTop: '5%' }}>
-                    <h1 style={{ fontSize: '3rem' }}>{product.name}</h1>
-                    <h2 style={{ fontSize: '2.5rem', color: 'red' }}>
-                        {price}
-                    </h2>
-                    <h3 style={{ fontSize: '1.75rem' }}>Thông tin sản phẩm</h3>
-                    <div style={{ fontSize: '1.25rem' }}>
-                        {ReactHtmlParser(product.description)}
-                    </div>
-                    <br />
-                    <div>
-                        <h2 style={{ fontSize: '2rem' }}>Số lượng</h2>
-                        <br />
-                        <QuantityPicker
-                            onChange={(value) => setQuantity(value)}
-                            min={1}
-                            value={quantity}
-                            max={99}
-                            smooth
+        <CartCountItemContext.Provider value={items.length}>
+            <div style={{ marginTop: '5%' }}>
+                <Row>
+                    <Col span={3}></Col>
+                    <Col span={11}>
+                        <img
+                            src={product['img']}
+                            width={'70%'}
+                            height={'120%'}
                         />
-                    </div>
-                    <div>
-                        <Button
-                            type="primary"
-                            style={{ height: '5rem', fontSize: '1.5rem' }}
-                            onClick={handleAddToCart}
-                        >
-                            <ShoppingCartOutlined />
-                            Thêm vào giỏ hàng
-                        </Button>
-                    </div>
-                </Col>
-            </Row>
-        </div>
+                    </Col>
+                    <Col span={10} style={{ marginTop: '5%' }}>
+                        <h1 style={{ fontSize: '3rem' }}>{product.name}</h1>
+                        <h2 style={{ fontSize: '2.5rem', color: 'red' }}>
+                            {price}
+                        </h2>
+                        <h3 style={{ fontSize: '1.75rem' }}>
+                            Thông tin sản phẩm
+                        </h3>
+                        <div style={{ fontSize: '1.25rem' }}>
+                            {ReactHtmlParser(product.description)}
+                        </div>
+                        <br />
+                        <div>
+                            <h2 style={{ fontSize: '2rem' }}>Số lượng</h2>
+                            <br />
+                            <QuantityPicker
+                                onChange={(value) => setQuantity(value)}
+                                min={1}
+                                value={quantity}
+                                max={99}
+                                smooth
+                            />
+                        </div>
+                        <div>
+                            <Button
+                                type="primary"
+                                style={{ height: '5rem', fontSize: '1.5rem' }}
+                                onClick={handleAddToCart}
+                            >
+                                <ShoppingCartOutlined />
+                                Thêm vào giỏ hàng
+                            </Button>
+                        </div>
+                    </Col>
+                </Row>
+            </div>
+        </CartCountItemContext.Provider>
     )
 }
 

@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useContext, useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import './navbar.css'
 import { useSelector } from 'react-redux'
@@ -11,15 +11,17 @@ import HomeIcon from './HomeIcon'
 import LogoutIcon from './Logout'
 import LoginIcon from './LoginIcon'
 import UserIcon from './UserIcon'
+import { CartCountItemContext } from '../Product/ProductDetail'
 const NavBar = ({ itemsCount }) => {
     // const [user, setUSer] = useState(null)
+    const count = useContext(CartCountItemContext)
     const badgeQuantity = (JSON.parse(localStorage.getItem('items')) || [])
         .length
     const user = JSON.parse(localStorage.getItem('user'))
     return (
         <nav className="navbar-container">
             <HomeIcon />
-            <CartIcon count={badgeQuantity} />
+            <CartIcon countItems={badgeQuantity} />
             {user ? (
                 <>
                     <UserIcon user={user} />

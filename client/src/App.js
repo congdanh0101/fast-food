@@ -15,6 +15,7 @@ import Page from './Components/Cart/CartClone'
 import UserProfile from './Components/Profile/UserProfile'
 import Logout from './Components/Logout/Logout'
 import ForgotPassword from './Components/ForgotPassword/ForgotPassword'
+import Checkout from './Components/Checkout/Checkout'
 // import './dist/output.css'
 
 function App() {
@@ -33,7 +34,7 @@ function App() {
                     {/* <Route path="/logout" element={<Logout />} /> */}
                     <Route path="/profile" element={<UserProfile />} />
                     <Route path="/forgot" element={<ForgotPassword />} />
-                    
+                    <Route path="/checkout" element={<Checkout />} />
                 </Routes>
             </div>
         </Router>

@@ -19,6 +19,8 @@ const Transaction = () => {
     const [orderData, setOrderData] = useState([])
     const [user, setUser] = useState({})
 
+    const navigate = useNavigate()
+
     const vnpay = (e) => {
         const orderID = e.target.dataset.orderId
         try {
@@ -26,7 +28,10 @@ const Transaction = () => {
                 .post('/payment/create_payment_url', {
                     orderID: orderID,
                 })
-                .then((res) => window.open(res.data.payment, '_blank'))
+                .then((res) => {
+                    window.location.href = res.data.payment
+                    // window.open(res.data.payment, '_blank')
+                })
                 .catch((err) => console.log(err))
         } catch (error) {
             console.log(error)

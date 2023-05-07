@@ -1,11 +1,12 @@
 import { useContext, useEffect, useRef, useState } from 'react'
-import './Cart.css'
+import './CartCheckout.css'
 import { Link, useNavigate } from 'react-router-dom'
 import { QuantityPicker } from 'react-qty-picker'
 import ReactHtmlParser from 'react-html-parser'
 import { Button, notification } from 'antd'
 import axiosInstance from '../../utils/axiosInstance'
 import CartContext from '../../context/CartContext'
+import { Table } from 'react-bootstrap'
 
 function Header({ itemCount }) {
     return (
@@ -27,6 +28,38 @@ function Header({ itemCount }) {
 function ProductList({ products, onChangeProductQuantity, onRemoveProduct }) {
     return (
         <section className="container">
+            <div>
+                <Table striped bordered hover>
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>First Name</th>
+                            <th>Last Name</th>
+                            <th>Username</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>1</td>
+                            <td>Mark</td>
+                            <td>Otto</td>
+                            <td>@mdo</td>
+                        </tr>
+                        <tr>
+                            <td>2</td>
+                            <td>Jacob</td>
+                            <td>Thornton</td>
+                            <td>@fat</td>
+                        </tr>
+                        <tr>
+                            <td>3</td>
+                            <td colSpan={2}>Larry the Bird</td>
+                            <td>@twitter</td>
+                        </tr>
+                    </tbody>
+                </Table>
+            </div>
+
             <ul className="products">
                 {products.map((product, index) => {
                     return (
@@ -58,33 +91,19 @@ function ProductList({ products, onChangeProductQuantity, onRemoveProduct }) {
                                         style={{ fontSize: '1rem' }}
                                     >
                                         Đơn giá:{' '}
-                                        <span
-                                            style={{
-                                                color: 'red',
-                                                fontWeight: 'bold',
-                                            }}
-                                        >
-                                            {formatCurrency(
-                                                product.product.price
-                                            )}
-                                        </span>{' '}
+                                        {formatCurrency(product.product.price)}
                                     </div>
                                     <div
                                         className="price"
                                         style={{ fontSize: '1rem' }}
                                     >
                                         Thành tiền:{' '}
-                                        <span
-                                            style={{
-                                                color: 'red',
-                                                fontWeight: 'bold',
-                                            }}
-                                        >
+                                        <>
                                             {formatCurrency(
                                                 product.product.price *
                                                     product.quantity
                                             )}
-                                        </span>
+                                        </>
                                     </div>
                                 </div>
                             </div>
@@ -128,20 +147,6 @@ function ProductList({ products, onChangeProductQuantity, onRemoveProduct }) {
                                         smooth
                                     />
                                 </div>
-
-                                <div className="remove">
-                                    <svg
-                                        onClick={() => onRemoveProduct(index)}
-                                        version="1.1"
-                                        className="close"
-                                        x="0px"
-                                        y="0px"
-                                        viewBox="0 0 60 60"
-                                        enableBackground="new 0 0 60 60"
-                                    >
-                                        <polygon points="38.936,23.561 36.814,21.439 30.562,27.691 24.311,21.439 22.189,23.561 28.441,29.812 22.189,36.064 24.311,38.186 30.562,31.934 36.814,38.186 38.936,36.064 32.684,29.812" />
-                                    </svg>
-                                </div>
                             </div>
                         </li>
                     )
@@ -159,7 +164,7 @@ function Summary({
     checkPromoCode,
     voucher,
 }) {
-    const total = subTotal - discount + subTotal * 0.1
+    const total = subTotal - discount + tax
 
     // const checkPromoCode = (e)=>{
     //     console.log(onEnterPromoCode);
@@ -180,36 +185,21 @@ function Summary({
                 <button type="button" onClick={checkPromoCode} />
             </div> */}
 
-            <div
-                className="summary"
-                style={{ float: 'right', marginRight: '12px' }}
-            >
+            <div className="summary" style={{ float: 'right' }}>
                 <ul>
                     <li>
-                        Subtotal{' '}
-                        <span style={{ color: 'red', fontWeight: 'bold' }}>
-                            {formatCurrency(subTotal)}
-                        </span>
+                        Subtotal <span>{formatCurrency(subTotal)}</span>
                     </li>
                     {discount > 0 && (
                         <li>
-                            Discount{' '}
-                            <span style={{ color: 'red', fontWeight: 'bold' }}>
-                                {formatCurrency(discount)}
-                            </span>
+                            Discount <span>{formatCurrency(discount)}</span>
                         </li>
                     )}
                     <li>
-                        VAT (10%){' '}
-                        <span style={{ color: 'red', fontWeight: 'bold' }}>
-                            {formatCurrency(subTotal * 0.1)}
-                        </span>
+                        Tax <span>{formatCurrency(tax)}</span>
                     </li>
                     <li className="total">
-                        Total{' '}
-                        <span style={{ color: 'red', fontWeight: 'bold' }}>
-                            {formatCurrency(total)}
-                        </span>
+                        Total <span>{formatCurrency(total)}</span>
                     </li>
                 </ul>
             </div>
@@ -239,7 +229,7 @@ const PROMOTIONS = [
 ]
 const TAX = 0
 
-function Page() {
+function CartCheckout() {
     const { getCountItem } = useContext(CartContext)
 
     const items = JSON.parse(localStorage.getItem('items'))
@@ -318,7 +308,7 @@ function Page() {
 
     return (
         <div>
-            <Header itemCount={itemCount || 0} />
+            {/* <Header itemCount={itemCount || 0} /> */}
 
             {products?.length > 0 ? (
                 <div>
@@ -356,4 +346,4 @@ function formatCurrency(value) {
     })
 }
 
-export default Page
+export default CartCheckout

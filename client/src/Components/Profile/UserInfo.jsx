@@ -24,13 +24,14 @@ import {
     TransactionOutlined,
     HeartOutlined,
 } from '@ant-design/icons'
-import { useEffect, useState } from 'react'
+import { useContext, useEffect, useState } from 'react'
 import { FormLabel } from 'react-bootstrap'
 import axios from 'axios'
 import SelectWard from './SelectWard'
 import SelectDistrict from './SelectDistrict'
 import axiosInstance from '../../utils/axiosInstance'
 import request from '../../utils/axiosConfig'
+import CartContext from '../../context/CartContext'
 require('dotenv').config()
 
 const UserInfo = () => {
@@ -45,6 +46,8 @@ const UserInfo = () => {
         }
         return Promise.resolve()
     }
+
+    const {getUser} = useContext(CartContext)
 
     const [districtChange, setDistrictChange] = useState(false)
     const [currentUser,setCurrentUser] = useState(JSON.parse(localStorage.getItem('user')))
@@ -86,7 +89,8 @@ const UserInfo = () => {
                 message: 'Update successfully',
                 duration: 3,
             })
-            setTimeout(()=>window.location.reload(),700)
+            getUser()
+            // setTimeout(()=>window.location.reload(),700)
         } catch (error) {
             notification.error({
                 message: 'Update Failure',

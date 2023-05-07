@@ -11,20 +11,22 @@ import HomeIcon from './HomeIcon'
 import LogoutIcon from './Logout'
 import LoginIcon from './LoginIcon'
 import UserIcon from './UserIcon'
-import { CartCountItemContext } from '../Product/ProductDetail'
-const NavBar = ({ itemsCount }) => {
+import CartContext from '../../context/CartContext'
+const NavBar = () => {
     // const [user, setUSer] = useState(null)
-    const count = useContext(CartCountItemContext)
-    const badgeQuantity = (JSON.parse(localStorage.getItem('items')) || [])
-        .length
-    const user = JSON.parse(localStorage.getItem('user'))
+
+    const context = useContext(CartContext)
+
+    // console.log('context', context)
+
+    // const user = JSON.parse(localStorage.getItem('user'))
     return (
         <nav className="navbar-container">
             <HomeIcon />
-            <CartIcon countItems={badgeQuantity} />
-            {user ? (
+            <CartIcon />
+            {context.user ? (
                 <>
-                    <UserIcon user={user} />
+                    <UserIcon />
                     <LogoutIcon />
                 </>
             ) : (

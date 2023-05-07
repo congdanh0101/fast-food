@@ -20,13 +20,15 @@ import {
     PhoneOutlined,
     TransactionOutlined,
 } from '@ant-design/icons'
-import { useState } from 'react'
+import { useContext, useEffect, useState } from 'react'
 import { FormLabel } from 'react-bootstrap'
 import UserInformation from './UserInformation'
 import Security from './Security'
 import UserInfo from './UserInfo'
 import Reward from './Reward'
 import Transaction from './Transaction'
+import CartContext from '../../context/CartContext'
+import { useNavigate } from 'react-router-dom'
 
 const { Title, Text } = Typography
 
@@ -67,6 +69,23 @@ function UserProfile() {
     const [form] = Form.useForm()
     const [isLoading, setIsLoading] = useState(false)
 
+    const navigate = useNavigate()
+
+    const [user, setUser] = useState(null)
+
+    const getUser = () => {
+        const currentUser = JSON.parse(localStorage.getItem('user'))
+        if (currentUser) setUser(currentUser)
+        else navigate('/login')
+    }
+
+    useEffect(() => {
+        getUser()
+        return () => {
+            setUser(null)
+        }
+    }, [])
+
     const [key, setKey] = useState('info')
 
     const onFinish = (values) => {
@@ -103,10 +122,10 @@ function UserProfile() {
                     onClick={handleMenuChanged}
                 ></Menu>
             )}
-            {key === 'info' && <UserInfo  />}
-            {key === 'security' && <Security/>}
-            {key ==='reward' && <Reward />}
-            {key ==='trans' && <Transaction />}
+            {user && key === 'info' && <UserInfo />}
+            {user && key === 'security' && <Security />}
+            {user && key === 'reward' && <Reward />}
+            {user && key === 'trans' && <Transaction />}
         </div>
     )
 }

@@ -1,12 +1,14 @@
 import { Badge, Button } from 'antd'
 import { UserOutlined } from '@ant-design/icons'
-import { useState } from 'react'
+import { useContext, useState } from 'react'
 import { Link } from 'react-router-dom'
+import CartContext from '../../context/CartContext'
 
-const UserIcon = ({ user }) => {
+const UserIcon = () => {
+    const context = useContext(CartContext)
     return (
         <Link to="/profile" style={{ fontSize: '1.5rem' }}>
-            {user.fullName}
+            {context.user.fullName}
             <UserOutlined style={{ fontSize: '3rem' }} />
         </Link>
     )

@@ -16,27 +16,33 @@ import UserProfile from './Components/Profile/UserProfile'
 import Logout from './Components/Logout/Logout'
 import ForgotPassword from './Components/ForgotPassword/ForgotPassword'
 import Checkout from './Components/Checkout/Checkout'
+import { NavbarProvider } from './context/CartContext'
 // import './dist/output.css'
 
 function App() {
     return (
-        <Router>
-            <NavBar />
-            <div className="App">
-                <Routes>
-                    <Route path="/" element={<HomePage />} />
-                    <Route path="/login" element={<Login />} />
-                    <Route path="/register" element={<RegisterForm />} />
-                    <Route path="/verify/register" element={<Email />} />
-                    <Route path="/verify/forgot" element={<Email />} />
-                    <Route path="/product/:id" element={<ProductDetail />} />
-                    <Route path="/cart" element={<Page />} />
-                    {/* <Route path="/logout" element={<Logout />} /> */}
-                    <Route path="/profile" element={<UserProfile />} />
-                    <Route path="/forgot" element={<ForgotPassword />} />
-                    <Route path="/checkout" element={<Checkout />} />
-                </Routes>
-            </div>
+        <Router >
+            <NavbarProvider>
+                <NavBar />
+                <div className="App">
+                    <Routes>
+                        <Route path="/" element={<HomePage />} />
+                        <Route path="/login" element={<Login />} />
+                        <Route path="/register" element={<RegisterForm />} />
+                        <Route path="/verify/register" element={<Email />} />
+                        <Route path="/verify/forgot" element={<Email />} />
+                        <Route
+                            path="/product/:id"
+                            element={<ProductDetail />}
+                        />
+                        <Route path="/cart" element={<Page />} />
+                        {/* <Route path="/logout" element={<Logout />} /> */}
+                        <Route path="/profile" element={<UserProfile />} />
+                        <Route path="/forgot" element={<ForgotPassword />} />
+                        <Route path="/checkout" element={<Checkout />} />
+                    </Routes>
+                </div>
+            </NavbarProvider>
         </Router>
     )
 }

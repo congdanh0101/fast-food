@@ -52,6 +52,10 @@ const orderSchema = new Schema({
                 require: true,
                 min: 1,
             },
+            price: {
+                type: Number,
+                require: true,
+            },
         },
     ],
     isPaid: {
@@ -70,6 +74,14 @@ const orderSchema = new Schema({
         enum: ['Ship', 'Pickup'],
         require: true,
         default: 'Ship',
+    },
+    feeShip: {
+        type: Number,
+        require: true,
+    },
+    vat: {
+        type: Number,
+        require: true,
     },
 })
 

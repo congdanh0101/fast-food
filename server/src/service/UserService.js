@@ -6,6 +6,7 @@ const mongoose = require('mongoose')
 const errorHandler = require('../middleware/ErrorHandler')
 const ResourceNotFoundException = require('../exception/ResourceNotFoundException')
 const createHttpError = require('http-errors')
+const Utils = require('../utils/Utils')
 
 class UserService {
     async createUser(user) {
@@ -96,6 +97,16 @@ class UserService {
             })
             if (!updatedUser) throw new Error('User cannot change password')
             return updatedUser
+        } catch (error) {
+            throw error
+        }
+    }
+
+    async getDiscountByRanking(id){
+        try {
+            const user = await this.getUserById(id) 
+            const discount = Utils.getDiscountRanking(user['rank'])
+            return discount
         } catch (error) {
             throw error
         }

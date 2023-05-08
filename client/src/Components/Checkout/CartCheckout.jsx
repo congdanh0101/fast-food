@@ -6,8 +6,9 @@ import ReactHtmlParser from 'react-html-parser'
 import { Button, Table, notification } from 'antd'
 import axiosInstance from '../../utils/axiosInstance'
 import CartContext from '../../context/CartContext'
+import request from '../../utils/axiosConfig'
 
-function ProductList({ products, onChangeProductQuantity, onRemoveProduct }) {
+function ProductList({ products }) {
     const [data, setData] = useState([])
 
     const getProduct = () => {
@@ -17,13 +18,22 @@ function ProductList({ products, onChangeProductQuantity, onRemoveProduct }) {
             const quantity = products[i].quantity
             record.push({
                 key: product['_id'],
-                product: product['name'],
+                product: getProductImage(product),
                 quantity: quantity,
-                price: formatCurrency(product['price']),
-                totalPrice: formatCurrency(product['price'] * quantity),
+                price: currencyFormat(product['price']),
+                totalPrice: currencyFormat(product['price'] * quantity),
             })
         }
         setData(record)
+    }
+
+    const getProductImage = (product) => {
+        return (
+            <div>
+                <h2>{product['name']}</h2>
+                <img src={product['img']} width={100} height={100}></img>
+            </div>
+        )
     }
 
     useEffect(() => {
@@ -72,75 +82,135 @@ function ProductList({ products, onChangeProductQuantity, onRemoveProduct }) {
 function Summary({
     subTotal,
     discount,
-    tax,
     onEnterPromoCode,
     checkPromoCode,
-    voucher,
+    feeShip,
+    promoCode,
 }) {
-    const total = subTotal - discount + tax
+    const [discountRanking, setDiscountRankings] = useState(0)
 
-    // const checkPromoCode = (e)=>{
-    //     console.log(onEnterPromoCode);
-    // }
+    const total =
+        subTotal -
+        discount +
+        subTotal * 0.1 +
+        feeShip -
+        subTotal * discountRanking
+
+    const getDiscountRanking = async () => {
+        try {
+            const response = await axiosInstance.get('/user/discount')
+            setDiscountRankings(response.data.discount)
+        } catch (error) {
+            console.log(error)
+        }
+    }
+    useEffect(() => {
+        getDiscountRanking()
+
+        return () => {
+            setDiscountRankings(0)
+        }
+    }, [])
+
     const navigate = useNavigate()
 
-    const handleCheckout = () => {
-        const user = localStorage.getItem('user')
-        if (user) navigate('/checkout')
-        else navigate('/login')
+    const handlePayment = async () => {
+        const items = JSON.parse(localStorage.getItem('items'))
+
+        const orderItems = []
+
+        for (var i = 0; i < items.length; i++) {
+            const product = items[i].product
+            const quantity = items[i].quantity
+            orderItems.push({
+                product: product['_id'],
+                quantity: quantity,
+            })
+        }
+
+        console.log(items)
+        console.log(promoCode)
+        const order = {
+            items: orderItems,
+            payment: 'Online',
+            feeShip: feeShip,
+            voucher: promoCode === '' ? null : promoCode,
+        }
+
+        try {
+            const responseOrder = await axiosInstance.post('/order', {
+                items: orderItems,
+                payment: 'Online',
+                feeShip: feeShip,
+                voucher: promoCode === '' ? null : promoCode,
+            })
+
+            const orderID = responseOrder.data._id
+
+            const response = request
+                .post('/payment/create_payment_url', {
+                    orderID: orderID,
+                })
+                .then((res) => {
+                    window.location.href = res.data.payment
+                    // window.open(res.data.payment, '_blank')
+                })
+                .catch((err) => console.log(err))
+        } catch (error) {
+            console.log(error)
+        }
     }
 
     return (
         <section className="container">
-            {/* <div className="promotion">
+            <div className="promotion">
                 <label htmlFor="promo-code">Have A Promo Code?</label>
                 <input type="text" onChange={onEnterPromoCode} />
                 <button type="button" onClick={checkPromoCode} />
-            </div> */}
+            </div>
 
-            <div className="summary" style={{ float: 'right' }}>
+            <div className="summary">
                 <ul>
                     <li>
-                        Subtotal <span>{formatCurrency(subTotal)}</span>
+                        Giá trị đơn hàng <span>{currencyFormat(subTotal)}</span>
                     </li>
                     {discount > 0 && (
                         <li>
-                            Discount <span>{formatCurrency(discount)}</span>
+                            Giảm giá voucher{' '}
+                            <span>{currencyFormat(-discount)}</span>
+                        </li>
+                    )}
+                    {discountRanking > 0 && (
+                        <li>
+                            Giảm giá hạng thành viên{' '}
+                            <span>
+                                {currencyFormat(-discountRanking * subTotal)}
+                            </span>
+                        </li>
+                    )}
+                    {feeShip > 0 && (
+                        <li>
+                            Phí giao hàng <span>{currencyFormat(feeShip)}</span>
                         </li>
                     )}
                     <li>
-                        Tax <span>{formatCurrency(tax)}</span>
+                        Thuế VAT(10%){' '}
+                        <span>{currencyFormat(subTotal * 0.1)}</span>
                     </li>
                     <li className="total">
-                        Total <span>{formatCurrency(total)}</span>
+                        Tổng cộng <span>{currencyFormat(total)}</span>
                     </li>
                 </ul>
             </div>
 
-            <div className="18">
-                <button type="button" onClick={handleCheckout}>
-                    Check Out
+            <div className="checkout">
+                <button type="button" onClick={handlePayment}>
+                    Thanh toán
                 </button>
             </div>
         </section>
     )
 }
-
-const PROMOTIONS = [
-    {
-        code: 'SUMMER',
-        discount: '50%',
-    },
-    {
-        code: 'AUTUMN',
-        discount: '40%',
-    },
-    {
-        code: 'WINTER',
-        discount: '30%',
-    },
-]
-const TAX = 0
 
 function CartCheckout() {
     const { getCountItem } = useContext(CartContext)
@@ -148,48 +218,47 @@ function CartCheckout() {
     const items = JSON.parse(localStorage.getItem('items'))
     const [products, setProducts] = useState(items)
     const [promoCode, setPromoCode] = useState('')
-    const [discountPercent, setDiscountPercent] = useState(0)
     const [discount, setDiscount] = useState(0)
-    const [voucher, setVoucher] = useState({})
-    const itemCount =
-        products?.reduce((quantity, product) => {
-            return quantity + +product.quantity
-        }, 0) || 0
+    const [feeShip, setFeeShip] = useState(0)
+
     const subTotal =
         products?.reduce((total, product) => {
             return total + product.product.price * +product.quantity
         }, 0) || 0
-    // const discount = (subTotal * discountPercent) / 100
 
-    const onChangeProductQuantity = async (index, event) => {
-        const cloneProducts = [...products]
-        const value = event
-        console.log(index)
-
-        const valueInt = parseInt(value)
-
-        // Minimum quantity is 1, maximum quantity is 100, can left blank to input easily
-        if (value === '') {
-            cloneProducts[index].quantity = value
-        } else if (valueInt > 0 && valueInt < 100) {
-            cloneProducts[index].quantity = valueInt
+    const getFeeShip = async () => {
+        const user = JSON.parse(localStorage.getItem('user'))
+        const obj = {
+            from_district_id: 1461,
+            service_id: 53320,
+            service_type_id: null,
+            to_district_id: Number(user?.address.district.code),
+            to_ward_code: Number(user?.address.ward.code),
+            height: 1,
+            length: 1,
+            weight: 1,
+            width: 1,
+            insurance_value: 10000,
+            coupon: null,
         }
-        localStorage.setItem('items', JSON.stringify(cloneProducts))
-        setProducts(cloneProducts)
-    }
-
-    const onRemoveProduct = (i) => {
-        const filteredProduct = products.filter((product, index) => {
-            return index !== i
-        })
-        localStorage.setItem('items', JSON.stringify(filteredProduct))
-        setProducts(filteredProduct)
-        getCountItem()
-        setPromoCode(promoCode)
-        notification.success({
-            message: 'Remove Product Success',
-            duration: 1,
-        })
+        try {
+            const resp = await fetch(
+                `https://dev-online-gateway.ghn.vn/shiip/public-api/v2/shipping-order/fee`,
+                {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': ['application/json', 'text/plain'],
+                        token: 'eab201ba-816f-11ed-a2ce-1e68bf6263c5',
+                    },
+                    body: JSON.stringify(obj),
+                }
+            )
+            const response = await resp.json()
+            const data = await response.data
+            setFeeShip(data.total)
+        } catch (error) {
+            console.log(error)
+        }
     }
 
     const onEnterPromoCode = (event) => {
@@ -219,25 +288,27 @@ function CartCheckout() {
         // alert('Sorry, the Promotional code you entered is not valid!')
     }
 
+    useEffect(() => {
+        getFeeShip()
+
+        return () => {
+            setFeeShip(0)
+        }
+    }, [])
+
     return (
         <div>
-            {/* <Header itemCount={itemCount || 0} /> */}
-
             {products?.length > 0 ? (
                 <div>
-                    <ProductList
-                        products={products}
-                        onChangeProductQuantity={onChangeProductQuantity}
-                        onRemoveProduct={onRemoveProduct}
-                    />
+                    <ProductList products={products} />
 
                     <Summary
                         subTotal={subTotal}
                         discount={discount}
-                        voucher={voucher}
-                        tax={TAX}
                         onEnterPromoCode={onEnterPromoCode}
                         checkPromoCode={checkPromoCode}
+                        feeShip={feeShip}
+                        promoCode={promoCode}
                     />
                 </div>
             ) : (
@@ -252,11 +323,13 @@ function CartCheckout() {
     )
 }
 
-function formatCurrency(value) {
-    return Number(value).toLocaleString('it-IT', {
-        style: 'currency',
-        currency: 'VND',
-    })
-}
+const currencyFormat = (price) => (
+    <h4 style={{ color: 'red' }}>
+        {price.toLocaleString('it-IT', {
+            style: 'currency',
+            currency: 'VND',
+        })}
+    </h4>
+)
 
 export default CartCheckout

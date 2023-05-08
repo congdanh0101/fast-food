@@ -4,7 +4,6 @@ const UserController = require('../controller/UserController')
 const Authenticate = require('../middleware/Authenticate')
 
 //get by id
-router.get(`/:id`, Authenticate.AuthorizationUSER, UserController.getUserById)
 //delete user by id
 router.delete('/:id', UserController.deleteUser)
 //change password
@@ -19,5 +18,12 @@ router.get('/', UserController.getAllUser)
 router.put('/', Authenticate.AuthorizationUSER, UserController.updateUser)
 //create new user
 router.post('/', UserController.createUser)
+
+router.get(
+    '/discount',
+    Authenticate.AuthorizationUSER,
+    UserController.getDiscountByRanking
+)
+router.get(`/:id`, Authenticate.AuthorizationUSER, UserController.getUserById)
 
 module.exports = router

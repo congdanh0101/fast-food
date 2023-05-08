@@ -6,8 +6,21 @@ const moment = require('moment')
 const createHttpError = require('http-errors')
 class VoucherService {
     async createVoucher(data) {
+        const currencyFormat = (price) =>
+            price.toLocaleString('it-IT', {
+                style: 'currency',
+                currency: 'VND',
+            })
         try {
             if (!data['code']) data['code'] = Utils.generateVoucherCode()
+            const description = [
+                `Giảm giá ${data['discount']}%`,
+                `Giá trị đơn hàng tối thiểu ${currencyFormat(
+                    data['minOrder']
+                )}`,
+                `Giảm giá tối đa ${currencyFormat(data['maxDiscount'])}`,
+            ]
+            data['description'] = description
             const voucher = new Voucher(data)
             return await voucher.save()
         } catch (error) {
@@ -104,7 +117,9 @@ class VoucherService {
 
     async useVoucher(request) {
         try {
-            const voucher = await this.getVoucherByCode(request['code'].toUpperCase())
+            const voucher = await this.getVoucherByCode(
+                request['code'].toUpperCase()
+            )
             if (this.isAvailableVoucher(voucher) === true) {
                 return this.checkDiscount(voucher, request['value'])
             }

@@ -52,8 +52,10 @@ const Transaction = () => {
                     date: new Date(order['dateOrder']).toLocaleDateString(),
                     time: new Date(order['dateOrder']).toLocaleTimeString(),
                     totalPrice: currencyFormat(order['totalPrice']),
-                    discount: currencyFormat(order['discount']),
+                    discount: currencyFormat(-order['discount']),
                     subTotal: currencyFormat(order['subtotal']),
+                    feeShip: currencyFormat(order['feeShip']),
+                    vat: currencyFormat(order['vat']),
                     payment: getTextPaymentMethod(order['payment']),
                     paid:
                         order['isPaid'] === true ? (
@@ -168,6 +170,22 @@ const Transaction = () => {
                         <span style={{ fontWeight: 'bold' }}>Chiết khấu</span>
                     ),
                     dataIndex: 'discount',
+                    align: 'center',
+                },
+                {
+                    title: () => (
+                        <span style={{ fontWeight: 'bold' }}>
+                            Phí giao hàng
+                        </span>
+                    ),
+                    dataIndex: 'feeShip',
+                    align: 'center',
+                },
+                {
+                    title: () => (
+                        <span style={{ fontWeight: 'bold' }}>Thuế VAT</span>
+                    ),
+                    dataIndex: 'vat',
                     align: 'center',
                 },
                 {

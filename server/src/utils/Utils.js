@@ -79,6 +79,7 @@ class Utils {
                     throw new ResourceNotFoundException('Product', 'id', id)
                 //calculate price of combo
                 price += existProduct['price'] * quantity
+                combo[index]['price'] = existProduct['price']
             }
             //set null for element of combo does not have id or quantity
             position.forEach((index) => (combo[index] = null))

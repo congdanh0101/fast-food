@@ -55,8 +55,13 @@ class OrderService {
                 order['totalPrice'] * discountRanking + discountVoucher
 
             order['discount'] = totalDiscount
+            order['vat'] = order['totalPrice'] * 0.1
             //calculate the order's subtotal
-            order['subtotal'] = order['totalPrice'] - order['discount']
+            order['subtotal'] =
+                order['totalPrice'] -
+                order['discount'] +
+                order['vat'] +
+                order['feeShip']
             //update user
             await user.save()
             const o = new Order(order)
@@ -190,7 +195,7 @@ class OrderService {
             const orders = await Order.find(filter)
                 .populate('items.product', 'name price -_id')
                 .populate('voucher')
-                .sort({dateOrder:'desc'})
+                .sort({ dateOrder: 'desc' })
             // console.log(orders)
             return orders
         } catch (error) {

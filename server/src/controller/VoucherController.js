@@ -7,7 +7,7 @@ class VoucherController {
         const data = req.body
         const voucher = {
             code: data.code,
-            description: data.description,
+            // description: data.description,
             minOrder: data.minOrder,
             maxDiscount: data.maxDiscount,
             discount: data.discount,

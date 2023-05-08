@@ -117,6 +117,16 @@ class UserController {
         //     else return next(new ResourceNotFoundException('User', 'id', id))
         // }
     }
+
+    async getDiscountByRanking(req, res, next) {
+        const userID = req.userID
+        try {
+            const discount = await UserService.getDiscountByRanking(userID)
+            return res.json({discount})
+        } catch (error) {
+            return next(error)
+        }
+    }
 }
 
 module.exports = new UserController()

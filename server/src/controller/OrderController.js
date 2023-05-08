@@ -11,6 +11,7 @@ class OrderController {
             deliveryMethod: data.deliveryMethod,
             payment: data.payment,
             voucher: data.voucher,
+            feeShip: data.feeShip,
         }
         try {
             const result = await OrderService.createOrder(order)
@@ -36,7 +37,7 @@ class OrderController {
             const orders = await OrderService.getAllOrder(filter)
             return res.json(orders)
         } catch (error) {
-            return next(error)    
+            return next(error)
         }
     }
 

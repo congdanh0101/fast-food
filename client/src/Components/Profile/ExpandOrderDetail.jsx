@@ -16,9 +16,9 @@ const ExpandOrderDetail = ({ OrderId }) => {
                 key: product['_id'],
                 product: product['name'],
                 quantity: items[i]['quantity'],
-                price: currencyFormat(product['price']),
+                price: currencyFormat(items[i]['price']),
                 totalPrice: currencyFormat(
-                    product['price'] * items[i]['quantity']
+                    items[i]['price'] * items[i]['quantity']
                 ),
             })
         }

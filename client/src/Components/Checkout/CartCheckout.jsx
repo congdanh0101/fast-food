@@ -3,156 +3,69 @@ import './CartCheckout.css'
 import { Link, useNavigate } from 'react-router-dom'
 import { QuantityPicker } from 'react-qty-picker'
 import ReactHtmlParser from 'react-html-parser'
-import { Button, notification } from 'antd'
+import { Button, Table, notification } from 'antd'
 import axiosInstance from '../../utils/axiosInstance'
 import CartContext from '../../context/CartContext'
-import { Table } from 'react-bootstrap'
-
-function Header({ itemCount }) {
-    return (
-        <header className="container">
-            <h1>Giỏ hàng</h1>
-
-            <ul className="breadcrumb">
-                <li>
-                    <Link to="/">Home</Link>
-                </li>
-                <li>Shopping Cart</li>
-            </ul>
-
-            <span className="count">{itemCount} items in the bag</span>
-        </header>
-    )
-}
 
 function ProductList({ products, onChangeProductQuantity, onRemoveProduct }) {
+    const [data, setData] = useState([])
+
+    const getProduct = () => {
+        const record = []
+        for (var i = 0; i < products.length; i++) {
+            const product = products[i].product
+            const quantity = products[i].quantity
+            record.push({
+                key: product['_id'],
+                product: product['name'],
+                quantity: quantity,
+                price: formatCurrency(product['price']),
+                totalPrice: formatCurrency(product['price'] * quantity),
+            })
+        }
+        setData(record)
+    }
+
+    useEffect(() => {
+        getProduct()
+
+        return () => {
+            setData([])
+        }
+    }, [])
+
+    const columns = [
+        {
+            title: () => <span style={{ fontWeight: 'bold' }}>Sản phẩm</span>,
+            dataIndex: 'product',
+            align: 'center',
+        },
+        {
+            title: () => <span style={{ fontWeight: 'bold' }}>Số lượng</span>,
+            dataIndex: 'quantity',
+            align: 'center',
+        },
+        {
+            title: () => <span style={{ fontWeight: 'bold' }}>Đơn giá</span>,
+            dataIndex: 'price',
+            align: 'center',
+        },
+        {
+            title: () => <span style={{ fontWeight: 'bold' }}>Thành tiền</span>,
+            dataIndex: 'totalPrice',
+            align: 'center',
+        },
+    ]
+
     return (
-        <section className="container">
-            <div>
-                <Table striped bordered hover>
-                    <thead>
-                        <tr>
-                            <th>#</th>
-                            <th>First Name</th>
-                            <th>Last Name</th>
-                            <th>Username</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>1</td>
-                            <td>Mark</td>
-                            <td>Otto</td>
-                            <td>@mdo</td>
-                        </tr>
-                        <tr>
-                            <td>2</td>
-                            <td>Jacob</td>
-                            <td>Thornton</td>
-                            <td>@fat</td>
-                        </tr>
-                        <tr>
-                            <td>3</td>
-                            <td colSpan={2}>Larry the Bird</td>
-                            <td>@twitter</td>
-                        </tr>
-                    </tbody>
-                </Table>
-            </div>
-
-            <ul className="products">
-                {products.map((product, index) => {
-                    return (
-                        <li className="row" key={index}>
-                            <div className="col left">
-                                <div className="thumbnail">
-                                    <a href="#">
-                                        <img
-                                            src={product.product.img}
-                                            alt={product.product.name}
-                                        />
-                                    </a>
-                                </div>
-                                <div className="detail">
-                                    <div className="name">
-                                        <Link
-                                            to={`/product/${product.product._id}`}
-                                        >
-                                            <h1>{product.product.name}</h1>
-                                        </Link>
-                                    </div>
-                                    <div className="description">
-                                        {ReactHtmlParser(
-                                            product.product.description
-                                        )}
-                                    </div>
-                                    <div
-                                        className="price"
-                                        style={{ fontSize: '1rem' }}
-                                    >
-                                        Đơn giá:{' '}
-                                        {formatCurrency(product.product.price)}
-                                    </div>
-                                    <div
-                                        className="price"
-                                        style={{ fontSize: '1rem' }}
-                                    >
-                                        Thành tiền:{' '}
-                                        <>
-                                            {formatCurrency(
-                                                product.product.price *
-                                                    product.quantity
-                                            )}
-                                        </>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div className="col right">
-                                <div className="quantity">
-                                    {/* <input
-                                        type="text"
-                                        className="quantity"
-                                        step="1"
-                                        value={product.quantity}
-                                        onChange={(event) =>
-                                            onChangeProductQuantity(
-                                                index,
-                                                event
-                                            )
-                                        }
-                                    /> */}
-                                    {/* <QuantityPicker
-                                        onChange={(value) => {
-                                            onChangeProductQuantity(value)
-                                            const price =
-                                                product.product.price * value
-                                            console.log(price)
-                                        }}
-                                        min={1}
-                                        value={product.quantity}
-                                        max={99}
-                                        smooth
-                                    /> */}
-                                    <QuantityPicker
-                                        onChange={(event) => {
-                                            onChangeProductQuantity(
-                                                index,
-                                                event
-                                            )
-                                        }}
-                                        min={1}
-                                        value={product.quantity}
-                                        max={99}
-                                        smooth
-                                    />
-                                </div>
-                            </div>
-                        </li>
-                    )
-                })}
-            </ul>
-        </section>
+        <div>
+            <Table
+                columns={columns}
+                dataSource={data}
+                bordered
+                pagination={false}
+            />
+        </div>
     )
 }
 
@@ -204,7 +117,7 @@ function Summary({
                 </ul>
             </div>
 
-            <div className="checkout">
+            <div className="18">
                 <button type="button" onClick={handleCheckout}>
                     Check Out
                 </button>

@@ -27,6 +27,11 @@ const Email = () => {
     const [form] = Form.useForm()
 
     useEffect(() => {
+        const cookies = document.cookie.split('; ')
+        if (cookies.length <= 1) navigate('/notfound')
+    }, [])
+
+    useEffect(() => {
         if (remainingTime > 0) {
             const intervalId = setInterval(() => {
                 setRemainingTime((prevTime) => prevTime - 1)

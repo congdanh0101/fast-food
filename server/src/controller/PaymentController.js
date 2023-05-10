@@ -17,7 +17,7 @@ class PaymentController {
             ipAddr: ipAddr,
             bankCode: null,
             locale: null,
-            orderID:data.orderID
+            orderID: data.orderID,
         }
 
         try {
@@ -39,9 +39,15 @@ class PaymentController {
                 const code = result.code
                 const message = result.message
                 const order = result.updateOrder
+                // console.log('result', result)
                 // return res.json({ code, message, order })
-                return res.redirect('http://localhost:3000/')
-            } else throw createHttpError.InternalServerError(result.message)
+                return res.redirect(`http://localhost:3000/payment/success?message=${message}`)
+            }
+            // else throw createHttpError.InternalServerError(result.message)
+            else
+                res.redirect(
+                    `http://localhost:3000/payment/failure?message=${result.message}`
+                )
         } catch (error) {
             return next(error)
         }

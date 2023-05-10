@@ -201,7 +201,7 @@ const Checkout = () => {
 
     const getItem = () => {
         const items = JSON.parse(localStorage.getItem('items'))
-        if (items.length <= 0) navigate('/')
+        if (!items ||items.length <= 0) navigate('/')
     }
 
     useEffect(() => {

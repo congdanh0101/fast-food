@@ -22,11 +22,7 @@ const LogoutIcon = () => {
     }
 
     return (
-        <Link
-            to="/logout"
-            style={{ fontSize: '1.5rem' }}
-            onClick={handleLogout}
-        >
+        <Link to="/" style={{ fontSize: '1.5rem' }} onClick={handleLogout}>
             Đăng xuất
             <LogoutOutlined style={{ fontSize: '3rem' }} />
         </Link>

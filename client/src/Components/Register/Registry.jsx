@@ -20,7 +20,6 @@ const RegisterForm = () => {
         console.log(values['confirmPassword'])
 
         try {
-            localStorage.setItem('registerUser', JSON.stringify(values))
             registerUser(values, dispatch, navigate)
         } catch (error) {
             console.log(error)

@@ -27,7 +27,7 @@ export const loginUser = async (user, dispatch, navigate) => {
         const accessToken = {
             accessToken: response.data['accessToken'],
         }
-        localStorage.setItem('userID',response.data['user']['_id'])
+        localStorage.setItem('userID', response.data['user']['_id'])
         localStorage.setItem('accessToken', JSON.stringify(accessToken))
         localStorage.setItem('user', JSON.stringify(response.data['user']))
         notification.success({
@@ -53,22 +53,8 @@ export const registerUser = async (user, dispatch, navigate) => {
     dispatch(registerStart())
     try {
         const response = await request.post(`/auth/register`, user)
-        // request
-        //     .post('/auth/register', user)
-        //     .then((data) => {
-        //         const setCookieHeader = data.headers['set-cookie']
-        //         if (setCookieHeader instanceof Array) {
-        //             console.log('Cookies:')
-        //             setCookieHeader.forEach((cookie) => console.log(cookie))
-        //         } else console.log('Cookie:', setCookieHeader)
-        //     })
-        //     .catch((error) => console.log(error))
+        localStorage.setItem('registerUser', JSON.stringify(user))
 
-        // console.log(response.data)
-        // console.log(`cookie ${response.headers['Set-Cookie']}`)
-        // localStorage.setItem('user', JSON.stringify(response.data.user))
-        // localStorage.setItem('code', response.data.code)
-        // localStorage.setItem('expired', response.data.expired)
         dispatch(registerSuccess())
         notification.success({
             message: 'Register successfully',
@@ -109,6 +95,7 @@ export const verifyRegisterUser = async (code, dispatch, navigate) => {
         // localStorage.removeItem('user')
         // localStorage.removeItem('expired')
         // localStorage.removeItem('code')
+        localStorage.removeItem('registerUser')
         notification.success({
             message: 'Register successfully',
         })

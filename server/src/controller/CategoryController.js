@@ -23,7 +23,6 @@ class CategoryController {
 
     //get all
     async getAllCategory(req, res, next) {
-        Utils.setCookie(res, 'cookie', 'haha')
         res.json(await CategoryService.getAllCategory())
     }
 

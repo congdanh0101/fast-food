@@ -17,11 +17,14 @@ import Logout from './Components/Logout/Logout'
 import ForgotPassword from './Components/ForgotPassword/ForgotPassword'
 import Checkout from './Components/Checkout/Checkout'
 import { NavbarProvider } from './context/CartContext'
+import NotFound from './Components/Error/NotFound'
+import PaymentFailure from './Components/PaymentStatus/PaymentFailure'
+import PaymentSuccess from './Components/PaymentStatus/PaymentSuccess'
 // import './dist/output.css'
 
 function App() {
     return (
-        <Router >
+        <Router>
             <NavbarProvider>
                 <NavBar />
                 <div className="App">
@@ -40,6 +43,15 @@ function App() {
                         <Route path="/profile" element={<UserProfile />} />
                         <Route path="/forgot" element={<ForgotPassword />} />
                         <Route path="/checkout" element={<Checkout />} />
+                        <Route
+                            path="/payment/failure"
+                            element={<PaymentFailure />}
+                        />
+                        <Route
+                            path="/payment/success"
+                            element={<PaymentSuccess />}
+                        />
+                        <Route path="*" element={<NotFound />} />
                     </Routes>
                 </div>
             </NavbarProvider>

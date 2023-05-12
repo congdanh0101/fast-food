@@ -1,12 +1,12 @@
 import { createContext, useContext, useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import request from '../../utils/axiosConfig'
-import { Button, Col, Input, Row, Select, notification } from 'antd'
+import { Button, Col, Form, Input, Row, Select, notification } from 'antd'
 import ReactHtmlParser from 'react-html-parser'
 import { QuantityPicker } from 'react-qty-picker'
 import { ShoppingCartOutlined } from '@ant-design/icons'
 import CartContext from '../../context/CartContext'
-import { Form, FormGroup } from 'react-bootstrap'
+// import { Form, FormGroup } from 'react-bootstrap'
 import SunEditor from 'suneditor-react'
 import 'suneditor/dist/css/suneditor.min.css' // Import Sun Editor's CSS File
 const defaultFonts = [
@@ -29,9 +29,9 @@ const ProductDetail = () => {
     const id = useParams()
     const [listCategory, setListCategory] = useState([])
 
-    const [categoryUpdate, setCategoryUpdate] = useState('')
-    const [priceUpdate, setPriceUpdate] = useState(0)
-    const [nameUpdate, setNameUpdate] = useState('')
+    const [categoryUpdate, setCategoryUpdate] = useState(product.category?._id)
+    const [priceUpdate, setPriceUpdate] = useState(product.price)
+    const [nameUpdate, setNameUpdate] = useState(product.name)
 
     const sortedFontOptions = [
         'Logical',
@@ -134,167 +134,58 @@ const ProductDetail = () => {
                 <Col span={10} style={{ marginTop: '5%' }}>
                     {context.isAdmin ? (
                         <>
-                            <FormGroup
-                                className="mb-3"
-                                style={{
-                                    fontSize: '1.25rem',
-                                }}
-                            >
-                                <Form.Label>
-                                    <h4>Tên sản phẩm</h4>
-                                </Form.Label>
-                                {/* <Form.Control
+                            <Form.Item>
+                                <Input
+                                    type="text"
                                     value={product.name}
-                                    style={{
-                                        fontSize: '1.5rem',
-                                        backgroundColor: '#ccc',
-                                    }}
-                                /> */}
-                                <Input
-                                    // defaultValue={product.name}
-                                    placeholder={product.name}
-                                    style={{
-                                        fontSize: '1.5rem',
-                                        backgroundColor: '#ccc',
-                                    }}
-                                    onChange={(e) =>
-                                        setNameUpdate(e.target.value)
-                                    }
+                                    style={{ fontSize: '1.25rem' }}
+                                    placeholder="product name"
                                 />
-                                <Form.Label>
-                                    <h4>Giá tiền</h4>
-                                </Form.Label>
-                                {/* <Form.Control
-                                    placeholder={product['price']}
-                                    value={product['price']}
-                                    style={{
-                                        fontSize: '1.5rem',
-                                        backgroundColor: '#ccc',
-                                    }}
-                                    onChange={(e) =>
-                                        console.log(e.target.value)
-                                    }
-                                /> */}
-                                <Input
-                                    style={{
-                                        fontSize: '1.5rem',
-                                        backgroundColor: '#ccc',
-                                    }}
-                                    onChange={(e) =>
-                                        // console.log(e.target.value)
-                                        setPriceUpdate(e.target.value)
-                                    }
-                                    placeholder={price}
-                                    type="number"
-                                ></Input>
-                                <Form.Label>
-                                    <h4>Loại sản phẩm</h4>
-                                </Form.Label>
-                                <Form.Select
-                                    style={{
-                                        fontSize: '1.5rem',
-                                        backgroundColor: '#ccc',
-                                        width: '50%',
-                                    }}
-                                    onChange={(e) =>
-                                        setCategoryUpdate(e.target.value)
-                                    }
-                                >
-                                    {/* <option value={categoryUpdate} selected>
-                                        {product?.category?.name}
-                                    </option> */}
-                                    {listCategory?.map((item) => (
-                                        <option
-                                            value={item._id}
-                                            // selected={categoryUpdate}
-                                        >
-                                            {item.name}
-                                        </option>
-                                    ))}
+                            </Form.Item>
 
-                                    {/* {listCategory
-                                        ?.filter(
-                                            (item) =>
-                                                item._id !== categoryUpdate
-                                        )
-                                        ?.map((item) => (
-                                            <option value={item._id}>
-                                                {item.name}
-                                            </option>
-                                        ))} */}
-
-                                    {/* <option
-                                        selected={categoryUpdate}
-                                        value={
-                                            listCategory.filter(
-                                                (item) =>
-                                                    item._id === categoryUpdate
-                                            )['_id']
-                                        }
-                                    >
-                                        {
-                                            listCategory.filter(
-                                                (item) =>
-                                                    item._id === categoryUpdate
-                                            )['name']
-                                        }
-                                    </option> */}
-                                </Form.Select>
-                                {/* <Select value={categoryUpdate}>
-                                    {listCategory?.map((item) => (
-                                        <Select.Option key={item['_id']}>
-                                            {item['name']}
-                                        </Select.Option>
-                                    ))}
-                                </Select> */}
-                                {/* <SunEditorCustomize /> */}
-                                <br></br>
-                                <br></br>
-                                <Form.Label>
-                                    <h4>Mô tả</h4>
-                                </Form.Label>
-                                <SunEditor
-                                    // defaultValue={product.description}
-                                    setContents={description}
-                                    onChange={setDescription}
-                                    setOptions={{
-                                        buttonList: [
-                                            ['font', 'fontSize'],
-                                            // ['paragraphStyle', 'blockquote'],
-                                            [
-                                                'bold',
-                                                'underline',
-                                                'italic',
-                                                'strike',
-                                                'subscript',
-                                                'superscript',
-                                            ],
-                                            ['fontColor', 'hiliteColor'],
-                                            ['align', 'list', 'lineHeight'],
-                                            ['outdent', 'indent'],
-                                            // ['math'] //You must add the 'katex' library at options to use the 'math' plugin.
-                                            // ['imageGallery'], // You must add the "imageGalleryUrl".
-                                            // ["fullScreen", "showBlocks", "codeView"],
-                                            // ['save', 'template'],
-                                            // '/', Line break
-                                        ], // Or Array of button list, eg. [['font', 'align'], ['image']]
-                                        // defaultTag: 'div',
-                                        minHeight: '200px',
-                                        showPathLabel: false,
-                                        font: sortedFontOptions,
-                                    }}
-                                />
-                                <Button
-                                    type="primary"
-                                    style={{
-                                        height: '3rem',
-                                        fontSize: '100%',
-                                    }}
-                                    onClick={handleUpdate}
-                                >
-                                    Update
-                                </Button>
-                            </FormGroup>
+                            <br></br>
+                            <br></br>
+                            <SunEditor
+                                // defaultValue={product.description}
+                                setContents={description}
+                                onChange={setDescription}
+                                setOptions={{
+                                    buttonList: [
+                                        ['font', 'fontSize'],
+                                        // ['paragraphStyle', 'blockquote'],
+                                        [
+                                            'bold',
+                                            'underline',
+                                            'italic',
+                                            'strike',
+                                            'subscript',
+                                            'superscript',
+                                        ],
+                                        ['fontColor', 'hiliteColor'],
+                                        ['align', 'list', 'lineHeight'],
+                                        ['outdent', 'indent'],
+                                        // ['math'] //You must add the 'katex' library at options to use the 'math' plugin.
+                                        // ['imageGallery'], // You must add the "imageGalleryUrl".
+                                        // ["fullScreen", "showBlocks", "codeView"],
+                                        // ['save', 'template'],
+                                        // '/', Line break
+                                    ], // Or Array of button list, eg. [['font', 'align'], ['image']]
+                                    // defaultTag: 'div',
+                                    minHeight: '200px',
+                                    showPathLabel: false,
+                                    font: sortedFontOptions,
+                                }}
+                            />
+                            <Button
+                                type="primary"
+                                style={{
+                                    height: '3rem',
+                                    fontSize: '100%',
+                                }}
+                                onClick={handleUpdate}
+                            >
+                                Update
+                            </Button>
                         </>
                     ) : (
                         <>

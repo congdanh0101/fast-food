@@ -95,7 +95,7 @@ const ManageProductList = () => {
             align: 'center',
             render: (_, record) => (
                 <EditTwoTone
-                    onClick={() => navigate(`/product/${record.key}`)}
+                    onClick={() => navigate(`/admin/product/edit/${record.key}`)}
                 />
             ),
         },

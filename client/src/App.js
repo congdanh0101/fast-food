@@ -21,6 +21,7 @@ import NotFound from './Components/Error/NotFound'
 import PaymentFailure from './Components/PaymentStatus/PaymentFailure'
 import PaymentSuccess from './Components/PaymentStatus/PaymentSuccess'
 import DashBoard from './Components/Admin/Dashboard'
+import EditProduct from './Components/Admin/EditProduct'
 // import './dist/output.css'
 
 function App() {
@@ -62,6 +63,8 @@ function App() {
                             path="/admin/dashboard"
                             element={<DashBoard />}
                         />
+
+                        <Route path='/admin/product/edit/:id' element={<EditProduct />}/>
 
                         <Route path="*" element={<NotFound />} />
                     </Routes>

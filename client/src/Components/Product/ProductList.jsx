@@ -1,4 +1,4 @@
-import React, { useEffect, useLayoutEffect, useState } from 'react'
+import React, { useContext, useEffect, useLayoutEffect, useState } from 'react'
 import { Card } from 'react-bootstrap'
 // import { getProductById } from '../../redux/apiRequest'
 // import { useDispatch, useSelector } from 'react-redux'
@@ -7,11 +7,14 @@ import request from '../../utils/axiosConfig'
 import { ShoppingCartOutlined } from '@ant-design/icons'
 import { Col, Row } from 'antd'
 // import { BrowserRouter as Router, Route, Routes } from 'react-router-dom'
-import { EyeOutlined } from '@ant-design/icons'
+import { EyeOutlined,EditTwoTone  } from '@ant-design/icons'
 import { useMediaQuery } from 'react-responsive'
 import axiosInstance from '../../utils/axiosInstance'
+import CartContext from '../../context/CartContext'
 
 const ProductCard = ({ item, width }) => {
+    const context = useContext(CartContext)
+
     return (
         <Link to={`/product/${item['_id']}`}>
             <Card
@@ -44,6 +47,13 @@ const ProductCard = ({ item, width }) => {
                                 ? `${(item['view'] / 1000).toFixed(2)}K`
                                 : item['view']}
                         </div>
+                        {/* {context.isAdmin ? (
+                            <div style={{ right: 0 }}>
+                                <EditTwoTone />
+                            </div>
+                        ) : (
+                            <></>
+                        )} */}
                     </div>
                     <Card.Link
                         href="/product"

@@ -16,14 +16,13 @@ const NavBar = () => {
     // const [user, setUSer] = useState(null)
 
     const context = useContext(CartContext)
-
     // console.log('context', context)
 
     // const user = JSON.parse(localStorage.getItem('user'))
     return (
         <nav className="navbar-container">
             <HomeIcon />
-            <CartIcon />
+            {context.isAdmin ? <></> : <CartIcon />}
             {context.user ? (
                 <>
                     <UserIcon />

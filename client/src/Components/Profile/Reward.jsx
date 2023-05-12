@@ -25,69 +25,8 @@ const configModal = (item) => {
 
 const VoucherCard = ({ item, width }) => {
     const [countdown, setCountdown] = useState(null)
-
-    // useEffect(() => {
-    //     const targetDate = new Date(item.expiryDate).getTime() // Set the target date here
-    //     const intervalId = setInterval(() => {
-    //         const now = new Date().getTime()
-    //         const distance = targetDate - now
-    //         const days = Math.floor(distance / (1000 * 60 * 60 * 24))
-    //         const hours = Math.floor(
-    //             (distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)
-    //         )
-    //         const minutes = Math.floor(
-    //             (distance % (1000 * 60 * 60)) / (1000 * 60)
-    //         )
-    //         const seconds = Math.floor((distance % (1000 * 60)) / 1000)
-    //         if (days === 0 && hours === 0 && minutes === 0 && seconds === 0)
-    //             setCountdown(null)
-    //         else if (minutes === 0 && hours === 0 && days === 0)
-    //             setCountdown(`${seconds}s`)
-    //         else if (hours === 0 && days === 0)
-    //             setCountdown(`${minutes}m ${seconds}s`)
-    //         else if (days === 0)
-    //             setCountdown(`${hours}h ${minutes}m ${seconds}s`)
-    //         else setCountdown(`${days}d ${hours}h ${minutes}m ${seconds}s`)
-    //     }, 1000)
-    //     return () => clearInterval(intervalId)
-    // }, [])
-
     return (
         <div>
-            {/* {countdown != null ? (
-                <Card border="dark" bg="light">
-                    <div
-                        className=""
-                        style={{ width: `${width}%` }}
-                        onClick={() => configModal(item)}
-                    >
-                        <img
-                            src={
-                                'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS11onTcfNwCEY3_t152pKiWYJoTKKEaIVycw&usqp=CAU'
-                            }
-                        />
-                    </div>
-                    <Card.Body style={{ marginTop: 24 }}>
-                        <Card.Title onClick={() => configModal(item)}>
-                            <h2>{item['code']}</h2>
-                        </Card.Title>
-                        <Card.Text>
-                            <h3>
-                                Expiry date:{' '}
-                                {new Date(item.expiryDate).toLocaleDateString()}{' '}
-                                {new Date(item.expiryDate).toLocaleTimeString()}
-                            </h3>
-                            <h4>
-                                Remain:{' '}
-                                {countdown}
-                            </h4>
-                        </Card.Text>
-                    </Card.Body>
-                </Card>
-            ) : (
-                <></>
-            )} */}
-
             <Card border="dark" bg="light">
                 <div
                     className=""

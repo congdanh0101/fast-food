@@ -4,7 +4,7 @@ import { BrowserRouter as Router, Route, Routes } from 'react-router-dom'
 import Login from './Components/Login/Login'
 import Register from './Components/Register/Register'
 import NavBar from './Components/NavBar/NavBar'
-import { createContext, useEffect, useState } from 'react'
+import { createContext, useContext, useEffect, useState } from 'react'
 import Email from './Components/EmailVerification/Email'
 import RegisterForm from './Components/Register/Registry'
 import Product from './Components/Product/Product'
@@ -16,13 +16,15 @@ import UserProfile from './Components/Profile/UserProfile'
 import Logout from './Components/Logout/Logout'
 import ForgotPassword from './Components/ForgotPassword/ForgotPassword'
 import Checkout from './Components/Checkout/Checkout'
-import { NavbarProvider } from './context/CartContext'
+import CartContext, { NavbarProvider } from './context/CartContext'
 import NotFound from './Components/Error/NotFound'
 import PaymentFailure from './Components/PaymentStatus/PaymentFailure'
 import PaymentSuccess from './Components/PaymentStatus/PaymentSuccess'
+import DashBoard from './Components/Admin/Dashboard'
 // import './dist/output.css'
 
 function App() {
+
     return (
         <Router>
             <NavbarProvider>
@@ -40,7 +42,12 @@ function App() {
                         />
                         <Route path="/cart" element={<Page />} />
                         {/* <Route path="/logout" element={<Logout />} /> */}
-                        <Route path="/profile" element={<UserProfile />} />
+                        <Route
+                            path="/profile"
+                            element={
+                                <UserProfile />
+                            }
+                        />
                         <Route path="/forgot" element={<ForgotPassword />} />
                         <Route path="/checkout" element={<Checkout />} />
                         <Route
@@ -51,6 +58,11 @@ function App() {
                             path="/payment/success"
                             element={<PaymentSuccess />}
                         />
+                        <Route
+                            path="/admin/dashboard"
+                            element={<DashBoard />}
+                        />
+
                         <Route path="*" element={<NotFound />} />
                     </Routes>
                 </div>

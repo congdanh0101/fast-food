@@ -69,13 +69,17 @@ function UserProfile() {
     const [form] = Form.useForm()
     const [isLoading, setIsLoading] = useState(false)
 
+
     const navigate = useNavigate()
 
     const [user, setUser] = useState(null)
 
     const getUser = () => {
         const currentUser = JSON.parse(localStorage.getItem('user'))
-        if (currentUser) setUser(currentUser)
+        if (currentUser) {
+            setUser(currentUser)
+            if(currentUser?.roles.length>=2) navigate('/notfound')
+        }
         else navigate('/login')
     }
 

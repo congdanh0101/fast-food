@@ -34,10 +34,16 @@ export const loginUser = async (user, dispatch, navigate) => {
             message: 'Login successfully',
             duration: 3,
         })
-        setTimeout(() => {
-            navigate('/')
-            window.location.reload()
-        }, 500)
+        if (response.data['user']['roles'].includes('ADMIN'))
+            setTimeout(() => {
+                navigate('/admin/dashboard')
+                window.location.reload()
+            }, 500)
+        else
+            setTimeout(() => {
+                navigate('/')
+                window.location.reload()
+            }, 500)
     } catch (error) {
         notification.error({
             message: 'Login failure',

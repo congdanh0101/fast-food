@@ -1,4 +1,4 @@
-import { Col, Input, Row } from 'antd'
+import { Col, Input, Row, notification } from 'antd'
 import { useContext, useEffect, useState } from 'react'
 import { Form, FormGroup, FormLabel } from 'react-bootstrap'
 import CartContext from '../../context/CartContext'
@@ -195,13 +195,33 @@ const Checkout = () => {
 
     const getUser = () => {
         const currentUser = JSON.parse(localStorage.getItem('user'))
-        if (currentUser) setUser(currentUser)
-        else navigate('/login')
+        if (currentUser) {
+            if (
+                !currentUser?.address ||
+                !currentUser?.address?.add ||
+                !currentUser?.address?.ward?.code ||
+                !currentUser?.address?.district?.code
+            ) {
+                notification.error({
+                    message: 'Address',
+                    description: 'Please try again',
+                })
+                navigate('/profile')
+            }
+            if (!currentUser?.phoneNumber) {
+                notification.error({
+                    message: 'Phone number',
+                    description: 'Please try again',
+                })
+                navigate('/profile')
+            }
+            setUser(currentUser)
+        } else navigate('/login')
     }
 
     const getItem = () => {
         const items = JSON.parse(localStorage.getItem('items'))
-        if (!items ||items.length <= 0) navigate('/')
+        if (!items || items.length <= 0) navigate('/')
     }
 
     useEffect(() => {

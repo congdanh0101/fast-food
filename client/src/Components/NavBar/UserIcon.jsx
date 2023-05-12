@@ -7,8 +7,11 @@ import CartContext from '../../context/CartContext'
 const UserIcon = () => {
     const context = useContext(CartContext)
     return (
-        <Link to="/profile" style={{ fontSize: '1.5rem' }}>
-            {context.user.fullName}
+        <Link
+            to={context.isAdmin ? '/' : '/profile'}
+            style={{ fontSize: '1.5rem' }}
+        >
+            {context.isAdmin ? 'ADMIN' : context.user.fullName}
             <UserOutlined style={{ fontSize: '3rem' }} />
         </Link>
     )

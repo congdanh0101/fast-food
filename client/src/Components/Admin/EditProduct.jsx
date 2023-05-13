@@ -1,7 +1,7 @@
 import { createContext, useContext, useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import request from '../../utils/axiosConfig'
-import { Button, Col, Form, Input, Row, Select, notification } from 'antd'
+import { Button, Col, Input, Row, Select, notification } from 'antd'
 import ReactHtmlParser from 'react-html-parser'
 import { QuantityPicker } from 'react-qty-picker'
 import { ShoppingCartOutlined } from '@ant-design/icons'
@@ -9,6 +9,7 @@ import CartContext from '../../context/CartContext'
 // import { Form, FormGroup } from 'react-bootstrap'
 import SunEditor from 'suneditor-react'
 import 'suneditor/dist/css/suneditor.min.css' // Import Sun Editor's CSS File
+import { FormGroup, Form } from 'react-bootstrap'
 const defaultFonts = [
     'Arial',
     'Comic Sans MS',
@@ -57,6 +58,7 @@ export default function EditProduct() {
             })
         )
         // setPriceUpdate(pro)
+        setPriceUpdate(data['price'])
         setNameUpdate(data['name'])
         setCategoryUpdate(data['category']['_id'])
     }
@@ -103,7 +105,8 @@ export default function EditProduct() {
                     <img src={product['img']} width={'70%'} height={'120%'} />
                 </Col>
                 <Col span={10} style={{ marginTop: '5%' }}>
-                    <Form.Item>
+                    <FormGroup >
+                        <Form.Label>Ten san pham</Form.Label>
                         <Input
                             type="text"
                             value={nameUpdate}
@@ -111,21 +114,16 @@ export default function EditProduct() {
                             placeholder="product name"
                             onChange={(e) => setNameUpdate(e.target.value)}
                         />
-                    </Form.Item>
-
-                    <Form.Item>
+                        <Form.Label>Ten san pham</Form.Label>
                         <Input
                             type="text"
-                            value={price}
+                            value={priceUpdate}
                             style={{ fontSize: '1.25rem' }}
-                            placeholder="product name"
-                            onChange={(e) => setPrice(e.target.value)}
+                            onChange={(e) => setPriceUpdate(e.target.value)}
                         />
-                    </Form.Item>
+                    </FormGroup>
 
-                    <Form.Item>
-                        <input type="file" onChange={(e) => console.log(e)} />
-                    </Form.Item>
+                    <input type="file" onChange={(e) => console.log(e)} />
 
                     <br></br>
                     <br></br>

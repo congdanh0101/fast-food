@@ -23,12 +23,12 @@ const Email = () => {
 
     const dispatch = useDispatch()
     const navigate = useNavigate()
-    const [remainingTime, setRemainingTime] = useState(60)
+    const [remainingTime, setRemainingTime] = useState(5)
     const [form] = Form.useForm()
 
     useEffect(() => {
-        const cookies = document.cookie.split('; ')
-        if (cookies.length <= 1) navigate('/notfound')
+        // const cookies = document.cookie.split('; ')
+        // if (cookies.length <= 1) navigate('/notfound')
     }, [])
 
     useEffect(() => {
@@ -57,7 +57,7 @@ const Email = () => {
 
     const handleResend = async (e) => {
         e.preventDefault()
-        setRemainingTime(60)
+        setRemainingTime(5)
         if (location.pathname === '/verify/register') {
             const register = localStorage.getItem('registerUser')
             const user = register ? JSON.parse(register) : null

@@ -1,4 +1,6 @@
 import { useNavigate } from 'react-router-dom'
+import axiosInstance from '../../utils/axiosInstance'
+import { useEffect } from 'react'
 
 const Logout = () => {
     const navigate = useNavigate()
@@ -6,8 +8,8 @@ const Logout = () => {
     localStorage.removeItem('accessToken')
     localStorage.removeItem('refreshToken')
     localStorage.removeItem('user')
+    localStorage.removeItem('userID')
 
-    navigate('/')
     window.location.reload()
     return null
 }

@@ -47,19 +47,25 @@ const UserInfo = () => {
         return Promise.resolve()
     }
 
-    const {getUser} = useContext(CartContext)
+    const { getUser } = useContext(CartContext)
 
     const [districtChange, setDistrictChange] = useState(false)
-    const [currentUser,setCurrentUser] = useState(JSON.parse(localStorage.getItem('user')))
+    const [currentUser, setCurrentUser] = useState(
+        JSON.parse(localStorage.getItem('user'))
+    )
     const [fullName, setFullName] = useState(currentUser.fullName)
     const [phoneNumber, setPhoneNumber] = useState(currentUser.phoneNumber)
     const [gender, setGender] = useState(currentUser.gender)
     const [dob, setDOB] = useState(currentUser.dob)
     const [email, setEmail] = useState(currentUser.email)
     const [address, setAddress] = useState(currentUser.address?.add || '')
-    const [userDistrict, setUserDistrict] = useState(currentUser.address?.district)
+    const [userDistrict, setUserDistrict] = useState(
+        currentUser.address?.district
+    )
     const [userWard, setUserWard] = useState(currentUser.address?.ward)
-    const [idDistrict, setIdDistrict] = useState(currentUser.address?.district?.code)
+    const [idDistrict, setIdDistrict] = useState(
+        currentUser.address?.district?.code
+    )
 
     const handleUpdateData = async () => {
         try {
@@ -94,7 +100,7 @@ const UserInfo = () => {
         } catch (error) {
             notification.error({
                 message: 'Update Failure',
-                description: error.response.data.message,
+                description: error.response?.data.message,
                 duration: 3,
             })
         }

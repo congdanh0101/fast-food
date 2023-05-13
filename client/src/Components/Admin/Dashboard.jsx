@@ -3,6 +3,7 @@ import CartContext from '../../context/CartContext'
 import { useNavigate } from 'react-router-dom'
 import { Badge, Menu } from 'antd'
 import ManageProductList from './ManageProductList'
+import ManageOrderList from './ManageOrderList'
 
 function getItem(label, key, icon, children, type) {
     return {
@@ -16,15 +17,16 @@ function getItem(label, key, icon, children, type) {
 
 const items = [
     getItem(
-        'Product',
-        'product'
-        // <InfoCircleOutlined style={{ fontSize: '150%' }} />
-    ),
-    getItem(
         'Order',
         'order'
         // <LockOutlined style={{ fontSize: '150%' }} />
     ),
+    getItem(
+        'Product',
+        'product'
+        // <InfoCircleOutlined style={{ fontSize: '150%' }} />
+    ),
+
     getItem(
         'User',
         'user'
@@ -40,6 +42,7 @@ const items = [
 const DashBoard = () => {
     const context = useContext(CartContext)
     const navigate = useNavigate()
+    const [key, setKey] = useState('order')
 
     const [user, setUser] = useState(null)
     useEffect(() => {})
@@ -56,9 +59,12 @@ const DashBoard = () => {
                         fontWeight: 'bold',
                         marginTop: '2rem',
                     }}
+                    onClick={(e) => setKey(e.key)}
                 ></Menu>
             )}
-            <ManageProductList />
+            {/* <ManageProductList /> */}
+            {key === 'order' && <ManageOrderList />}
+            {key === 'product' && <ManageProductList />}
         </div>
     )
 }

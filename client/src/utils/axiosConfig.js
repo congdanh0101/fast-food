@@ -1,7 +1,5 @@
 import axios from 'axios'
 
-axios.defaults.withCredentials = true
-
 let accesToken = localStorage.getItem('accessToken') || null
 
 const request = axios.create({
@@ -11,6 +9,7 @@ const request = axios.create({
         'Access-Control-Allow-Origin': '*',
         // 'Access-Control-Allow-Methods': 'GET,PUT,POST,DELETE,PATCH,OPTIONS',
     },
+    withCredentials: true,
 })
 
 export default request

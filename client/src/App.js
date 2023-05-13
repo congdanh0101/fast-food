@@ -22,10 +22,13 @@ import PaymentFailure from './Components/PaymentStatus/PaymentFailure'
 import PaymentSuccess from './Components/PaymentStatus/PaymentSuccess'
 import DashBoard from './Components/Admin/Dashboard'
 import EditProduct from './Components/Admin/EditProduct'
+import UserInfo from './Components/Profile/UserInfo'
+import Reward from './Components/Profile/Reward'
+import Transaction from './Components/Profile/Transaction'
+import Security from './Components/Profile/Security'
 // import './dist/output.css'
 
 function App() {
-
     return (
         <Router>
             <NavbarProvider>
@@ -43,12 +46,17 @@ function App() {
                         />
                         <Route path="/cart" element={<Page />} />
                         {/* <Route path="/logout" element={<Logout />} /> */}
+                        <Route path="/profile" element={<UserProfile />} />
+                        {/* <Route path="/profile/info" element={<UserInfo />} />
+                        <Route path="/profile/reward" element={<Reward />} />
                         <Route
-                            path="/profile"
-                            element={
-                                <UserProfile />
-                            }
+                            path="/profile/transactions"
+                            element={<Transaction />}
                         />
+                        <Route
+                            path="/profile/security"
+                            element={<Security />}
+                        /> */}
                         <Route path="/forgot" element={<ForgotPassword />} />
                         <Route path="/checkout" element={<Checkout />} />
                         <Route
@@ -64,7 +72,10 @@ function App() {
                             element={<DashBoard />}
                         />
 
-                        <Route path='/admin/product/edit/:id' element={<EditProduct />}/>
+                        <Route
+                            path="/admin/product/edit/:id"
+                            element={<EditProduct />}
+                        />
 
                         <Route path="*" element={<NotFound />} />
                     </Routes>

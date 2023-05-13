@@ -69,10 +69,10 @@ export const registerUser = async (user, dispatch, navigate) => {
         navigate(`/verify/register`)
     } catch (error) {
         console.log(error)
-        console.log(error.response.data.message)
+        console.log(error.response?.data.message)
         notification.error({
             message: 'Login failure',
-            description: error.response.data.message.email,
+            description: error.response?.data.message.email,
             duration: 2,
         })
         dispatch(registerFailure())

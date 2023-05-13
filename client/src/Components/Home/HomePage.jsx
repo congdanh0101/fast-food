@@ -68,7 +68,7 @@ const HomePage = () => {
     category.forEach((x) => items.push(getItem(x['name'], x['_id'])))
 
     return (
-        <div >
+        <div>
             {/* <NavBar></NavBar> */}
             <div style={{ marginTop: 50 }}>
                 {(isDesktop || isBigScreen || isLaptop) && (

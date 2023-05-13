@@ -21,7 +21,7 @@ app.use(cookieParser())
 app.use(
     cors({
         credentials: true,
-        // allowedHeaders: 'http://localhost:2023',
+        // allowedHeaders: 'http://localhost:3000',
         origin: process.env.URL_CLIENT,
         optionsSuccessStatus: 200,
     })

@@ -6,6 +6,6 @@ const router = express.Router()
 router.post('/', Authenticate.AuthorizationUSER, OrderController.createOrder)
 router.get('/:id', OrderController.getOrderById)
 router.get('/', OrderController.getAllOrder)
-router.put('/:id', OrderController.updateOrder)
+router.put('/:id', Authenticate.AuthorizationADMIN, OrderController.updateOrder)
 
 module.exports = router

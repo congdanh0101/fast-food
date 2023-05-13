@@ -195,7 +195,9 @@ class OrderService {
             const orders = await Order.find(filter)
                 .populate('items.product', 'name price -_id')
                 .populate('voucher')
+                .populate('user', '-password')
                 .sort({ dateOrder: 'desc' })
+            // .limit(10)
             // console.log(orders)
             return orders
         } catch (error) {

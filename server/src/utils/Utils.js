@@ -49,8 +49,8 @@ class Utils {
 
     setCookie = (res, key, value, age = 0) => {
         res.cookie(key, value, {
-            httpOnly: true,
-            secure: false,
+            // httpOnly: true,
+            secure: true,
             path: '/',
             sameSite: 'strict',
             // expires: age === 0 ? 0 : new Date(Date.now() + age),

@@ -60,9 +60,9 @@ const UserInfo = () => {
     const [email, setEmail] = useState(currentUser.email)
     const [address, setAddress] = useState(currentUser.address?.add || '')
     const [userDistrict, setUserDistrict] = useState(
-        currentUser.address?.district
+        currentUser.address?.district || ''
     )
-    const [userWard, setUserWard] = useState(currentUser.address?.ward)
+    const [userWard, setUserWard] = useState(currentUser.address?.ward || '')
     const [idDistrict, setIdDistrict] = useState(
         currentUser.address?.district?.code
     )

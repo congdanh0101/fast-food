@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom'
 import { Badge, Menu } from 'antd'
 import ManageProductList from './ManageProductList'
 import ManageOrderList from './ManageOrderList'
+import ManageUser from './ManageUser'
 
 function getItem(label, key, icon, children, type) {
     return {
@@ -65,6 +66,7 @@ const DashBoard = () => {
             {/* <ManageProductList /> */}
             {key === 'order' && <ManageOrderList />}
             {key === 'product' && <ManageProductList />}
+            {key === 'user' && <ManageUser />}
         </div>
     )
 }

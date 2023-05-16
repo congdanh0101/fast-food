@@ -10,7 +10,7 @@ import CartContext from '../../context/CartContext'
 import SunEditor from 'suneditor-react'
 import 'suneditor/dist/css/suneditor.min.css' // Import Sun Editor's CSS File
 import { FormGroup, Form } from 'react-bootstrap'
-import Dropzone from 'react-dropzone'
+import axiosInstance from '../../utils/axiosInstance'
 
 const defaultFonts = [
     'Arial',
@@ -23,18 +23,15 @@ const defaultFonts = [
     'Verdana',
 ]
 
-export default function EditProduct() {
-    const context = useContext(CartContext)
-    const [product, setProduct] = useState({})
+const CreateProduct = () => {
     const [price, setPrice] = useState(0)
     const [description, setDescription] = useState('')
-    const id = useParams()
     const [listCategory, setListCategory] = useState([])
-
+    const [name, setName] = useState(null)
     const [selectedImage, setSelectedImage] = useState(null)
-    const [categoryUpdate, setCategoryUpdate] = useState(null)
-    const [priceUpdate, setPriceUpdate] = useState(null)
-    const [nameUpdate, setNameUpdate] = useState(null)
+    const [selectCategory, setSelectCategory] = useState(null)
+    const [selectCombo, setSelectCombo] = useState(false)
+    const [comboCategory, setComboCategory] = useState(null)
 
     const sortedFontOptions = [
         'Logical',
@@ -47,12 +44,29 @@ export default function EditProduct() {
         ...defaultFonts,
     ].sort()
 
-    // console.log(description)
-    const handleImageDrop = (e) => {
-        // setSelectedImage(URL.createObjectURL(acceptedFiles[0]))
-        // setSelectedImage(URL.createObjectURL(e.target.value))
-        const file = e.target.files[0]
+    const fetchCategory = async () => {
+        try {
+            const response = await request.get('/category')
+            setListCategory(response.data)
+            response.data.forEach((element) => {
+                if (element['name'] === 'Combo')
+                    setComboCategory(element['_id'])
+            })
+        } catch (error) {
+            console.log(error)
+        }
+    }
 
+    useEffect(() => {
+        fetchCategory()
+
+        return () => {
+            setListCategory([])
+        }
+    }, [])
+
+    const handleImageDrop = (e) => {
+        const file = e.target.files[0]
         const formData = new FormData()
         formData.append('image', file)
 
@@ -61,11 +75,6 @@ export default function EditProduct() {
             file.type === 'image/jpg' ||
             file.type === 'image/png'
         ) {
-            // const render = new FileReader()
-            // render.onloadend = () => {
-            //     setSelectedImage(render.result)
-            // }
-            // render.readAsDataURL(file)
             setSelectedImage(file)
             notification.success({
                 message: 'Upload successfully',
@@ -73,78 +82,58 @@ export default function EditProduct() {
         } else {
             notification.error({
                 message: 'Upload failed',
+                description: 'Only upload JPEG/JPG/PNG image',
             })
         }
     }
-    const fetchDataProduct = async () => {
-        const p = await request.get(`/product/${id.id}`)
-        const data = p.data
-        setProduct(data)
-        setDescription(data['description'])
-        setPrice(
-            data['price'].toLocaleString('it-IT', {
-                style: 'currency',
-                currency: 'VND',
-            })
+
+    const handleAddProduct = async () => {
+        if (
+            name === null ||
+            name === '' ||
+            price === 0 ||
+            price === '' ||
+            selectedImage === null ||
+            selectedImage === '' ||
+            selectCategory === null ||
+            selectCategory === ''
         )
-        // setPriceUpdate(pro)
-        setPriceUpdate(data['price'])
-        setNameUpdate(data['name'])
-        setCategoryUpdate(data['category']['_id'])
-    }
-    const fetchCategoryList = async () => {
-        try {
-            const response = await request.get('/category')
-            setListCategory(response.data)
-        } catch (error) {
-            console.log(error)
-        }
-    }
-
-    useEffect(() => {
-        fetchDataProduct()
-        fetchCategoryList()
-        return () => {
-            console.log(`clean product by id`)
-            setProduct({})
-            setListCategory([])
-        }
-    }, [id])
-
-    const handleUpdate = async (e) => {
-        console.log(e)
-        console.log(priceUpdate)
-        console.log(categoryUpdate)
-        console.log(nameUpdate)
-        console.log(description)
-        console.log(selectedImage)
-        const formData = new FormData()
-        if (selectedImage !== null) formData.append('img', selectedImage)
-        // else formData.append('img', product['img'])
-        formData.append('description', description)
-        formData.append('name', nameUpdate)
-        formData.append('price', priceUpdate)
-        formData.append('category', categoryUpdate)
-        console.log(formData)
-        try {
-            const response = await request.put(`/product/${id.id}`, formData, {
-                headers: {
-                    'Content-Type': 'multipart/form-data',
-                },
-            })
-            notification.success({
-                message: 'Update product successfully',
-            })
-        } catch (error) {
             notification.error({
-                message: 'Update product failed',
-                description: error.response?.data?.message,
+                message: 'Add new product failed',
+                description: 'Please enter all field!',
             })
-        }
+        else
+            try {
+                const formData = new FormData()
+
+                formData.append('name', name)
+                formData.append('category', selectCategory)
+                formData.append('description', description)
+                formData.append('img', selectedImage)
+                formData.append('price', price)
+                const response = await axiosInstance.post(
+                    '/product',
+                    formData,
+                    {
+                        headers: {
+                            'Content-Type': 'multipart/form-data',
+                        },
+                    }
+                )
+                notification.success({
+                    message: 'Add new product successfully',
+                })
+            } catch (error) {
+                console.log(error)
+                notification.error({
+                    message: 'Add new product failed',
+                    description: error.response?.data.message,
+                })
+            }
     }
 
     return (
-        <div style={{ marginTop: '2%' }}>
+        <div>
             <Row>
                 {/* <Col span={3}></Col> */}
                 <Col span={10} offset={3}>
@@ -157,9 +146,10 @@ export default function EditProduct() {
                         />
                     ) : (
                         <img
-                            src={product['img']}
+                            src={null}
                             width={'70%'}
                             height={'120%'}
+                            alt="Selected image"
                         />
                     )}
                 </Col>
@@ -168,29 +158,32 @@ export default function EditProduct() {
                         <Form.Label>Tên sản phẩm</Form.Label>
                         <Input
                             type="text"
-                            value={nameUpdate}
+                            value={name}
                             style={{ fontSize: '1.25rem' }}
-                            placeholder="product name"
-                            onChange={(e) => setNameUpdate(e.target.value)}
+                            onChange={(e) => setName(e.target.value)}
                         />
                         <br />
                         <Form.Label>Đơn giá</Form.Label>
                         <Input
-                            type="text"
-                            value={priceUpdate}
+                            type="number"
+                            value={price}
                             style={{ fontSize: '1.25rem' }}
-                            onChange={(e) => setPriceUpdate(e.target.value)}
+                            onChange={(e) => setPrice(e.target.value)}
                         />
                         <br />
                         <Form.Label>Loại sản phẩm</Form.Label>
                         <Select
-                            style={{ width: '100%' }}
+                            style={{ width: '100%', height: '100%' }}
                             options={listCategory?.map((item) => ({
                                 value: item['_id'],
                                 label: item['name'],
                             }))}
-                            value={categoryUpdate}
-                            onChange={setCategoryUpdate}
+                            value={selectCategory}
+                            onChange={(e) => {
+                                setSelectCategory(e)
+                                console.log(e)
+                                if (e === comboCategory) console.log(true)
+                            }}
                         ></Select>
 
                         <Form.Label>Tải hình ảnh</Form.Label>
@@ -244,9 +237,9 @@ export default function EditProduct() {
                                 height: '3rem',
                                 fontSize: '100%',
                             }}
-                            onClick={handleUpdate}
+                            onClick={handleAddProduct}
                         >
-                            Update
+                            Xac nhan
                         </Button>
                     </FormGroup>
                 </Col>
@@ -254,3 +247,5 @@ export default function EditProduct() {
         </div>
     )
 }
+
+export default CreateProduct

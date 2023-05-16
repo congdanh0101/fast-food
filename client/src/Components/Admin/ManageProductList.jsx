@@ -1,8 +1,9 @@
-import { Badge, Table } from 'antd'
+import { Badge, Button, Table } from 'antd'
 import { useEffect, useState } from 'react'
 import request from '../../utils/axiosConfig'
 import { EyeOutlined, EditTwoTone } from '@ant-design/icons'
 import { useNavigate } from 'react-router-dom'
+import CreateProduct from './CreateProduct'
 
 const currencyFormat = (price) => (
     <h4 style={{ color: 'red' }}>
@@ -29,7 +30,7 @@ const ManageProductList = () => {
                 data.push({
                     key: product['_id'],
                     no: (i + 1).toString(),
-                    price: currencyFormat(product['price']),
+                    price: product['price'],
                     category: product['category']['name'],
                     product: product['name'],
                 })
@@ -53,7 +54,7 @@ const ManageProductList = () => {
             setFilterCategory(filter)
         } catch (error) {
             console.log(error)
-        } 
+        }
     }
 
     useEffect(() => {
@@ -80,6 +81,8 @@ const ManageProductList = () => {
             title: () => <span style={{ fontWeight: 'bold' }}>Đơn giá</span>,
             dataIndex: 'price',
             align: 'center',
+            render: (value) => currencyFormat(value),
+            sorter: (a, b) => a.price - b.price,
         },
         {
             title: () => (
@@ -95,12 +98,28 @@ const ManageProductList = () => {
             align: 'center',
             render: (_, record) => (
                 <EditTwoTone
-                    onClick={() => navigate(`/admin/product/edit/${record.key}`)}
+                    onClick={() =>
+                        navigate(`/admin/product/edit/${record.key}`)
+                    }
                 />
             ),
         },
     ]
-    const defaultTitle = () => <h1>Danh sách sản phẩm</h1>
+    const defaultTitle = () => (
+        <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+            <h1>Danh sách sản phẩm</h1>
+            <Button
+                size="large"
+                type="primary"
+                danger
+                shape="round"
+                ghost
+                onClick={(e) => navigate('/admin/product/create')}
+            >
+                Them san pham
+            </Button>
+        </div>
+    )
 
     return (
         <div>

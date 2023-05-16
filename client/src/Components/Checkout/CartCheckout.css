@@ -30,7 +30,7 @@ button::after {
 
 button:hover {
     background-color: #f58551;
-    border-color: #f58551;
+    border-color: #000000;
 }
 
 button:hover::after {

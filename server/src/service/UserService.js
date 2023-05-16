@@ -60,6 +60,24 @@ class UserService {
         }
     }
 
+    async changeSoftDeleted(id) {
+        try {
+            const user = await this.getUserById(id)
+            if (!user)
+                throw createHttpError.BadRequest(
+                    `User not found with id: ${id}`
+                )
+
+            return await User.findByIdAndUpdate(
+                id,
+                { softDeleted: !user['softDeleted'] },
+                { new: true }
+            )
+        } catch (error) {
+            throw error
+        }
+    }
+
     async updateUserById(id, data) {
         try {
             //Check phone number exist
@@ -102,9 +120,9 @@ class UserService {
         }
     }
 
-    async getDiscountByRanking(id){
+    async getDiscountByRanking(id) {
         try {
-            const user = await this.getUserById(id) 
+            const user = await this.getUserById(id)
             const discount = Utils.getDiscountRanking(user['rank'])
             return discount
         } catch (error) {

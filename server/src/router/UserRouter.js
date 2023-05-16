@@ -5,12 +5,17 @@ const Authenticate = require('../middleware/Authenticate')
 
 //get by id
 //delete user by id
-router.delete('/:id', UserController.deleteUser)
+// router.delete('/:id', UserController.deleteUser)
 //change password
 router.put(
     '/pwd/',
     Authenticate.AuthorizationUSER,
     UserController.changePassword
+)
+router.put(
+    '/soft/:id',
+    Authenticate.AuthorizationADMIN,
+    UserController.changeSoftDeleted
 )
 //get all
 router.get('/', UserController.getAllUser)

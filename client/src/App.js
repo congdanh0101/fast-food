@@ -26,6 +26,7 @@ import UserInfo from './Components/Profile/UserInfo'
 import Reward from './Components/Profile/Reward'
 import Transaction from './Components/Profile/Transaction'
 import Security from './Components/Profile/Security'
+import CreateProduct from './Components/Admin/CreateProduct'
 // import './dist/output.css'
 
 function App() {
@@ -75,6 +76,11 @@ function App() {
                         <Route
                             path="/admin/product/edit/:id"
                             element={<EditProduct />}
+                        />
+
+                        <Route
+                            path="/admin/product/create"
+                            element={<CreateProduct />}
                         />
 
                         <Route path="*" element={<NotFound />} />

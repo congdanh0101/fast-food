@@ -122,7 +122,17 @@ class UserController {
         const userID = req.userID
         try {
             const discount = await UserService.getDiscountByRanking(userID)
-            return res.json({discount})
+            return res.json({ discount })
+        } catch (error) {
+            return next(error)
+        }
+    }
+
+    async changeSoftDeleted(req, res, next) {
+        const id = req.params.id
+        try {
+            const user = await UserService.changeSoftDeleted(id)
+            return res.json(user)
         } catch (error) {
             return next(error)
         }

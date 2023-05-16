@@ -70,7 +70,8 @@ class ProductController {
             category: data.category,
             combo: data.combo,
             img: fileName ? `${basePath}${fileName}` : null,
-            description:data.description,
+            // img: `${basePath}${fileName}`,
+            description: data.description,
         }
 
         try {

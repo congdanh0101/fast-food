@@ -18,6 +18,7 @@ class ProductService {
                     'id',
                     product['category']
                 )
+            if (product['img'] === null) delete product['img']
             const combo = product['combo']
             console.log(combo)
             if (combo && combo.length > 0) {
@@ -94,7 +95,7 @@ class ProductService {
             if (!category)
                 throw new ResourceNotFoundException(
                     'Category',
-                    'id',   
+                    'id',
                     product['category']
                 )
             //check combo not null
@@ -106,7 +107,7 @@ class ProductService {
                 product['price'] = priceResult
                 product['combo'] = comboResult
             }
-
+            if (product['img'] === null) delete product['img']
             const updatedProduct = await Product.findByIdAndUpdate(
                 id,
                 product,

@@ -45,7 +45,10 @@ class ProductController {
         if (req.query.category) {
             filter['category'] = req.query.category.split(',')
         }
-        filter['softDeleted'] = softDeleted
+        if (req.query.softDeleted) {
+            filter['softDeleted'] = req.query.softDeleted
+        }
+        // filter['softDeleted'] = softDeleted
         console.log(filter)
         // filter = req.query
         try {
@@ -90,6 +93,16 @@ class ProductController {
                 status: `success`,
                 message: `Product with id=${id} has been deleted!`,
             })
+        } catch (error) {
+            return next(error)
+        }
+    }
+
+    async changeSoftDeleted(req, res, next) {
+        try {
+            const id = req.params.id
+            const product = await ProductService.changeSoftDeleted(id)
+            return res.json(product)
         } catch (error) {
             return next(error)
         }

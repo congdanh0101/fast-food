@@ -1,7 +1,16 @@
 import { createContext, useContext, useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import request from '../../utils/axiosConfig'
-import { Button, Col, Form, Input, Row, Select, notification } from 'antd'
+import {
+    Button,
+    Col,
+    Form,
+    Input,
+    Row,
+    Select,
+    Slider,
+    notification,
+} from 'antd'
 import ReactHtmlParser from 'react-html-parser'
 import { QuantityPicker } from 'react-qty-picker'
 import { ShoppingCartOutlined } from '@ant-design/icons'
@@ -9,6 +18,7 @@ import CartContext from '../../context/CartContext'
 // import { Form, FormGroup } from 'react-bootstrap'
 import SunEditor from 'suneditor-react'
 import 'suneditor/dist/css/suneditor.min.css' // Import Sun Editor's CSS File
+import Sider from 'antd/es/layout/Sider'
 const defaultFonts = [
     'Arial',
     'Comic Sans MS',
@@ -128,104 +138,46 @@ const ProductDetail = () => {
         <div style={{ marginTop: '5%' }}>
             <Row>
                 {/* <Col span={3}></Col> */}
-                <Col span={10} offset={3}>
-                    <img src={product['img']} width={'70%'} height={'120%'} />
+                <Col span={10} offset={1}>
+                    <img src={product['img']} width={'80%'} height={'100%'} />
                 </Col>
-                <Col span={10} style={{ marginTop: '5%' }}>
-                    {context.isAdmin ? (
-                        <>
-                            <Form.Item>
-                                <Input
-                                    type="text"
-                                    value={product.name}
-                                    style={{ fontSize: '1.25rem' }}
-                                    placeholder="product name"
-                                />
-                            </Form.Item>
-
-                            <br></br>
-                            <br></br>
-                            <SunEditor
-                                // defaultValue={product.description}
-                                setContents={description}
-                                onChange={setDescription}
-                                setOptions={{
-                                    buttonList: [
-                                        ['font', 'fontSize'],
-                                        // ['paragraphStyle', 'blockquote'],
-                                        [
-                                            'bold',
-                                            'underline',
-                                            'italic',
-                                            'strike',
-                                            'subscript',
-                                            'superscript',
-                                        ],
-                                        ['fontColor', 'hiliteColor'],
-                                        ['align', 'list', 'lineHeight'],
-                                        ['outdent', 'indent'],
-                                        // ['math'] //You must add the 'katex' library at options to use the 'math' plugin.
-                                        // ['imageGallery'], // You must add the "imageGalleryUrl".
-                                        // ["fullScreen", "showBlocks", "codeView"],
-                                        // ['save', 'template'],
-                                        // '/', Line break
-                                    ], // Or Array of button list, eg. [['font', 'align'], ['image']]
-                                    // defaultTag: 'div',
-                                    minHeight: '200px',
-                                    showPathLabel: false,
-                                    font: sortedFontOptions,
-                                }}
-                            />
-                            <Button
-                                type="primary"
-                                style={{
-                                    height: '3rem',
-                                    fontSize: '100%',
-                                }}
-                                onClick={handleUpdate}
-                            >
-                                Update
-                            </Button>
-                        </>
-                    ) : (
-                        <>
-                            <h1 style={{ fontSize: '3rem' }}>{product.name}</h1>
-                            <h2 style={{ fontSize: '2.5rem', color: 'red' }}>
-                                {price}
-                            </h2>
-                            <h3 style={{ fontSize: '1.75rem' }}>
-                                Thông tin sản phẩm
-                            </h3>
-                            <div style={{ fontSize: '1.25rem' }}>
-                                {ReactHtmlParser(product.description)}
-                            </div>
-                            <br />
-                            <div>
-                                <h2 style={{ fontSize: '2rem' }}>Số lượng</h2>
-                                <br />
-                                <QuantityPicker
-                                    onChange={(value) => setQuantity(value)}
-                                    min={1}
-                                    value={quantity}
-                                    max={99}
-                                    smooth
-                                />
-                            </div>
-                            <div>
-                                <Button
-                                    type="primary"
-                                    style={{
-                                        height: '5rem',
-                                        fontSize: '1.5rem',
-                                    }}
-                                    onClick={handleAddToCart}
-                                >
-                                    <ShoppingCartOutlined />
-                                    Thêm vào giỏ hàng
-                                </Button>
-                            </div>
-                        </>
-                    )}
+                <Col span={9}>
+                    <h1 style={{ fontSize: '3rem' }}>{product.name}</h1>
+                    <h2 style={{ fontSize: '2.5rem', color: 'red' }}>
+                        {price}
+                    </h2>
+                    <h3 style={{ fontSize: '1.75rem' }}>Thông tin sản phẩm</h3>
+                    <div style={{ fontSize: '1.25rem' }}>
+                        {ReactHtmlParser(product.description)}
+                    </div>
+                    <br />
+                    <div>
+                        <h2 style={{ fontSize: '2rem' }}>Số lượng</h2>
+                        <br />
+                        <QuantityPicker
+                            onChange={(value) => setQuantity(value)}
+                            min={1}
+                            value={quantity}
+                            max={99}
+                            smooth
+                        />
+                    </div>
+                    <div>
+                        <Button
+                            type="primary"
+                            style={{
+                                height: '5rem',
+                                fontSize: '1.5rem',
+                            }}
+                            onClick={handleAddToCart}
+                        >
+                            <ShoppingCartOutlined />
+                            Thêm vào giỏ hàng
+                        </Button>
+                    </div>
+                </Col>
+                <Col span={4}>
+                    <h1>haha</h1>
                 </Col>
             </Row>
         </div>

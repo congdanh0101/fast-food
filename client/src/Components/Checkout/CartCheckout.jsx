@@ -7,6 +7,7 @@ import { Button, Table, notification } from 'antd'
 import axiosInstance from '../../utils/axiosInstance'
 import CartContext from '../../context/CartContext'
 import request from '../../utils/axiosConfig'
+import axios from 'axios'
 
 function ProductList({ products }) {
     const [data, setData] = useState([])
@@ -232,31 +233,49 @@ function CartCheckout() {
             from_district_id: 1461,
             service_id: 53320,
             service_type_id: null,
-            to_district_id: Number(user?.address.district.code),
-            to_ward_code: Number(user?.address.ward.code),
-            height: 1,
-            length: 1,
-            weight: 1,
-            width: 1,
+            to_district_id: parseInt(user?.address.district.code),
+            to_ward_code: user?.address.ward.code,
+            height: Math.floor(Math.random() * 50) + 1,
+            length: Math.floor(Math.random() * 50) + 1,
+            weight: Math.floor(Math.random() * 1000) + 1,
+            width: Math.floor(Math.random() * 50) + 1,
             insurance_value: 10000,
             coupon: null,
+            shop_id: 121162,
         }
         try {
-            const resp = await fetch(
-                `https://dev-online-gateway.ghn.vn/shiip/public-api/v2/shipping-order/fee`,
+            // const resp = await fetch(
+            //     `https://dev-online-gateway.ghn.vn/shiip/public-api/v2/shipping-order/fee`,
+            //     {
+            //         method: 'POST',
+            //         headers: {
+            //             'Content-Type': ['application/json', 'text/plain'],
+            //             token: 'eab201ba-816f-11ed-a2ce-1e68bf6263c5',
+            //         },
+            //         body: JSON.stringify(obj),
+            //     }
+            // )
+            // const response = await resp.json()
+            // const data = await response.data
+            // setFeeShip(data.total)
+            const res = await axios.post(
+                'https://dev-online-gateway.ghn.vn/shiip/public-api/v2/shipping-order/fee',
+                obj,
                 {
-                    method: 'POST',
                     headers: {
                         'Content-Type': ['application/json', 'text/plain'],
                         token: 'eab201ba-816f-11ed-a2ce-1e68bf6263c5',
                     },
-                    body: JSON.stringify(obj),
+                    withCredentials: false,
                 }
             )
-            const response = await resp.json()
-            const data = await response.data
-            setFeeShip(data.total)
+            console.log()
+            setFeeShip(res.data.data.total)
         } catch (error) {
+            notification.error({
+                message: 'error',
+                description: error.res?.data.message,
+            })
             console.log(error)
         }
     }

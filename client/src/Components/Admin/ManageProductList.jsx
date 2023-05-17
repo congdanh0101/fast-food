@@ -1,9 +1,10 @@
-import { Badge, Button, Table } from 'antd'
+import { Badge, Button, Space, Switch, Table, notification } from 'antd'
 import { useEffect, useState } from 'react'
 import request from '../../utils/axiosConfig'
 import { EyeOutlined, EditTwoTone } from '@ant-design/icons'
 import { useNavigate } from 'react-router-dom'
 import CreateProduct from './CreateProduct'
+import axiosInstance from '../../utils/axiosInstance'
 
 const currencyFormat = (price) => (
     <h4 style={{ color: 'red' }}>
@@ -33,6 +34,7 @@ const ManageProductList = () => {
                     price: product['price'],
                     category: product['category']['name'],
                     product: product['name'],
+                    soft: product['softDeleted'],
                 })
             }
             setListProduct(data)
@@ -65,6 +67,23 @@ const ManageProductList = () => {
             setFilterCategory([])
         }
     }, [])
+
+    const handleSwitchChange = async (record, e) => {
+        try {
+            const response = await axiosInstance.put(
+                `/product/soft/${record.key}`
+            )
+            notification.success({
+                message: 'Edit user successfully',
+            })
+        } catch (error) {
+            console.log(error)
+            notification.error({
+                message: 'Edit user failed',
+                description: error.response?.data.message,
+            })
+        }
+    }
 
     const columns = [
         {
@@ -103,6 +122,23 @@ const ManageProductList = () => {
                     }
                 />
             ),
+        },
+        {
+            title: () => <span style={{ fontWeight: 'bold' }}></span>,
+            align: 'center',
+            dataIndex: 'soft',
+            render: (value, record) => (
+                <Space>
+                    <Switch
+                        style={{ width: '100%' }}
+                        checkedChildren="Kich hoat"
+                        unCheckedChildren="Han che"
+                        defaultChecked={!value}
+                        onChange={(e) => handleSwitchChange(record, e)}
+                    />
+                </Space>
+            ),
+            // sorter: (a, b) => a.no - b.no,
         },
     ]
     const defaultTitle = () => (

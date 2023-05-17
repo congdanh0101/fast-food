@@ -1,4 +1,4 @@
-import { Col, Modal, Row, Table } from 'antd'
+import { Col, Modal, Row, Slider, Table } from 'antd'
 import { createContext, useEffect, useState } from 'react'
 import { Card } from 'react-bootstrap'
 import request from '../../utils/axiosConfig'
@@ -74,11 +74,12 @@ const Reward = () => {
     const userID = localStorage.getItem('userID')
 
     const [user, setUser] = useState({})
-
+    const [rankingPoint, setRankingPoint] = useState(0)
     const fetchUser = async () => {
         try {
             const response = await axiosInstance.get(`/user/${userID}`)
             setUser(response.data)
+            setRankingPoint(response.data.rankingPoint)
         } catch (error) {
             console.log(error)
         }
@@ -121,9 +122,52 @@ const Reward = () => {
         }
     }, [user])
 
+    const marks = {
+        0: {
+            label: <h3>ĐỒNG</h3>,
+        },
+        100: {
+            label: <h3>BẠC (100)</h3>,
+        },
+        250: {
+            label: <h3>VÀNG (250)</h3>,
+        },
+        500: {
+            label: <h3>BẠCH KIM (500)</h3>,
+        },
+        1000: {
+            label: <h3>KIM CƯƠNG (1000)</h3>,
+        },
+    }
+    const markss = {
+        0: '0°C',
+        26: '26°C',
+        37: '37°C',
+        100: {
+            style: {
+                color: '#f50',
+            },
+            label: <strong>100°C</strong>,
+        },
+    }
+
     return (
         <div>
             <div>
+                <Slider
+                    marks={marks}
+                    // defaultValue={parseInt(user.rankingPoint)}
+                    style={{
+                        marginLeft: '36px',
+                        marginRight: '36px',
+                        marginTop: '36px',
+                    }}
+                    max={1100}
+                    // range={true}
+                    value={[0, parseInt(user['rankingPoint'])]}
+                    dis
+                ></Slider>
+
                 <ul
                     style={{
                         display: 'flex',

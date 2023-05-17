@@ -103,7 +103,7 @@ const ProductList = ({ category }) => {
         try {
             console.log(`category id ${categoryId}`)
             const response = await request.get(
-                `/product?category=${categoryId}`
+                `/product?category=${categoryId}&softDeleted=false`
             )
             const listData = response.data
             setProductList(listData)

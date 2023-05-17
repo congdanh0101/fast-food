@@ -206,7 +206,7 @@ const ManageUser = () => {
             ],
         },
         {
-            title: () => <span style={{ fontWeight: 'bold' }}>#</span>,
+            title: () => <span style={{ fontWeight: 'bold' }}></span>,
             align: 'center',
             dataIndex: 'restrict',
             render: (value, record) => (

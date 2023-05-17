@@ -1,5 +1,5 @@
 // import "./home.css";
-import { Col, Menu, Row } from 'antd'
+import { Col, Layout, Menu, Row } from 'antd'
 import {
     AppstoreOutlined,
     ContainerOutlined,
@@ -13,6 +13,8 @@ import ProductList from '../Product/ProductList'
 import Category from '../Category/Category'
 import { useMediaQuery } from 'react-responsive'
 import NavBar from '../NavBar/NavBar'
+import Sider from 'antd/es/layout/Sider'
+import { Content } from 'antd/es/layout/layout'
 
 function getItem(label, key, icon, children, type) {
     return {

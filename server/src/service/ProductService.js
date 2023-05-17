@@ -122,6 +122,19 @@ class ProductService {
             throw error
         }
     }
+
+    async changeSoftDeleted(id) {
+        try {
+            const product = await this.getProductById(id)
+            return await Product.findByIdAndUpdate(
+                id,
+                { softDeleted: !product['softDeleted'] },
+                { new: true }
+            )
+        } catch (error) {
+            throw error
+        }
+    }
 }
 
 module.exports = new ProductService()

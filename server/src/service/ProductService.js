@@ -116,7 +116,7 @@ class ProductService {
                 }
             )
             if (!updatedProduct)
-                throw new Error('Product not found or something went wrong')
+                throw new Error('Sản phẩm không tồn tại hoặc đã xảy ra lỗ')
             return updatedProduct
         } catch (error) {
             throw error

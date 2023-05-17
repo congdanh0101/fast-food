@@ -8,14 +8,6 @@ const ResourceNotFoundException = require('../exception/ResourceNotFoundExceptio
 const client = require('../utils/redis.config')
 
 class AuthController {
-    hello(req, res, next) {
-        const err = {
-            status: 400,
-            message: 'zz',
-        }
-        // next(err)
-        res.send(`hello everybody`)
-    }
     async register(req, res, next) {
         const errors = validationResult(req)
         if (!errors.isEmpty())
@@ -50,7 +42,7 @@ class AuthController {
             )
 
             return res.status(200).json({
-                message: `Verification code is sent to your email.`,
+                message: `Mã xác nhận đã được gửi tới email của bạn.`,
                 code: registerVerificationCode,
                 user: registerUser,
                 expired:
@@ -95,7 +87,7 @@ class AuthController {
                 (error, payload) => {
                     if (error)
                         return res.status(403).json({
-                            message: 'Access Denied!',
+                            message: 'Từ chối truy cập!',
                             error: error,
                             success: false,
                         })
@@ -131,7 +123,7 @@ class AuthController {
                 } else
                     return next(
                         createError.BadRequest(
-                            'Invalid code or token is expired!'
+                            'Mã xác thực không hợp lễ hoặc đã hết thời hạn!'
                         )
                     )
             } else if (path.includes('forgot')) {
@@ -145,7 +137,7 @@ class AuthController {
                 } else
                     return next(
                         createError.BadRequest(
-                            'Invalid code or token is expired!'
+                            'Mã xác thực không hợp lễ hoặc đã hết thời hạn!'
                         )
                     )
             } else {
@@ -176,7 +168,7 @@ class AuthController {
                 process.env.VERIFICATION_CODE_EXPIRED
             )
             return res.status(200).json({
-                message: `Verification code is sent to your email.`,
+                message: `Mã xác thực đã được gửi tới email của bạn.`,
                 code: forgotVerificationCode,
                 email: email,
             })
@@ -191,7 +183,7 @@ class AuthController {
             await AuthService.logout(userID)
             //clear refresh token in cookie and database
             res.clearCookie('refreshToken')
-            return res.json({ message: `Logout successfully` })
+            return res.json({ message: `Đăng xuất thành công` })
         } catch (error) {
             return next(error)
         }

@@ -26,22 +26,22 @@ class AuthService {
             }
             let err = {}
             if (existEmail)
-                err['email'] = 'Email was existed, please try another email!'
+                err['email'] = 'Email đã tồn tại, xin hãy thử một email khác!'
             if (existPhoneNumber)
                 err['phoneNumber'] =
-                    'Phone number was existed, please try another phone number!'
+                    'Số điện thoại đã tồn tại, xin hãy thử một số khác!'
 
             if (Object.keys(err).length !== 0)
                 throw createHttpError.BadRequest(err)
 
             if (user['confirmPassword'] !== user['password'])
-                throw new Error('Password does not match, please try again!')
+                throw new Error('Mật khẩu không khớp, xin hãy thử lại!')
 
             const randomCode = Utils.generateVerificationCode()
 
             await EmailService.sendEmail(
                 user['email'],
-                'email verfication code'.toUpperCase(),
+                'Email verification code'.toUpperCase(),
                 EmailService.htmlEmailVerificationCodeRegister(
                     randomCode,
                     user['fullName']
@@ -76,9 +76,9 @@ class AuthService {
                 !bcrypt.compareSync(request['password'], user['password'])
             )
                 throw new Error(
-                    'Invalid username or password, please try again!'
+                    'Tên đăng nhập hoặc mật khẩu không hợp lệ, xin hãy thử lại!'
                 )
-            if (user['softDeleted']) throw new Error('User is restricted')
+            if (user['softDeleted']) throw new Error('Tài khoản đã bị khoá')
             const accessToken = Utils.generateAccessToken({
                 userID: user['_id'],
             })
@@ -121,7 +121,7 @@ class AuthService {
             const redisToken = await client.GET(userID.toString())
             if (!redisToken)
                 throw createHttpError.InternalServerError(
-                    'User has been logout'
+                    'Tài khoản đã đăng xuất'
                 )
             // user['refreshToken'] = null
             await client.DEL(userID.toString(), (err, data) => {
@@ -144,7 +144,7 @@ class AuthService {
             const randomCode = Utils.generateVerificationCode()
             await EmailService.sendEmail(
                 email,
-                `email verfication code`.toUpperCase(),
+                `Email verification code`.toUpperCase(),
                 EmailService.htmlEmailVerificationCodeForgotPasswor(
                     randomCode,
                     user['fullName']

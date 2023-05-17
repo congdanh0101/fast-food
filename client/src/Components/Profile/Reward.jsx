@@ -9,10 +9,10 @@ const current = moment()
 
 const configModal = (item) => {
     Modal.info({
-        title: 'Voucher information',
+        title: 'Thông tin chi tiết mã giảm giá',
         content: (
             <>
-                <h1>Description</h1>
+                <h1>Mô tả</h1>
                 <ul>
                     {item.description?.map((descript) => (
                         <li>{descript}</li>
@@ -45,12 +45,12 @@ const VoucherCard = ({ item, width }) => {
                     </Card.Title>
                     <Card.Text>
                         <h3>
-                            Expiry date:{' '}
+                            Ngày hết hạn:{' '}
                             {new Date(item.expiryDate).toLocaleDateString()}{' '}
                             {new Date(item.expiryDate).toLocaleTimeString()}
                         </h3>
                         <h4>
-                            Remain:{' '}
+                            Còn lại:{' '}
                             {parseInt(
                                 Math.min(
                                     Math.abs(
@@ -60,7 +60,7 @@ const VoucherCard = ({ item, width }) => {
                                         (1000 * 60 * 60 * 24)
                                 )
                             )}
-                            days
+                            ngày
                         </h4>
                     </Card.Text>
                 </Card.Body>
@@ -163,12 +163,11 @@ const Reward = () => {
                         marginTop: '36px',
                     }}
                     max={1100}
-                    // range={true}
-                    value={[0, parseInt(user['rankingPoint'])]}
-                    dis
+                    range
+                    value={[0, user['rankingPoint']]}
                 ></Slider>
 
-                <ul
+                {/* <ul
                     style={{
                         display: 'flex',
                         justifyContent: 'space-around',
@@ -202,12 +201,12 @@ const Reward = () => {
                         <p>Reward point:</p>
                         <p style={{ color: 'red' }}>{user.rewardPoint}</p>
                     </li>
-                </ul>
+                </ul> */}
             </div>
 
             <Row gutter={[40, 24]}>
                 {voucherList?.map((item) => (
-                    <Col span={6}>
+                    <Col span={5} offset={1}>
                         <VoucherCard item={item} width={100} />
                     </Col>
                 ))}

@@ -18,26 +18,26 @@ function getItem(label, key, icon, children, type) {
 
 const items = [
     getItem(
-        'Order',
+        'Đơn hàng',
         'order'
         // <LockOutlined style={{ fontSize: '150%' }} />
     ),
     getItem(
-        'Product',
+        'Sản phẩm',
         'product'
         // <InfoCircleOutlined style={{ fontSize: '150%' }} />
     ),
 
     getItem(
-        'User',
+        'Khách hàng',
         'user'
         // <PlusCircleOutlined style={{ fontSize: '150%' }} />
     ),
-    getItem(
-        'Category',
-        'category'
-        // <TransactionOutlined style={{ fontSize: '150%' }} />
-    ),
+    // getItem(
+    //     'Category',
+    //     'category'
+    //     // <TransactionOutlined style={{ fontSize: '150%' }} />
+    // ),
 ]
 
 const DashBoard = () => {

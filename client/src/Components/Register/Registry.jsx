@@ -48,28 +48,28 @@ const RegisterForm = () => {
                         rules={[
                             {
                                 required: true,
-                                message: 'Please enter your full name',
+                                message: 'Hãy nhập họ tên',
                             },
                         ]}
                     >
                         <Input
                             prefix={<UserOutlined />}
-                            placeholder="Full Name"
+                            placeholder="Họ tên"
                         />
                     </Form.Item>
 
                     <Form.Item
                         name="gender"
-                        label="Gender"
+                        label="Giới tính"
                         rules={[
                             {
                                 required: true,
-                                message: 'Please select your gender!',
+                                message: 'Hãy chọn giới tính!',
                             },
                         ]}
                     >
                         <Select
-                            placeholder="Select your gender"
+                            placeholder="Chọn giới tính"
                             style={{ width: '125%' }}
                         >
                             <Select.Option></Select.Option>
@@ -81,21 +81,21 @@ const RegisterForm = () => {
                     <Form.Item
                         style={{ flex: '1' }}
                         name="email"
-                        label="Email address"
+                        label="Địa chỉ eamil"
                         rules={[
                             {
                                 required: true,
-                                message: 'Please enter your email address',
+                                message: 'Hãy nhập email',
                             },
                             {
                                 type: 'email',
-                                message: 'Please enter a valid email address',
+                                message: 'Hãy nhập email hợp lệ',
                             },
                         ]}
                     >
                         <Input
                             prefix={<MailOutlined />}
-                            placeholder="Email Address"
+                            placeholder="Địa chỉ email"
                         />
                     </Form.Item>
 
@@ -106,12 +106,12 @@ const RegisterForm = () => {
                         rules={[
                             {
                                 required: true,
-                                message: 'Please enter your password',
+                                message: 'Hãy nhập mật khẩu',
                             },
                             {
                                 min: 6,
                                 message:
-                                    'Password must be at least 6 characters long',
+                                    'Mật khẩu phải chứa ít nhất 6 kí tự',
                             },
                         ]}
                     >
@@ -124,11 +124,11 @@ const RegisterForm = () => {
                     <Form.Item
                         style={{ flex: '1' }}
                         name="confirmPassword"
-                        label="Confirm password"
+                        label="Xác nhận mật khẩu"
                         rules={[
                             {
                                 required: true,
-                                message: 'Please confirm your password',
+                                message: 'Hãy xác nhận mật khẩu',
                             },
                             ({ getFieldValue }) => ({
                                 validator(_, value) {
@@ -139,7 +139,7 @@ const RegisterForm = () => {
                                         return Promise.resolve()
                                     }
                                     return Promise.reject(
-                                        new Error('Passwords do not match')
+                                        new Error('Mật khẩu không khớp')
                                     )
                                 },
                             }),
@@ -147,7 +147,7 @@ const RegisterForm = () => {
                     >
                         <Input.Password
                             prefix={<LockOutlined />}
-                            placeholder="Confirm Password"
+                            placeholder="Xác nhận mật khẩu"
                         />
                     </Form.Item>
 

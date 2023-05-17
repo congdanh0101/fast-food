@@ -1,4 +1,4 @@
-import { Col, Input, Row, notification } from 'antd'
+import { Col, Input, Radio, Row, notification } from 'antd'
 import { useContext, useEffect, useState } from 'react'
 import { Form, FormGroup, FormLabel } from 'react-bootstrap'
 import CartContext from '../../context/CartContext'
@@ -238,10 +238,13 @@ const Checkout = () => {
             <Row>
                 <Col span={9} offset={1}>
                     <Contact user={user} />
+                    <br />
+                    
                 </Col>
                 <Col span={13} offset={1}>
                     <h1 style={{ textAlign: 'center' }}>Thông tin đơn hàng</h1>
                     <CartCheckout />
+                    
                 </Col>
             </Row>
         </div>

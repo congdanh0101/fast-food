@@ -141,17 +141,17 @@ const UserInfo = () => {
                         <Col span={6}>
                             <Form.Item
                                 name="fullName"
-                                label="Full name"
+                                label="Họ tên"
                                 rules={[
                                     {
                                         required: true,
-                                        message: 'Please enter your full name',
+                                        message: 'Hãy nhập họ tên',
                                     },
                                 ]}
                             >
                                 <Input
                                     prefix={<UserOutlined />}
-                                    placeholder="Full Name"
+                                    placeholder="Họ tên"
                                     type="text"
                                     defaultValue={fullName}
                                     style={{ fontSize: '1.25rem' }}
@@ -165,12 +165,12 @@ const UserInfo = () => {
                         <Col span={6} offset={1}>
                             <Form.Item
                                 name="phone"
-                                label="Phone number"
+                                label="Số điện thoại"
                                 rules={[
                                     {
                                         required: true,
                                         message:
-                                            'Please input your phone number!',
+                                            'Hãy nhập số điện thoại!',
                                     },
                                     {
                                         validator: validatePhoneNumber,
@@ -179,7 +179,7 @@ const UserInfo = () => {
                             >
                                 <Input
                                     prefix={<PhoneOutlined />}
-                                    placeholder="Phone number"
+                                    placeholder="Số điện thoại"
                                     style={{ fontSize: '1.25rem' }}
                                     defaultValue={phoneNumber}
                                     onChange={(e) =>
@@ -199,16 +199,16 @@ const UserInfo = () => {
                                 rules={[
                                     {
                                         required: true,
-                                        message: 'Please enter your full name',
+                                        message: 'Hãy nhập họ tên',
                                     },
                                 ]}
                             >
                                 <Input
                                     prefix={<HeartOutlined />}
-                                    placeholder="Gender"
+                                    placeholder="Giới tính"
                                     // defaultValue={props.email}
                                     style={{ fontSize: '1.25rem' }}
-                                    defaultValue={gender ? `MALE` : `FEMALE`}
+                                    defaultValue={gender ? `Nam` : `Nữ`}
                                     disabled
                                 />
                             </Form.Item>
@@ -217,12 +217,12 @@ const UserInfo = () => {
                         <Col span={6} offset={1}>
                             <Form.Item
                                 name="dob"
-                                label="Date of birth"
+                                label="Ngày sinh"
                                 rules={[
                                     {
                                         required: true,
                                         message:
-                                            'Please input your date of birth!',
+                                            'Hãy nhập ngày sinh!',
                                     },
                                 ]}
                             >
@@ -230,7 +230,7 @@ const UserInfo = () => {
                                     <>
                                         <Input
                                             prefix={<HeartOutlined />}
-                                            placeholder="Date of birth"
+                                            placeholder="Ngày sinh"
                                             // defaultValue={props.email}
                                             style={{ fontSize: '1.25rem' }}
                                             disabled
@@ -245,7 +245,7 @@ const UserInfo = () => {
                                     <>
                                         <Input
                                             prefix={<HeartOutlined />}
-                                            placeholder="Date of birth"
+                                            placeholder="Ngày sinh"
                                             // defaultValue={props.email}
                                             style={{ fontSize: '1.25rem' }}
                                             onChange={(e) =>
@@ -267,7 +267,7 @@ const UserInfo = () => {
                             rules={[
                                 {
                                     required: true,
-                                    message: 'Please input your email!',
+                                    message: 'Hãy nhập email!',
                                 },
                             ]}
                         >
@@ -291,12 +291,12 @@ const UserInfo = () => {
                             rules={[
                                 {
                                     required: true,
-                                    message: 'Please input your address!',
+                                    message: 'Hãy nhập địa chỉ!',
                                 },
                             ]}
                         >
                             <Input
-                                placeholder="Address"
+                                placeholder="Địa chỉ"
                                 // defaultValue={props.email}
                                 style={{ fontSize: '1.25rem' }}
                                 type="text"
@@ -335,7 +335,7 @@ const UserInfo = () => {
                                 rules={[
                                     {
                                         required: true,
-                                        message: 'Please input your ward!',
+                                        message: 'Hãy nhập phường!',
                                     },
                                 ]}
                             >

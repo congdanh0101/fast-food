@@ -72,14 +72,14 @@ const ManageUser = () => {
         },
         {
             title: () => (
-                <span style={{ fontWeight: 'bold' }}>Thong tin ca nhan</span>
+                <span style={{ fontWeight: 'bold' }}>Thông tin cá nhân</span>
             ),
             dataIndex: 'info',
             align: 'center',
             children: [
                 {
                     title: () => (
-                        <span style={{ fontWeight: 'bold' }}>Ho va ten</span>
+                        <span style={{ fontWeight: 'bold' }}>Họ và tên</span>
                     ),
                     dataIndex: 'name',
                     align: 'center',
@@ -87,7 +87,7 @@ const ManageUser = () => {
                 {
                     title: () => (
                         <span style={{ fontWeight: 'bold' }}>
-                            So dien thoai
+                            Số điện thoại
                         </span>
                     ),
                     dataIndex: 'phoneNumber',
@@ -103,14 +103,14 @@ const ManageUser = () => {
             ],
         },
         {
-            title: () => <span style={{ fontWeight: 'bold' }}>Tich luy</span>,
+            title: () => <span style={{ fontWeight: 'bold' }}>Tích luỹ</span>,
             // dataIndex: 'rank',
             align: 'center',
             children: [
                 {
                     title: () => (
                         <span style={{ fontWeight: 'bold' }}>
-                            Hang thanh vien
+                            Hạng thành viên
                         </span>
                     ),
                     dataIndex: 'rank',
@@ -119,7 +119,7 @@ const ManageUser = () => {
                 {
                     title: () => (
                         <span style={{ fontWeight: 'bold' }}>
-                            Diem tich luy
+                            Điểm tích luỹ
                         </span>
                     ),
                     dataIndex: 'rankingPoint',
@@ -128,27 +128,27 @@ const ManageUser = () => {
             ],
         },
         {
-            title: () => <span style={{ fontWeight: 'bold' }}>Lien he</span>,
+            title: () => <span style={{ fontWeight: 'bold' }}>Liên hệ</span>,
             // dataIndex: 'rank',
             align: 'center',
             children: [
                 {
                     title: () => (
-                        <span style={{ fontWeight: 'bold' }}>Dia chi</span>
+                        <span style={{ fontWeight: 'bold' }}>Địa chỉ</span>
                     ),
                     dataIndex: 'address',
                     align: 'center',
                 },
                 {
                     title: () => (
-                        <span style={{ fontWeight: 'bold' }}>Phuong</span>
+                        <span style={{ fontWeight: 'bold' }}>Phường</span>
                     ),
                     dataIndex: 'ward',
                     align: 'center',
                 },
                 {
                     title: () => (
-                        <span style={{ fontWeight: 'bold' }}>Quan</span>
+                        <span style={{ fontWeight: 'bold' }}>Quận</span>
                     ),
                     dataIndex: 'district',
                     align: 'center',
@@ -156,28 +156,28 @@ const ManageUser = () => {
             ],
         },
         {
-            title: () => <span style={{ fontWeight: 'bold' }}>Don hang</span>,
+            title: () => <span style={{ fontWeight: 'bold' }}>Đơn hàng</span>,
             // dataIndex: 'rank',
             align: 'center',
 
             children: [
                 {
                     title: () => (
-                        <span style={{ fontWeight: 'bold' }}>Tong so don</span>
+                        <span style={{ fontWeight: 'bold' }}>Tổng số đơn</span>
                     ),
                     dataIndex: 'orders',
                     align: 'center',
                 },
                 {
                     title: () => (
-                        <span style={{ fontWeight: 'bold' }}>Thanh cong</span>
+                        <span style={{ fontWeight: 'bold' }}>Thành công</span>
                     ),
                     align: 'center',
                     children: [
                         {
                             title: () => (
                                 <span style={{ fontWeight: 'bold' }}>
-                                    So luong
+                                    Số lượng
                                 </span>
                             ),
                             align: 'center',
@@ -186,7 +186,7 @@ const ManageUser = () => {
                         {
                             title: () => (
                                 <span style={{ fontWeight: 'bold' }}>
-                                    Ti le
+                                    Tỷ lệ
                                 </span>
                             ),
                             align: 'center',
@@ -213,8 +213,8 @@ const ManageUser = () => {
                 <Space>
                     <Switch
                         style={{ width: '100%' }}
-                        checkedChildren="Kich hoat"
-                        unCheckedChildren="Han che"
+                        checkedChildren="Kích hoạt"
+                        unCheckedChildren="Hạn chế"
                         defaultChecked={!value}
                         onChange={(e) => handleSwitchChange(record, e)}
                     />
@@ -223,7 +223,7 @@ const ManageUser = () => {
             // sorter: (a, b) => a.no - b.no,
         },
     ]
-    const defaultTitle = () => <h1>Danh sach khach hang</h1>
+    const defaultTitle = () => <h1>Danh sách khách hàng</h1>
 
     return (
         <Table

@@ -3,7 +3,7 @@ import './CartCheckout.css'
 import { Link, useNavigate } from 'react-router-dom'
 import { QuantityPicker } from 'react-qty-picker'
 import ReactHtmlParser from 'react-html-parser'
-import { Button, Table, notification } from 'antd'
+import { Button, Radio, Table, notification } from 'antd'
 import axiosInstance from '../../utils/axiosInstance'
 import CartContext from '../../context/CartContext'
 import request from '../../utils/axiosConfig'
@@ -168,6 +168,14 @@ function Summary({
                 <label htmlFor="promo-code">Have A Promo Code?</label>
                 <input type="text" onChange={onEnterPromoCode} />
                 <button type="button" onClick={checkPromoCode} />
+                <Radio.Group
+                    optionType="button"
+                    buttonStyle="solid"
+                    style={{ fontSize: '2rem' }}
+                >
+                    <Radio value="COD">Thanh toan COD</Radio>
+                    <Radio value="Online">Thanh toan Online</Radio>
+                </Radio.Group>
             </div>
 
             <div className="summary">

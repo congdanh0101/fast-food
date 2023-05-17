@@ -91,7 +91,7 @@ class ProductController {
             const result = await ProductService.deleteProduct(id)
             return res.json({
                 status: `success`,
-                message: `Product with id=${id} has been deleted!`,
+                message: `Sản phẩm với id=${id} đã bị xoá!`,
             })
         } catch (error) {
             return next(error)

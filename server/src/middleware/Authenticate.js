@@ -15,7 +15,7 @@ class Authenticate {
                 const role = user['roles']
                 console.log(`Role ${role}`)
                 if (role.includes('USER')) return next()
-                return next(createHttpError.Forbidden(`Access denied!`))
+                return next(createHttpError.Forbidden(`Từ chối truy cập!`))
             } catch (error) {
                 return next(error)
             }
@@ -29,7 +29,7 @@ class Authenticate {
                 const user = await UserService.getUserById(userID)
                 const role = user['roles']
                 if (role.includes('ADMIN')) return next()
-                return next(createHttpError.Forbidden(`Access denied!`))
+                return next(createHttpError.Forbidden(`Từ chối truy cập!`))
             } catch (error) {
                 return next(error)
             }
@@ -48,7 +48,7 @@ const verifyAccessToken = (req, res, next) => {
         (error, user) => {
             if (error)
                 return res.status(403).json({
-                    message: 'Access Denied!',
+                    message: 'Từ chối truy cập!',
                     error: error,
                     success: false,
                 })

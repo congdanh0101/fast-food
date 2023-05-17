@@ -3,7 +3,6 @@ const router = express.Router()
 const AuthController = require('../controller/AuthController')
 const { validate } = require('../middleware/Validator')
 const Authenticate = require('../middleware/Authenticate')
-router.get('/', AuthController.hello)
 
 //register new user
 router.post(

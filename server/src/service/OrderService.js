@@ -32,7 +32,7 @@ class OrderService {
                 )
                 //check voucher available
                 if (VoucherService.isAvailableVoucher(voucher) === false)
-                    throw createHttpError.BadRequest('Voucher invalid')
+                    throw createHttpError.BadRequest('Mã giảm giá không hợp lệ')
                 //calculate voucher discount
                 discountVoucher = VoucherService.checkDiscount(
                     voucher,
@@ -93,7 +93,7 @@ class OrderService {
                 (order['status'] === 'Failed' && order['isPaid'] === true) ||
                 (order['status'] === 'Succeeded' && order['isPaid'] === true)
             )
-                throw createHttpError.BadRequest('Order cannot be updated')
+                throw createHttpError.BadRequest('Đơn hàng không thể cập nhật')
 
             const userID = order['user']['_id']
             const user = await UserService.getUserById(userID)
@@ -126,7 +126,7 @@ class OrderService {
             })
             if (!updatedUser)
                 throw createHttpError.InternalServerError(
-                    'Something went wrong'
+                    'Đã xảy ra lỗi'
                 )
             order['status'] = data['status']
             if (order['isPaid'] != true) {
@@ -147,7 +147,7 @@ class OrderService {
             ).populate('user', '-password -refreshToken')
             if (!updatedOrder)
                 throw createHttpError.InternalServerError(
-                    'Order cannot be updated'
+                    'Đơn hàng không thể cập nhật'
                 )
             return updatedOrder
         } catch (error) {

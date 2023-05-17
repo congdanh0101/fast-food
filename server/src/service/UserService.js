@@ -65,7 +65,7 @@ class UserService {
             const user = await this.getUserById(id)
             if (!user)
                 throw createHttpError.BadRequest(
-                    `User not found with id: ${id}`
+                    `Tài khoản không tồn tại với id: ${id}`
                 )
 
             return await User.findByIdAndUpdate(
@@ -91,11 +91,11 @@ class UserService {
             if (existPhoneNumber) {
                 if (existPhoneNumber['_id'].toString() !== id)
                     throw createHttpError.BadRequest(
-                        'Phone number was existed, please try another phone number!'
+                        'Số điện thoại đã tồn tại, xin hãy thử một số khác!'
                     )
             }
             const user = await User.findByIdAndUpdate(id, data, { new: true })
-            if (!user) throw new Error(`User cannot be updated with id: ${id}`)
+            if (!user) throw new Error(`Tài khoản không thể cập nhật với id: ${id}`)
             return user
         } catch (error) {
             throw error
@@ -106,14 +106,14 @@ class UserService {
         try {
             const user = await this.getUserById(id)
             if (!bcrypt.compareSync(data['currentPassword'], user['password']))
-                throw new Error('Your password is invalid, please try again!')
+                throw new Error('Mật khẩu không hợp lệ, xin hãy thử lại!')
             if (data['newPassword'] !== data['confirmPassword'])
-                throw new Error('Your password is invalid, please try again!')
+                throw new Error('Mật khẩu không tồn tại, xin hãy thử lại!')
             user['password'] = bcrypt.hashSync(data['newPassword'], 10)
             const updatedUser = await User.findByIdAndUpdate(id, user, {
                 new: true,
             })
-            if (!updatedUser) throw new Error('User cannot change password')
+            if (!updatedUser) throw new Error('Tài khoản không thể thay đổi mật khẩu')
             return updatedUser
         } catch (error) {
             throw error

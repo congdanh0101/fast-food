@@ -44,22 +44,22 @@ function getItem(label, key, icon, children, type) {
 
 const items = [
     getItem(
-        'Information',
+        'Thông tin',
         'info',
         <InfoCircleOutlined style={{ fontSize: '150%' }} />
     ),
     getItem(
-        'Security',
+        'Bảo mật',
         'security',
         <LockOutlined style={{ fontSize: '150%' }} />
     ),
     getItem(
-        'Reward',
+        'Điểm thưởng',
         'reward',
         <PlusCircleOutlined style={{ fontSize: '150%' }} />
     ),
     getItem(
-        'Transaction History',
+        'Lịch sử mua hàng',
         'trans',
         <TransactionOutlined style={{ fontSize: '150%' }} />
     ),
@@ -92,19 +92,7 @@ function UserProfile() {
 
     const [key, setKey] = useState('info')
 
-    const onFinish = (values) => {
-        console.log('Received values of form: ', values)
-    }
-
-    const validatePhoneNumber = (rule, value) => {
-        const phoneNumberRegex = /^[0-9]{10}$/ // match 10 digits
-        if (value && !phoneNumberRegex.test(value)) {
-            return Promise.reject('Phone number must be 10 digits')
-        }
-        return Promise.resolve()
-    }
-
-    const handleSubmit = () => {}
+   
 
     const handleMenuChanged = (e) => {
         console.log(e.key)

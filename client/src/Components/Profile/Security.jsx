@@ -32,13 +32,13 @@ const Security = () => {
                 confirmPassword: requestChangePassword['confirmPassword'],
             })
             notification.success({
-                message: 'Chang password successfully',
+                message: 'Đổi mật khẩu thành công',
                 duration: 2,
             })
         } catch (error) {
             console.log(error)
             notification.error({
-                message: 'Change password failure',
+                message: 'Đổi mật khẩu thất bại',
                 description: error.response.data.message,
                 duration: 2,
             })
@@ -62,44 +62,44 @@ const Security = () => {
                     >
                         <Form.Item
                             name="currentPassword"
-                            label="Current Password"
+                            label="Mật khẩu hiện tại"
                             rules={[
                                 {
                                     required: true,
                                     message:
-                                        'Please input your current password!',
+                                        'Hãy nhập mật khẩu hiện tại!',
                                 },
                             ]}
                         >
                             <Input.Password
                                 prefix={<LockOutlined />}
-                                placeholder="Current Password"
+                                placeholder="Mật khẩu hiện tại"
                             />
                         </Form.Item>
                         <Form.Item
                             name="newPassword"
-                            label="New Password"
+                            label="Mật khẩu mới"
                             rules={[
                                 {
                                     required: true,
-                                    message: 'Please input your new password!',
+                                    message: 'Hãy nhập mật khẩu mới!',
                                 },
                             ]}
                         >
                             <Input.Password
                                 prefix={<LockOutlined />}
-                                placeholder="New Password"
+                                placeholder="Mật khẩu mới"
                             />
                         </Form.Item>
                         <Form.Item
                             name="confirmPassword"
-                            label="Confirm New Password"
+                            label="Xác nhận mật khẩu mới"
                             dependencies={['newPassword']}
                             rules={[
                                 {
                                     required: true,
                                     message:
-                                        'Please confirm your new password!',
+                                        'Hãy xác nhận mật khẩu mới!',
                                 },
                                 ({ getFieldValue }) => ({
                                     validator(_, value) {
@@ -112,7 +112,7 @@ const Security = () => {
                                         }
                                         return Promise.reject(
                                             new Error(
-                                                'The two passwords that you entered do not match!'
+                                                'Mật khẩu không khớp!'
                                             )
                                         )
                                     },
@@ -121,7 +121,7 @@ const Security = () => {
                         >
                             <Input.Password
                                 prefix={<LockOutlined />}
-                                placeholder="Confirm New Password"
+                                placeholder="Xác nhận mật khẩu mới"
                             />
                         </Form.Item>
                         <Form.Item>

@@ -131,8 +131,8 @@ const ManageProductList = () => {
                 <Space>
                     <Switch
                         style={{ width: '100%' }}
-                        checkedChildren="Kich hoat"
-                        unCheckedChildren="Han che"
+                        checkedChildren="Hiện"
+                        unCheckedChildren="Ẩn"
                         defaultChecked={!value}
                         onChange={(e) => handleSwitchChange(record, e)}
                     />
@@ -152,7 +152,7 @@ const ManageProductList = () => {
                 ghost
                 onClick={(e) => navigate('/admin/product/create')}
             >
-                Them san pham
+                Thêm sản phẩm
             </Button>
         </div>
     )

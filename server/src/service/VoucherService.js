@@ -103,7 +103,7 @@ class VoucherService {
             //Discount by percentage
             if (voucher['minOrder'] > price)
                 throw createHttpError.BadRequest(
-                    'Your order does not have enough condition to use voucher'
+                    'Đơn hàng không đủ điều kiện áp dụng mã giảm giá'
                 )
             discount = (price * voucher['discount']) / 100
             if (discount > voucher['maxDiscount'])
@@ -123,7 +123,7 @@ class VoucherService {
             if (this.isAvailableVoucher(voucher) === true) {
                 return this.checkDiscount(voucher, request['value'])
             }
-            throw createHttpError.BadRequest('Your voucher is not available')
+            throw createHttpError.BadRequest('Mã giảm giá không tồn tại')
         } catch (error) {
             throw error
         }

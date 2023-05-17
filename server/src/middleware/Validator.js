@@ -2,22 +2,22 @@ const { check } = require('express-validator')
 
 let validateRegisterUser = () => {
   return [
-    check('email', `Invalid email does not empty`).not().isEmpty(),
-    check('email', `Invalid email`).isEmail(),
-    check('dob', `Invalid birthday`).isISO8601('yyyy-mm-dd'),
-    check('fullName', `Invalid fullname does not empty`).not().isEmpty(),
-    check('address', `Invalid address does not empty`).not().isEmpty(),
-    check('gender', `Invalid gender does not empty`).not().isEmpty(),
-    check('password', `Invalid password does not empty`).not().isEmpty(),
+    check('email', `Hãy nhập email`).not().isEmpty(),
+    check('email', `Email không hợp lệ`).isEmail(),
+    check('dob', `Ngày sinh không hợp lệ`).isISO8601('yyyy-mm-dd'),
+    check('fullName', `Hãy nhập họ tên`).not().isEmpty(),
+    check('address', `Hãy nhập địa chỉ`).not().isEmpty(),
+    check('gender', `Hãy nhập giới tính`).not().isEmpty(),
+    check('password', `Hãy nhập mật khẩu`).not().isEmpty(),
     check(
       'password',
-      `Invalid password's length at least 6 characters`
+      `Mật khẩu phải có ít nhất 6 kí tự`
     ).isLength({ min: 6 }),
-    check('phoneNumber', `Invalid phoneNumber does not empty`).not().isEmpty(),
-    check('phoneNumber', `Invalid phoneNumber does not alpha`).not().isAlpha(),
+    check('phoneNumber', `Xin hãy nhập số điện thoại`).not().isEmpty(),
+    check('phoneNumber', `Số điện thoại không bao gồm kí tự đặc biệt`).not().isAlpha(),
     check(
       'phoneNumber',
-      `Invalid phoneNumber's length between 10 and 11 digits'`
+      `Số điện thoại chỉ từ 10 đến 11 kí tự'`
     ).isLength({ min: 10, max: 11 }),
   ]
 }

@@ -132,7 +132,7 @@ const UserInfo = () => {
                 // justifyContent: 'center',
                 // alignItems: 'center',
                 // minHeight: '100vh',
-                width: '105%',
+                width: '100%',
             }}
         >
             <Row align="middle" justify="start">

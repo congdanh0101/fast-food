@@ -30,7 +30,11 @@ const VoucherCard = ({ item, width }) => {
             <Card border="dark" bg="light">
                 <div
                     className=""
-                    style={{ width: `${width}%` }}
+                    style={{
+                        width: `${width}%`,
+                        cursor: 'pointer',
+                        transition: '.2s',
+                    }}
                     onClick={() => configModal(item)}
                 >
                     <img
@@ -139,20 +143,9 @@ const Reward = () => {
             label: <h3>KIM CƯƠNG (1000)</h3>,
         },
     }
-    const markss = {
-        0: '0°C',
-        26: '26°C',
-        37: '37°C',
-        100: {
-            style: {
-                color: '#f50',
-            },
-            label: <strong>100°C</strong>,
-        },
-    }
 
     return (
-        <div>
+        <div style={{ width: '100%' }}>
             <div>
                 <Slider
                     marks={marks}
@@ -162,7 +155,7 @@ const Reward = () => {
                         marginRight: '36px',
                         marginTop: '36px',
                     }}
-                    max={1100}
+                    max={1000}
                     range
                     value={[0, user['rankingPoint']]}
                 ></Slider>

@@ -298,7 +298,7 @@ const ProductCardMustTry = ({ item, onChangeMustTryQuantity }) => {
                                                     event
                                                 )
                                             }}
-                                            min={1}
+                                            min={0}
                                             value={0}
                                             max={99}
                                             smooth

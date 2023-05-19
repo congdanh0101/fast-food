@@ -1,4 +1,8 @@
 const multer = require('multer')
+const AWS = require('aws-sdk')
+const AWSConfig = AWS.config.loadFromPath('./aws_config.json')
+const s3 = new AWS.S3(AWSConfig)
+
 
 const FILE_TYPE_MAP = {
     'image/png': 'png',

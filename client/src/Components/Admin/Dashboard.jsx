@@ -1,74 +1,63 @@
-import { useContext, useEffect, useState } from 'react'
-import CartContext from '../../context/CartContext'
-import { useNavigate } from 'react-router-dom'
-import { Badge, Menu } from 'antd'
-import ManageProductList from './ManageProductList'
-import ManageOrderList from './ManageOrderList'
-import ManageUser from './ManageUser'
+import ReactEChartsCore from 'echarts-for-react/lib/core'
+import * as echarts from 'echarts/core'
+import { BarChart, LineChart } from 'echarts/charts'
+import {
+    GridComponent,
+    TooltipComponent,
+    TitleComponent,
+    DatasetComponent,
+} from 'echarts/components'
+import {
+    CanvasRenderer,
+    // SVGRenderer,
+} from 'echarts/renderers'
+import { useState } from 'react'
 
-function getItem(label, key, icon, children, type) {
-    return {
-        key,
-        icon,
-        children,
-        label,
-        type,
+echarts.use([
+    TitleComponent,
+    TooltipComponent,
+    GridComponent,
+    BarChart,
+    LineChart,
+    CanvasRenderer,
+    DatasetComponent,
+])
+
+const AdminDashboard = () => {
+    const [loading, setLoading] = useState(false)
+    const option = {
+        title: { text: 'haha' },
+        legend: {},
+        tooltip: { position: 'top' },
+        dataset: {
+            // Provide a set of data.
+            source: [
+                ['Matcha Latte', 43.3, 85.8, 93.7],
+                ['Milk Tea', 83.1, 73.4, 55.1],
+                ['Cheese Cocoa', 86.4, 65.2, 82.5],
+                ['Walnut Brownie', 72.4, 53.9, 39.1],
+            ],
+            dimensions: ['product', '2015', '2016', '2017'],
+        },
+        // Declare an x-axis (category axis).
+        // The category map the first column in the dataset by default.
+        xAxis: { type: 'category' },
+        // Declare a y-axis (value axis).
+        yAxis: {},
+        // Declare several 'bar' series,
+        // every series will auto-map to each column by default.
+        series: [{ type: 'line' }, { type: 'bar' }, { type: 'bar' }],
     }
-}
-
-const items = [
-    getItem(
-        'Đơn hàng',
-        'order'
-        // <LockOutlined style={{ fontSize: '150%' }} />
-    ),
-    getItem(
-        'Sản phẩm',
-        'product'
-        // <InfoCircleOutlined style={{ fontSize: '150%' }} />
-    ),
-
-    getItem(
-        'Khách hàng',
-        'user'
-        // <PlusCircleOutlined style={{ fontSize: '150%' }} />
-    ),
-    // getItem(
-    //     'Category',
-    //     'category'
-    //     // <TransactionOutlined style={{ fontSize: '150%' }} />
-    // ),
-]
-
-const DashBoard = () => {
-    const context = useContext(CartContext)
-    const navigate = useNavigate()
-    const [key, setKey] = useState('order')
-
-    const [user, setUser] = useState(null)
-    useEffect(() => {})
-
     return (
         <div>
-            {items.length > 0 && (
-                <Menu
-                    items={items}
-                    mode="horizontal"
-                    defaultSelectedKeys={items[0]?.key}
-                    style={{
-                        fontSize: '100%',
-                        fontWeight: 'bold',
-                        marginTop: '2rem',
-                    }}
-                    onClick={(e) => setKey(e.key)}
-                ></Menu>
-            )}
-            {/* <ManageProductList /> */}
-            {key === 'order' && <ManageOrderList />}
-            {key === 'product' && <ManageProductList />}
-            {key === 'user' && <ManageUser />}
+            <ReactEChartsCore
+                echarts={echarts}
+                notMerge={true}
+                lazyUpdate={true}
+                option={option}
+            />
         </div>
     )
 }
 
-export default DashBoard
+export default AdminDashboard

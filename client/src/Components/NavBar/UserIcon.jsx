@@ -8,7 +8,7 @@ const UserIcon = () => {
     const context = useContext(CartContext)
     return (
         <Link
-            to={context.isAdmin ? '/admin/dashboard' : '/profile'}
+            to={context.isAdmin ? '/admin/management' : '/profile'}
             style={{ fontSize: '1.5rem' }}
         >
             {context.isAdmin ? 'ADMIN' : context.user.fullName}

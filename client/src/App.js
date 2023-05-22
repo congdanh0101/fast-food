@@ -20,13 +20,14 @@ import CartContext, { NavbarProvider } from './context/CartContext'
 import NotFound from './Components/Error/NotFound'
 import PaymentFailure from './Components/PaymentStatus/PaymentFailure'
 import PaymentSuccess from './Components/PaymentStatus/PaymentSuccess'
-import DashBoard from './Components/Admin/Dashboard'
+import AdminManagement from './Components/Admin/Management'
 import EditProduct from './Components/Admin/EditProduct'
 import UserInfo from './Components/Profile/UserInfo'
 import Reward from './Components/Profile/Reward'
 import Transaction from './Components/Profile/Transaction'
 import Security from './Components/Profile/Security'
 import CreateProduct from './Components/Admin/CreateProduct'
+import AdminDashboard from './Components/Admin/Dashboard'
 // import './dist/output.css'
 
 function App() {
@@ -69,8 +70,12 @@ function App() {
                             element={<PaymentSuccess />}
                         />
                         <Route
+                            path="/admin/management"
+                            element={<AdminManagement />}
+                        />
+                        <Route
                             path="/admin/dashboard"
-                            element={<DashBoard />}
+                            element={<AdminDashboard />}
                         />
 
                         <Route

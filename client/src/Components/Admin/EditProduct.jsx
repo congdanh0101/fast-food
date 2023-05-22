@@ -1,7 +1,16 @@
 import { createContext, useContext, useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import request from '../../utils/axiosConfig'
-import { Button, Col, Input, Row, Select, message, notification } from 'antd'
+import {
+    Button,
+    Col,
+    Input,
+    Row,
+    Select,
+    Spin,
+    message,
+    notification,
+} from 'antd'
 import ReactHtmlParser from 'react-html-parser'
 import { QuantityPicker } from 'react-qty-picker'
 import { ShoppingCartOutlined } from '@ant-design/icons'
@@ -35,7 +44,7 @@ export default function EditProduct() {
     const [categoryUpdate, setCategoryUpdate] = useState(null)
     const [priceUpdate, setPriceUpdate] = useState(null)
     const [nameUpdate, setNameUpdate] = useState(null)
-
+    const [loading, setLoading] = useState(false)
     const sortedFontOptions = [
         'Logical',
         'Salesforce Sans',
@@ -128,11 +137,14 @@ export default function EditProduct() {
         formData.append('category', categoryUpdate)
         console.log(formData)
         try {
+            setLoading(true)
+
             const response = await request.put(`/product/${id.id}`, formData, {
                 headers: {
                     'Content-Type': 'multipart/form-data',
                 },
             })
+            setLoading(false)
             notification.success({
                 message: 'Update product successfully',
             })
@@ -146,112 +158,116 @@ export default function EditProduct() {
 
     return (
         <div style={{ marginTop: '2%' }}>
-            <Row>
-                {/* <Col span={3}></Col> */}
-                <Col span={10} offset={3}>
-                    {selectedImage != null ? (
-                        <img
-                            src={URL.createObjectURL(selectedImage)}
-                            alt="Selected"
-                            width={'70%'}
-                            height={'120%'}
-                        />
-                    ) : (
-                        <img
-                            src={product['img']}
-                            width={'70%'}
-                            height={'120%'}
-                        />
-                    )}
-                </Col>
-                <Col span={10} style={{ marginTop: '5%' }}>
-                    <FormGroup style={{ width: '100%', fontSize: '1.5rem' }}>
-                        <Form.Label>Tên sản phẩm</Form.Label>
-                        <Input
-                            type="text"
-                            value={nameUpdate}
-                            style={{ fontSize: '1.25rem' }}
-                            placeholder="product name"
-                            onChange={(e) => setNameUpdate(e.target.value)}
-                        />
-                        <br />
-                        <Form.Label>Đơn giá</Form.Label>
-                        <Input
-                            type="text"
-                            value={priceUpdate}
-                            style={{ fontSize: '1.25rem' }}
-                            onChange={(e) => setPriceUpdate(e.target.value)}
-                        />
-                        <br />
-                        <Form.Label>Loại sản phẩm</Form.Label>
-                        <Select
-                            style={{ width: '100%' }}
-                            options={listCategory?.map((item) => ({
-                                value: item['_id'],
-                                label: item['name'],
-                            }))}
-                            value={categoryUpdate}
-                            onChange={setCategoryUpdate}
-                        ></Select>
-
-                        <Form.Label>Tải hình ảnh</Form.Label>
-                        <br />
-                        {/* <input type="file" onChange={(e) => console.log(e)} /> */}
-                        <Input
-                            type="file"
-                            accept=".jpg,.jpeg,.png"
-                            onChange={handleImageDrop}
-                            style={{ width: '50%', cursor: 'pointer' }}
-                        />
-                        <br></br>
-                        <Form.Label>Mô tả sản phẩm</Form.Label>
-                        <SunEditor
-                            // defaultValue={product.description}
-                            setContents={description}
-                            onChange={(e) => {
-                                console.log(e)
-                                setDescription(e)
-                            }}
-                            setOptions={{
-                                buttonList: [
-                                    ['font', 'fontSize'],
-                                    // ['paragraphStyle', 'blockquote'],
-                                    [
-                                        'bold',
-                                        'underline',
-                                        'italic',
-                                        'strike',
-                                        'subscript',
-                                        'superscript',
-                                    ],
-                                    ['fontColor', 'hiliteColor'],
-                                    ['align', 'list', 'lineHeight'],
-                                    ['outdent', 'indent'],
-                                    // ['math'] //You must add the 'katex' library at options to use the 'math' plugin.
-                                    // ['imageGallery'], // You must add the "imageGalleryUrl".
-                                    // ["fullScreen", "showBlocks", "codeView"],
-                                    // ['save', 'template'],
-                                    // '/', Line break
-                                ], // Or Array of button list, eg. [['font', 'align'], ['image']]
-                                // defaultTag: 'div',
-                                minHeight: '200px',
-                                showPathLabel: false,
-                                font: sortedFontOptions,
-                            }}
-                        />
-                        <Button
-                            type="primary"
-                            style={{
-                                height: '3rem',
-                                fontSize: '100%',
-                            }}
-                            onClick={handleUpdate}
+            <Spin spinning={loading}>
+                <Row>
+                    {/* <Col span={3}></Col> */}
+                    <Col span={10} offset={3}>
+                        {selectedImage != null ? (
+                            <img
+                                src={URL.createObjectURL(selectedImage)}
+                                alt="Selected"
+                                width={'70%'}
+                                height={'120%'}
+                            />
+                        ) : (
+                            <img
+                                src={product['img']}
+                                width={'70%'}
+                                height={'120%'}
+                            />
+                        )}
+                    </Col>
+                    <Col span={10} style={{ marginTop: '5%' }}>
+                        <FormGroup
+                            style={{ width: '100%', fontSize: '1.5rem' }}
                         >
-                            Update
-                        </Button>
-                    </FormGroup>
-                </Col>
-            </Row>
+                            <Form.Label>Tên sản phẩm</Form.Label>
+                            <Input
+                                type="text"
+                                value={nameUpdate}
+                                style={{ fontSize: '1.25rem' }}
+                                placeholder="product name"
+                                onChange={(e) => setNameUpdate(e.target.value)}
+                            />
+                            <br />
+                            <Form.Label>Đơn giá</Form.Label>
+                            <Input
+                                type="text"
+                                value={priceUpdate}
+                                style={{ fontSize: '1.25rem' }}
+                                onChange={(e) => setPriceUpdate(e.target.value)}
+                            />
+                            <br />
+                            <Form.Label>Loại sản phẩm</Form.Label>
+                            <Select
+                                style={{ width: '100%' }}
+                                options={listCategory?.map((item) => ({
+                                    value: item['_id'],
+                                    label: item['name'],
+                                }))}
+                                value={categoryUpdate}
+                                onChange={setCategoryUpdate}
+                            ></Select>
+
+                            <Form.Label>Tải hình ảnh</Form.Label>
+                            <br />
+                            {/* <input type="file" onChange={(e) => console.log(e)} /> */}
+                            <Input
+                                type="file"
+                                accept=".jpg,.jpeg,.png"
+                                onChange={handleImageDrop}
+                                style={{ width: '50%', cursor: 'pointer' }}
+                            />
+                            <br></br>
+                            <Form.Label>Mô tả sản phẩm</Form.Label>
+                            <SunEditor
+                                // defaultValue={product.description}
+                                setContents={description}
+                                onChange={(e) => {
+                                    console.log(e)
+                                    setDescription(e)
+                                }}
+                                setOptions={{
+                                    buttonList: [
+                                        ['font', 'fontSize'],
+                                        // ['paragraphStyle', 'blockquote'],
+                                        [
+                                            'bold',
+                                            'underline',
+                                            'italic',
+                                            'strike',
+                                            'subscript',
+                                            'superscript',
+                                        ],
+                                        ['fontColor', 'hiliteColor'],
+                                        ['align', 'list', 'lineHeight'],
+                                        ['outdent', 'indent'],
+                                        // ['math'] //You must add the 'katex' library at options to use the 'math' plugin.
+                                        // ['imageGallery'], // You must add the "imageGalleryUrl".
+                                        // ["fullScreen", "showBlocks", "codeView"],
+                                        // ['save', 'template'],
+                                        // '/', Line break
+                                    ], // Or Array of button list, eg. [['font', 'align'], ['image']]
+                                    // defaultTag: 'div',
+                                    minHeight: '200px',
+                                    showPathLabel: false,
+                                    font: sortedFontOptions,
+                                }}
+                            />
+                            <Button
+                                type="primary"
+                                style={{
+                                    height: '3rem',
+                                    fontSize: '100%',
+                                }}
+                                onClick={handleUpdate}
+                            >
+                                Cap nhat
+                            </Button>
+                        </FormGroup>
+                    </Col>
+                </Row>
+            </Spin>
         </div>
     )
 }

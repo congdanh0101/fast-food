@@ -19,7 +19,7 @@ class ProductController {
             category: data.category,
             price: data.price,
             // img: data.img,
-            img: fileName ? `${basePath}${fileName}` : null,
+            img: link['Location'] || null,
             combo: data.combo,
             description: data.description,
         }

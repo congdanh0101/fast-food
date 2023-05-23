@@ -252,7 +252,7 @@ const CreateProduct = () => {
                                 }}
                                 onClick={handleAddProduct}
                             >
-                                Xac nhan
+                                Xác nhận
                             </Button>
                         </FormGroup>
                     </Col>

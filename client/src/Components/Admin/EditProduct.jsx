@@ -262,7 +262,7 @@ export default function EditProduct() {
                                 }}
                                 onClick={handleUpdate}
                             >
-                                Cap nhat
+                                Cập nhật
                             </Button>
                         </FormGroup>
                     </Col>

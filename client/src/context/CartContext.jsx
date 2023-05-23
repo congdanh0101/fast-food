@@ -9,7 +9,8 @@ const CartContext = createContext({})
 export function NavbarProvider({ children }) {
     const [count, setCount] = useState(0)
     const [user, setUser] = useState(null)
-    const [isAdmin,setIsAdmin] = useState(false)
+    const [isAdmin, setIsAdmin] = useState(false)
+    const [selectMethod, setSelectMethod] = useState('Online')
 
     const getCountItem = () => {
         const items = JSON.parse(localStorage.getItem('items')) || []
@@ -20,8 +21,9 @@ export function NavbarProvider({ children }) {
     const getUser = () => {
         const currentUser = JSON.parse(localStorage.getItem('user'))
         if (currentUser) setUser(currentUser)
-        if(currentUser?.roles.length>=2) setIsAdmin(true)
+        if (currentUser?.roles.length >= 2) setIsAdmin(true)
     }
+
 
     useEffect(() => {
         getCountItem()
@@ -33,7 +35,15 @@ export function NavbarProvider({ children }) {
     }, [])
 
     return (
-        <CartContext.Provider value={{ count, getCountItem, user, getUser,isAdmin }}>
+        <CartContext.Provider
+            value={{
+                count,
+                getCountItem,
+                user,
+                getUser,
+                isAdmin,
+            }}
+        >
             {children}
         </CartContext.Provider>
     )

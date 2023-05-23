@@ -192,6 +192,8 @@ function Contact({ user }) {
 const Checkout = () => {
     const [user, setUser] = useState(null)
     const navigate = useNavigate()
+    const context = useContext(CartContext)
+    const [selectMethod, setSelectMethod] = useState('Online')
 
     const getUser = () => {
         const currentUser = JSON.parse(localStorage.getItem('user'))
@@ -227,6 +229,7 @@ const Checkout = () => {
     useEffect(() => {
         getUser()
         getItem()
+        console.log(context)
         return () => {
             setUser(null)
         }
@@ -234,17 +237,14 @@ const Checkout = () => {
 
     return (
         <div>
-            <h1>Check out</h1>
             <Row>
                 <Col span={9} offset={1}>
                     <Contact user={user} />
                     <br />
-                    
                 </Col>
                 <Col span={13} offset={1}>
                     <h1 style={{ textAlign: 'center' }}>Thông tin đơn hàng</h1>
                     <CartCheckout />
-                    
                 </Col>
             </Row>
         </div>

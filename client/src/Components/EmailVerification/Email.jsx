@@ -103,7 +103,7 @@ const Email = () => {
                         }}
                     >
                         <Form.Item style={{ flex: '1' }} name="code">
-                            <Input placeholder="Verification code" />
+                            <Input placeholder="Mã xác thực" />
                         </Form.Item>
                         <Form.Item>
                             {remainingTime > 0 ? (

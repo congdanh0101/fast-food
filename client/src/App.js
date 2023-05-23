@@ -28,6 +28,7 @@ import Transaction from './Components/Profile/Transaction'
 import Security from './Components/Profile/Security'
 import CreateProduct from './Components/Admin/CreateProduct'
 import AdminDashboard from './Components/Admin/Dashboard'
+import OrderSuccessfully from './Components/PaymentStatus/OrderSuccessfully'
 // import './dist/output.css'
 
 function App() {
@@ -64,6 +65,10 @@ function App() {
                         <Route
                             path="/payment/failure"
                             element={<PaymentFailure />}
+                        />
+                        <Route
+                            path="/order/success"
+                            element={<OrderSuccessfully />}
                         />
                         <Route
                             path="/payment/success"

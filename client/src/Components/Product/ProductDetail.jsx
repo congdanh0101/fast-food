@@ -1,5 +1,5 @@
 import { createContext, useContext, useEffect, useState } from 'react'
-import { Link, useParams } from 'react-router-dom'
+import { Link, useNavigate, useParams } from 'react-router-dom'
 import request from '../../utils/axiosConfig'
 import {
     Button,
@@ -50,7 +50,7 @@ const ProductDetail = () => {
     const [nameUpdate, setNameUpdate] = useState(product.name)
 
     const [selectMustTry, setSelectMustTry] = useState([])
-
+    const navigate = useNavigate()
     const sortedFontOptions = [
         'Logical',
         'Salesforce Sans',
@@ -84,18 +84,31 @@ const ProductDetail = () => {
     }
 
     const fetchDataProduct = async () => {
-        const p = await request.get(`/product/${id.id}`)
-        const data = p.data
-        setProduct(data)
-        setDescription(p.description)
-        setPrice(
-            data['price'].toLocaleString('it-IT', {
-                style: 'currency',
-                currency: 'VND',
+        try {
+            const p = await request.get(`/product/${id.id}`)
+            if (p) {
+                const data = p.data
+                setProduct(data)
+                setDescription(p.description)
+                setPrice(
+                    data['price'].toLocaleString('it-IT', {
+                        style: 'currency',
+                        currency: 'VND',
+                    })
+                )
+                setNameUpdate(data['name'])
+                setCategoryUpdate(data['category']['_id'])
+            } else {
+                navigate('/')
+            }
+        } catch (error) {
+            notification.error({
+                message: 'Có lỗi xảy ra',
+                description: error.p?.data.message,
+                duration: 2,
             })
-        )
-        setNameUpdate(data['name'])
-        setCategoryUpdate(data['category']['_id'])
+            console.error(error)
+        }
     }
     const fetchCategoryList = async () => {
         try {
@@ -157,8 +170,9 @@ const ProductDetail = () => {
         setItems(items)
 
         notification.success({
-            message: 'Add to cart successfully',
-            duration: 1,
+            message: 'Đã thêm sản phẩm vào giỏ hàng',
+            description: 'Vui lòng vào giỏ hàng để kiểm tra sản phẩm đã chọn',
+            duration: 1.5,
         })
     }
 
@@ -233,7 +247,7 @@ const ProductDetail = () => {
                     </div>
                 </Col>
                 <Col span={8} style={{ width: '50%' }}>
-                    <h1>Phai thu</h1>
+                    <h1>Ăn kèm</h1>
                     {/* {listMustTryProduct?.map((item) => (
                         <>
                             <ProductList products={listMustTryProduct}/>

@@ -299,7 +299,7 @@ const Transaction = () => {
                 bordered
                 pagination={{
                     position: ['bottomRight'],
-                    defaultPageSize: 10,
+                    defaultPageSize: 5,
                     defaultCurrent: 1,
                     hideOnSinglePage: true,
                 }}

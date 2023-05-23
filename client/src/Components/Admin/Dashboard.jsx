@@ -6,12 +6,18 @@ import {
     TooltipComponent,
     TitleComponent,
     DatasetComponent,
+    LegendComponent,
 } from 'echarts/components'
 import {
     CanvasRenderer,
     // SVGRenderer,
 } from 'echarts/renderers'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
+import axiosInstance from '../../utils/axiosInstance'
+import request from '../../utils/axiosConfig'
+import { Col, Row, Spin } from 'antd'
+import OverallChart from './OverallChart'
+import RevenueChart from './RevenueChart'
 
 echarts.use([
     TitleComponent,
@@ -21,10 +27,54 @@ echarts.use([
     LineChart,
     CanvasRenderer,
     DatasetComponent,
+    LegendComponent,
 ])
 
 const AdminDashboard = () => {
     const [loading, setLoading] = useState(false)
+    const [dataOverall, setDataOverall] = useState({})
+
+    const [optionsChart, setOptionChart] = useState({})
+
+    const fetchDataOverall = async () => {
+        try {
+            setLoading(true)
+            const response = await request.get('/data/chart/visualize/overall')
+            setLoading(false)
+            setDataOverall(response.data)
+            const opts = {
+                legend: {
+                    orient: 'horizontal',
+                    right: 100,
+                    top: 'center',
+                },
+                tooltip: { position: 'top' },
+
+                xAxis: { type: 'category', data: Object.keys(response.data) },
+                yAxis: {},
+                series: [
+                    {
+                        type: 'bar',
+                        data: Object.values(response.data),
+                        color: ['#dd6b66', '#759aa0'],
+                    },
+                ],
+            }
+            console.log(opts)
+            setOptionChart(opts)
+        } catch (error) {
+            console.error(error)
+        }
+    }
+
+    useEffect(() => {
+        fetchDataOverall()
+
+        return () => {
+            setDataOverall({})
+        }
+    }, [])
+
     const option = {
         title: { text: 'haha' },
         legend: {},
@@ -50,12 +100,36 @@ const AdminDashboard = () => {
     }
     return (
         <div>
-            <ReactEChartsCore
-                echarts={echarts}
-                notMerge={true}
-                lazyUpdate={true}
-                option={option}
-            />
+            {/* <Spin spinning={loading}>
+                <Row>
+                    {Object.keys(dataOverall)?.map((item, index) => (
+                        <Col span={5} offset={1} key={index}>
+                            <div
+                                style={{
+                                    border: '1px solid',
+                                    backgroundColor:'#FFE5B4',
+                                    textAlign: 'center',
+                                    width: '75%',
+                                    boxShadow: '5px 7.5px #888888',
+                                    marginTop: '5%',
+                                    borderRadius: '30px',
+                                }}
+                            >
+                                <h1 style={{left:0}}>{item}</h1>
+                                <h1>{dataOverall[item]}</h1>
+                            </div>
+                        </Col>
+                    ))}
+                </Row>
+                <ReactEChartsCore
+                    echarts={echarts}
+                    notMerge={true}
+                    lazyUpdate={true}
+                    option={optionsChart}
+                />
+            </Spin> */}
+            <OverallChart />
+            <RevenueChart />
         </div>
     )
 }

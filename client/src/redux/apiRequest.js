@@ -31,7 +31,7 @@ export const loginUser = async (user, dispatch, navigate) => {
         localStorage.setItem('accessToken', JSON.stringify(accessToken))
         localStorage.setItem('user', JSON.stringify(response.data['user']))
         notification.success({
-            message: 'Login successfully',
+            message: 'Đăng nhập thành công',
             duration: 3,
         })
         if (response.data['user']['roles'].includes('ADMIN'))
@@ -46,9 +46,8 @@ export const loginUser = async (user, dispatch, navigate) => {
             }, 500)
     } catch (error) {
         notification.error({
-            message: 'Login failure',
-            description:
-                error.response.data.message || 'Invalid username or password',
+            message: 'Đăng nhập thất bại',
+            description: error.response?.data.message,
             duration: 3,
         })
         dispatch(loginFailure())
@@ -63,7 +62,7 @@ export const registerUser = async (user, dispatch, navigate) => {
 
         dispatch(registerSuccess())
         notification.success({
-            message: 'Register successfully',
+            message: 'Đăng ký thành công',
             duration: 2,
         })
         navigate(`/verify/register`)
@@ -71,7 +70,7 @@ export const registerUser = async (user, dispatch, navigate) => {
         console.log(error)
         console.log(error.response?.data.message)
         notification.error({
-            message: 'Login failure',
+            message: 'Đăng ký thất bại',
             description: error.response?.data.message.email,
             duration: 2,
         })
@@ -103,7 +102,7 @@ export const verifyRegisterUser = async (code, dispatch, navigate) => {
         // localStorage.removeItem('code')
         localStorage.removeItem('registerUser')
         notification.success({
-            message: 'Register successfully',
+            message: 'Xác thực thành công',
         })
         setTimeout(() => {
             dispatch(verifySuccess())
@@ -112,7 +111,7 @@ export const verifyRegisterUser = async (code, dispatch, navigate) => {
     } catch (error) {
         dispatch(verifyFailure())
         notification.error({
-            message: 'Register failed',
+            message: 'Xác thực thất bại',
             description: error.response.data.message,
         })
     }
@@ -125,16 +124,16 @@ export const verifyForogotPassword = async (code, navigate) => {
         })
         localStorage.removeItem('email')
         notification.success({
-            message: 'Reset password successfully',
+            message: 'Đổi mật khẩu thành công',
             description:
-                'Your new password has been sent to your email address. Please check your email address!',
+                'Mật khẩu mới được gửi tới địa chỉ email cá nhân của bạn. Vui lòng kiểm tra email!',
         })
 
         setTimeout(() => navigate('/login'), 500)
     } catch (error) {
         console.log(error)
         notification.error({
-            message: 'Error',
+            message: 'Có lỗi xảy ra',
             description: error.response.data.message,
         })
     }

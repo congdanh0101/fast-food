@@ -126,7 +126,7 @@ const Security = () => {
                         </Form.Item>
                         <Form.Item>
                             <Button type="primary" htmlType="submit">
-                                Change Password
+                                Đổi mật khẩu
                             </Button>
                         </Form.Item>
                     </Form>

@@ -14,12 +14,12 @@ function Header({ itemCount }) {
 
             <ul className="breadcrumb">
                 <li>
-                    <Link to="/">Home</Link>
+                    <Link to="/">Trang chủ</Link>
                 </li>
-                <li>Shopping Cart</li>
+                <li>Giỏ hàng</li>
             </ul>
 
-            <span className="count">{itemCount} items in the bag</span>
+            <span className="count">{itemCount} sản phẩm trong giỏ hàng</span>
         </header>
     )
 }
@@ -169,7 +169,15 @@ function Summary({
     const handleCheckout = () => {
         const user = localStorage.getItem('user')
         if (user) navigate('/checkout')
-        else navigate('/login')
+        else {
+            notification.error({
+                message: 'Có lỗi xảy ra',
+                description: 'Vui lòng đăng nhập trước khi thanh toán',
+                duration: 2,
+                
+            })
+            navigate('/login')
+        }
     }
 
     return (
@@ -186,14 +194,14 @@ function Summary({
             >
                 <ul>
                     <li>
-                        Subtotal{' '}
+                        Giá trị đơn hàng:{' '}
                         <span style={{ color: 'red', fontWeight: 'bold' }}>
                             {formatCurrency(subTotal)}
                         </span>
                     </li>
                     {discount > 0 && (
                         <li>
-                            Discount{' '}
+                            Chiết khấu{' '}
                             <span style={{ color: 'red', fontWeight: 'bold' }}>
                                 {formatCurrency(discount)}
                             </span>
@@ -206,7 +214,7 @@ function Summary({
                         </span>
                     </li>
                     <li className="total">
-                        Total{' '}
+                        Tổng tiền{' '}
                         <span style={{ color: 'red', fontWeight: 'bold' }}>
                             {formatCurrency(total)}
                         </span>
@@ -216,7 +224,7 @@ function Summary({
 
             <div className="checkout">
                 <button type="button" onClick={handleCheckout}>
-                    Check Out
+                    Tiến hành thanh toán
                 </button>
             </div>
         </section>
@@ -284,7 +292,7 @@ function Page() {
         getCountItem()
         setPromoCode(promoCode)
         notification.success({
-            message: 'Remove Product Success',
+            message: 'Đã xóa sản phẩm ra khỏi giỏ hàng',
             duration: 1,
         })
     }
@@ -339,9 +347,9 @@ function Page() {
                 </div>
             ) : (
                 <div className="empty-product">
-                    <h3>There are no products in your cart.</h3>
+                    <h3>Không có sản phẩm trong giỏ hàng.</h3>
                     <Link to="/">
-                        <button>Shopping now</button>
+                        <button>Mua hàng ngay</button>
                     </Link>
                 </div>
             )}

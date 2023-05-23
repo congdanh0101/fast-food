@@ -89,7 +89,7 @@ function Summary({
     promoCode,
 }) {
     const [discountRanking, setDiscountRankings] = useState(0)
-
+    const [selectMethod, setSelectMethod] = useState('Online')
     const total =
         subTotal -
         discount +
@@ -133,30 +133,35 @@ function Summary({
         console.log(promoCode)
         const order = {
             items: orderItems,
-            payment: 'Online',
+            payment: selectMethod,
             feeShip: feeShip,
             voucher: promoCode === '' ? null : promoCode,
         }
-
+        console.log(order)
         try {
             const responseOrder = await axiosInstance.post('/order', {
                 items: orderItems,
-                payment: 'Online',
+                payment: selectMethod,
                 feeShip: feeShip,
                 voucher: promoCode === '' ? null : promoCode,
             })
 
-            const orderID = responseOrder.data._id
+            if (selectMethod === 'Online') {
+                const orderID = responseOrder.data._id
 
-            const response = request
-                .post('/payment/create_payment_url', {
-                    orderID: orderID,
-                })
-                .then((res) => {
-                    window.location.href = res.data.payment
-                    // window.open(res.data.payment, '_blank')
-                })
-                .catch((err) => console.log(err))
+                const response = request
+                    .post('/payment/create_payment_url', {
+                        orderID: orderID,
+                    })
+                    .then((res) => {
+                        window.location.href = res.data.payment
+                        // window.open(res.data.payment, '_blank')
+                    })
+                    .catch((err) => console.log(err))
+            }
+            else{
+                navigate('/order/success')
+            }
         } catch (error) {
             console.log(error)
         }
@@ -172,9 +177,11 @@ function Summary({
                     optionType="button"
                     buttonStyle="solid"
                     style={{ fontSize: '2rem' }}
+                    defaultValue={'Online'}
+                    onChange={(e) => setSelectMethod(e.target.value)}
                 >
-                    <Radio value="COD">Thanh toan COD</Radio>
-                    <Radio value="Online">Thanh toan Online</Radio>
+                    <Radio value="Online">Thanh toán Online</Radio>
+                    <Radio value="Cash">Thanh toán COD</Radio>
                 </Radio.Group>
             </div>
 
@@ -221,14 +228,15 @@ function Summary({
     )
 }
 
-function CartCheckout() {
-    const { getCountItem } = useContext(CartContext)
+function CartCheckout({ selectPaymentMethod }) {
+    const context = useContext(CartContext)
 
     const items = JSON.parse(localStorage.getItem('items'))
     const [products, setProducts] = useState(items)
     const [promoCode, setPromoCode] = useState('')
     const [discount, setDiscount] = useState(0)
     const [feeShip, setFeeShip] = useState(0)
+    const [selectMethod, setSelectMethod] = useState('Online')
 
     const subTotal =
         products?.reduce((total, product) => {

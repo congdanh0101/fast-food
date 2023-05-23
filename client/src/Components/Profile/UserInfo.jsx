@@ -195,7 +195,7 @@ const UserInfo = () => {
                         <Col span={6}>
                             <Form.Item
                                 name="gender"
-                                label="Gender"
+                                label="Giới tính"
                                 rules={[
                                     {
                                         required: true,
@@ -285,7 +285,7 @@ const UserInfo = () => {
                 </Col>
                 <Col span={9} offset={8}>
                     <Col span={23}>
-                        <FormLabel>Address</FormLabel>
+                        <FormLabel>Địa chỉ</FormLabel>
                         <Form.Item
                             name="address"
                             rules={[
@@ -309,7 +309,7 @@ const UserInfo = () => {
                 <Col span={16} offset={8}>
                     <Row>
                         <Col span={6}>
-                            <FormLabel>District</FormLabel>
+                            <FormLabel>Quận</FormLabel>
 
                             <Form.Item
                                 name="district"
@@ -329,7 +329,7 @@ const UserInfo = () => {
                         </Col>
 
                         <Col span={6} offset={1}>
-                            <FormLabel>ward</FormLabel>
+                            <FormLabel>Phường</FormLabel>
                             <Form.Item
                                 name="ward"
                                 rules={[
@@ -361,7 +361,7 @@ const UserInfo = () => {
                         }}
                         onClick={handleUpdateData}
                     >
-                        Updated
+                        Cập nhật
                     </Button>
                 </Col>
             </Row>

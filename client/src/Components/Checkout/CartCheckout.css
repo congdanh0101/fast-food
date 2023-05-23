@@ -231,7 +231,7 @@ header .count {
     margin-top: 12px;
 }
 
-.promotion:hover>button {
+.promotion:hover>.submitVoucher {
     border-color: #f58551;
     background-color: #f58551;
 }

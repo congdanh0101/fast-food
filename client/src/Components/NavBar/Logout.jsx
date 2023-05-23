@@ -17,7 +17,7 @@ const LogoutIcon = () => {
             localStorage.removeItem('userID')
             console.log('logged out', response)
             notification.success({
-                message: 'Logout successfully',
+                message: 'Đăng xuất thành công',
                 duration: 2,
             })
             setTimeout(() => {
@@ -27,7 +27,7 @@ const LogoutIcon = () => {
         } catch (error) {
             console.log(error)
             notification.error({
-                message: 'Logout failed',
+                message: 'Đăng xuất thất bại',
                 description: error.response?.data.message,
                 duration: 2,
             })

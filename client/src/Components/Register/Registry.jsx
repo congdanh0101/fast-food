@@ -43,7 +43,7 @@ const RegisterForm = () => {
                 >
                     <Form.Item
                         style={{ flex: '1' }}
-                        label="Full name"
+                        label="Họ và tên"
                         name="fullName"
                         rules={[
                             {
@@ -102,7 +102,7 @@ const RegisterForm = () => {
                     <Form.Item
                         style={{ flex: '1' }}
                         name="password"
-                        label="Password"
+                        label="Mật khẩu"
                         rules={[
                             {
                                 required: true,
@@ -158,7 +158,7 @@ const RegisterForm = () => {
                             loading={isLoading}
                             style={{ width: '150%' }}
                         >
-                            Register
+                            Đăng ký
                         </Button>
                     </Form.Item>
                 </Form>

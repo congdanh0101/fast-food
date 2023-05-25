@@ -1,0 +1,29 @@
+@startuml
+autonumber
+actor User
+activate User
+User -> NPS_FE: Yều cầu đăng ký tài khoản
+activate NPS_FE
+NPS_FE -> NPS_BE: POST api/auth/register
+activate NPS_BE
+NPS_BE -> NPS_BE: Kiểm tra email có tồn tại trong database chưa
+alt  email đã tồn tại
+NPS_BE --> NPS_FE: Trả về lỗi email đã tồn tại
+NPS_FE --> User: Hiển thị lỗi email đã tồn tại
+end alt
+NPS_BE -> NPS_BE: Gửi mã xác thực đến email được đăng ký
+NPS_BE --> NPS_FE: Trả về thông tin yêu cầu đăng ký thành công
+NPS_FE --> User: Chuyển trang xác nhận email
+User -> NPS_FE: Nhập mã xác thực
+NPS_FE -> NPS_BE: POST api/auth/verify/register
+NPS_BE -> NPS_BE: Kiểm tra mã xác thực
+alt Mã xác thực không chính xác
+NPS_BE -> NPS_FE: Trả về thông tin lỗi
+NPS_FE -> User: Hiển thị thông báo lỗi
+end alt
+
+NPS_BE -> NPS_BE: Tạo mới tài khoản dựa trên yêu cầu đăng ký
+NPS_BE -> NPS_FE: Trả thông tin tài khoản vừa được tạo mới
+NPS_FE -> User: Thông báo đăng ký thành công và chuyển trang đăng nhập
+
+@enduml

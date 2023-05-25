@@ -1,0 +1,22 @@
+@startuml
+autonumber
+actor User
+activate User
+User -> NPS_FE: Yêu cầu xem danh sách \nphân quyền theo workspaceId
+activate NPS_FE
+NPS_FE -> NPS_BE: Gọi api get api/v1/workspace-for-team/{workspaceId}
+activate NPS_BE
+NPS_BE -> NPS_BE: Kiểm tra token hợp lệ không
+alt if token không hợp lệ
+NPS_BE --> NPS_FE: trả về tin nhắn token không hợp lệ
+NPS_FE --> User: Thông báo người dùng chưa đăng nhập
+end
+NPS_BE -> NPS_BE: Kiểm tra quyền của user
+alt if user không có quyền admin
+NPS_BE --> NPS_FE: Trả về lỗi không có quyền
+NPS_FE --> User: Thông báo người dùng không có quyền
+end
+NPS_BE -> NPS_BE: Truy vấn danh sách\nphân quyền theo workspaceId
+NPS_BE --> NPS_FE: Trả về danh sách\nphân quyền theo workspaceId
+NPS_FE --> User: Hiển thị danh sách\nphân quyền theo workspaceId
+@enduml

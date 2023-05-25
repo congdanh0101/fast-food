@@ -1,0 +1,21 @@
+@startuml
+autonumber
+actor User
+activate User
+User -> NPS_FE: Yêu cầu xem chi tiết label của note
+activate NPS_FE
+NPS_FE -> NPS_BE: Gọi api/v1/notes/labels/{labelId}
+activate NPS_BE
+NPS_BE -> NPS_BE: Kiểm tra token hợp lệ không
+alt if token không hợp lệ
+NPS_BE --> NPS_FE: trả về tin nhắn token không hợp lệ
+NPS_FE --> User: Thông báo người dùng chưa đăng nhập
+end
+NPS_BE -> NPS_BE: Truy vấn label theo id
+alt if label không tồn tại
+NPS_BE --> NPS_FE: trả về tin nhắn không tìm thấy label
+NPS_FE --> User: Thông báo không tìm thấy label
+end
+NPS_BE --> NPS_FE: Trả về thông tin chi tiết label
+NPS_FE --> User: Hiển thị thông tin label
+@enduml

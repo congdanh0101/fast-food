@@ -1,0 +1,22 @@
+@startuml
+autonumber
+actor User
+activate User
+User -> NPS_FE: Yêu cầu xem cập nhật\ndanh sách phân quyền theo workspace
+activate NPS_FE
+NPS_FE -> NPS_BE: Gọi api post api/v1/role-for-workspace
+activate NPS_BE
+NPS_BE -> NPS_BE: Kiểm tra token hợp lệ không
+alt if token không hợp lệ
+NPS_BE --> NPS_FE: trả về tin nhắn token không hợp lệ
+NPS_FE --> User: Thông báo người dùng chưa đăng nhập
+end
+NPS_BE -> NPS_BE: Kiểm tra quyền của user
+alt if user không có quyền admin
+NPS_BE --> NPS_FE: Trả về lỗi không có quyền
+NPS_FE --> User: Thông báo người dùng không có quyền
+end
+NPS_BE -> NPS_BE: Cập nhật danh sách\nphân quyền theo workspace
+NPS_BE --> NPS_FE: Trả về thông báo cập nhật\ndanh sách phân quyền\ntheo workspace thành công
+NPS_FE --> User: Hiển thị thông báo cập nhật\ndanh sách phân quyền\ntheo workspace thành công
+@enduml

@@ -1,0 +1,19 @@
+@startuml
+autonumber
+actor User
+activate User
+User -> NPS_FE: Yêu cầu đăng nhập
+activate NPS_FE
+NPS_FE -> NPS_BE: Gọi api/auth/login
+activate NPS_BE
+NPS_BE -> NPS_BE: Truy vấn user by email và password
+NPS_BE -> NPS_BE: Kiểm tra user hợp lệ hay không
+alt if người dùng không tồn tại
+NPS_BE --> NPS_FE: Đăng nhập thất bại
+NPS_FE --> User: Sai email hoặc password
+end alt
+NPS_BE -> NPS_BE: Tạo mới AccessToken & Refresh Token
+NPS_BE --> NPS_FE: Trả về AccessToken & Refresh Token
+NPS_FE --> User: Chuyển người dùng về trang chủ
+
+@enduml

@@ -1,0 +1,17 @@
+@startuml
+autonumber
+actor User
+activate User
+User -> NPS_FE: Yêu cầu danh sách contact
+activate NPS_FE
+NPS_FE -> NPS_BE: Gọi api/v1/contacts
+activate NPS_BE
+NPS_BE -> NPS_BE: Kiểm tra token hợp lệ không
+alt if token không hợp lệ
+NPS_BE --> NPS_FE: trả về tin nhắn token không hợp lệ
+NPS_FE --> User: Thông báo người dùng chưa đăng nhập
+end
+NPS_BE -> NPS_BE: Truy vấn danh sách contact
+NPS_BE --> NPS_FE: Trả về danh sách contact
+NPS_FE --> User: Hiển thị danh sách contact
+@enduml

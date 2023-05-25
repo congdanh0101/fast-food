@@ -1,0 +1,22 @@
+@startuml
+autonumber
+actor User
+activate User
+User -> NPS_FE: Yêu cầu tạo mới scrum label theo boardId
+activate NPS_FE
+NPS_FE -> NPS_BE: Gọi api/v1/scrumboards/boards/{boardId}/labels
+activate NPS_BE
+NPS_BE -> NPS_BE: Kiểm tra token hợp lệ không
+alt if token không hợp lệ
+NPS_BE --> NPS_FE: trả về tin nhắn token không hợp lệ
+NPS_FE --> User: Thông báo người dùng chưa đăng nhập
+end
+NPS_BE -> NPS_BE: Truy vấn board theo id
+alt if board không tìm thấy
+NPS_BE --> NPS_FE: trả về tin nhắn không tìm thấy board
+NPS_FE --> User: Hiển thị tin nhắn không tìm thấy board
+end
+NPS_BE -> NPS_BE: Tạo mới scrum label
+NPS_BE --> NPS_FE: Trả về tin nhắn tạo mới scrum label thành công
+NPS_FE --> User: Hiển thị tin nhắn tạo mới scrum label thành công
+@enduml

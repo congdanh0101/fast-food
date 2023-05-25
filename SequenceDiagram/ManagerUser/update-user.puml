@@ -1,0 +1,27 @@
+@startuml
+autonumber
+actor User
+activate User
+User -> NPS_FE: Cập nhật user
+activate NPS_FE
+NPS_FE -> NPS_BE: Gọi api/v1/manager/user/update
+activate NPS_BE
+NPS_BE -> NPS_BE: Kiểm tra token hợp lệ không
+alt if token không hợp lệ
+NPS_BE --> NPS_FE: trả về tin nhắn token không hợp lệ
+NPS_FE --> User: Thông báo người dùng chưa đăng nhập
+end
+NPS_BE -> NPS_BE: Kiểm tra quyền của user
+alt if user không có quyền admin
+NPS_BE --> NPS_FE: Trả về lỗi không có quyền
+NPS_FE --> User: Thông báo người dùng không có quyền
+end
+NNPS_BE -> NPS_BE: Truy vấn user theo id
+alt if user không tồn tại
+NPS_BE --> NPS_FE: Trả về tin nhắn user không tồn tại
+NPS_FE --> User: Hiển thị tin nhắn user không tồn tại
+end
+NPS_BE -> NPS_BE: Cập nhật user theo id
+NPS_BE --> NPS_FE: Trả về tin nhắn cập nhật user thành công
+NPS_FE --> User: Thông báo cập nhật user thành công
+@enduml

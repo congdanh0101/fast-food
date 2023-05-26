@@ -9,15 +9,27 @@ import {
     LegendComponent,
 } from 'echarts/components'
 import {
+    MenuFoldOutlined,
+    UploadOutlined,
+    UserOutlined,
+    VideoCameraOutlined,
+    MenuUnfoldOutlined,
+} from '@ant-design/icons'
+import {
     CanvasRenderer,
     // SVGRenderer,
 } from 'echarts/renderers'
 import { useEffect, useState } from 'react'
 import axiosInstance from '../../utils/axiosInstance'
 import request from '../../utils/axiosConfig'
-import { Col, Row, Spin } from 'antd'
+import { Button, Col, Layout, Menu, Row, Spin, theme } from 'antd'
+
 import OverallChart from './OverallChart'
 import RevenueChart from './RevenueChart'
+import ManageOrderList from './ManageOrderList'
+import ManageUser from './ManageUser'
+import ManageProductList from './ManageProductList'
+import { useNavigate } from 'react-router-dom'
 
 echarts.use([
     TitleComponent,
@@ -29,13 +41,65 @@ echarts.use([
     DatasetComponent,
     LegendComponent,
 ])
+const { Header, Sider, Content } = Layout
+
+function getItem(label, key, icon, children, type) {
+    return {
+        key,
+        icon,
+        children,
+        label,
+        type,
+    }
+}
+
+const items = [
+    getItem('Dashboard', 'dashboard'),
+    getItem(
+        'Đơn hàng',
+        'order'
+        // <LockOutlined style={{ fontSize: '150%' }} />
+    ),
+    getItem(
+        'Sản phẩm',
+        'product'
+        // <InfoCircleOutlined style={{ fontSize: '150%' }} />
+    ),
+
+    getItem(
+        'Khách hàng',
+        'user'
+        // <PlusCircleOutlined style={{ fontSize: '150%' }} />
+    ),
+    // getItem(
+    //     'Category',
+    //     'category'
+    //     // <TransactionOutlined style={{ fontSize: '150%' }} />
+    // ),
+]
 
 const AdminDashboard = () => {
     const [loading, setLoading] = useState(false)
     const [dataOverall, setDataOverall] = useState({})
 
     const [optionsChart, setOptionChart] = useState({})
+    const [collapsed, setCollapsed] = useState(false)
+    const {
+        token: { colorBgContainer },
+    } = theme.useToken()
 
+    const [key, setKey] = useState('dashboard')
+    const [user, setUser] = useState(null)
+    const navigate = useNavigate()
+
+    const getUser = () => {
+        const currentUser = JSON.parse(localStorage.getItem('user'))
+        if (currentUser) {
+            setUser(currentUser)
+        } else {
+            navigate('/login')
+        }
+    }
     const fetchDataOverall = async () => {
         try {
             setLoading(true)
@@ -68,10 +132,12 @@ const AdminDashboard = () => {
     }
 
     useEffect(() => {
+        getUser()
         fetchDataOverall()
 
         return () => {
             setDataOverall({})
+            setUser(null)
         }
     }, [])
 
@@ -100,7 +166,7 @@ const AdminDashboard = () => {
     }
     return (
         <div>
-            {/* <Spin spinning={loading}>
+            {/* <Spin spinning={loading} size="large" tip="Loading...">
                 <Row>
                     {Object.keys(dataOverall)?.map((item, index) => (
                         <Col span={5} offset={1} key={index}>
@@ -128,8 +194,65 @@ const AdminDashboard = () => {
                     option={optionsChart}
                 />
             </Spin> */}
-            <OverallChart />
-            <RevenueChart />
+            {/* <OverallChart /> */}
+            {/* <Row>
+                <Col span={3} offset={1}></Col>
+                <Col span={20}>
+                    <RevenueChart />
+                </Col>
+            </Row> */}
+            {/* <RevenueChart /> */}
+
+            <Layout>
+                <Sider trigger={null} collapsible collapsed={collapsed}>
+                    <Menu
+                        theme="dark"
+                        mode="inline"
+                        defaultSelectedKeys={items[0]?.key}
+                        items={items}
+                        onClick={(e) => setKey(e.key)}
+                        style={{ height: '100vh', fontSize: '150%' }}
+                    />
+                </Sider>
+                <Layout>
+                    <Header
+                        style={{
+                            padding: 0,
+                            background: colorBgContainer,
+                        }}
+                    >
+                        <Button
+                            type="text"
+                            icon={
+                                collapsed ? (
+                                    <MenuUnfoldOutlined />
+                                ) : (
+                                    <MenuFoldOutlined />
+                                )
+                            }
+                            onClick={() => setCollapsed(!collapsed)}
+                            style={{
+                                fontSize: '1.5rem',
+                                width: 48,
+                                height: 48,
+                            }}
+                        />
+                    </Header>
+                    <Content
+                        style={{
+                            margin: '24px 16px',
+                            padding: 24,
+                            minHeight: 280,
+                            background: colorBgContainer,
+                        }}
+                    >
+                        {key === 'dashboard' && <RevenueChart />}
+                        {key === 'order' && <ManageOrderList />}
+                        {key === 'product' && <ManageProductList />}
+                        {key === 'user' && <ManageUser />}
+                    </Content>
+                </Layout>
+            </Layout>
         </div>
     )
 }

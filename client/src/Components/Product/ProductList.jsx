@@ -5,9 +5,9 @@ import { Card } from 'react-bootstrap'
 import { Link } from 'react-router-dom'
 import request from '../../utils/axiosConfig'
 import { ShoppingCartOutlined } from '@ant-design/icons'
-import { Col, Row } from 'antd'
+import { Col, Row, Spin } from 'antd'
 // import { BrowserRouter as Router, Route, Routes } from 'react-router-dom'
-import { EyeOutlined,EditTwoTone  } from '@ant-design/icons'
+import { EyeOutlined, EditTwoTone } from '@ant-design/icons'
 import { useMediaQuery } from 'react-responsive'
 import axiosInstance from '../../utils/axiosInstance'
 import CartContext from '../../context/CartContext'
@@ -78,6 +78,8 @@ const ProductCard = ({ item, width }) => {
 }
 
 const ProductList = ({ category }) => {
+    const [loading, setLoading] = useState(false)
+
     const isDesktop = useMediaQuery({
         minWidth: 1366,
         maxWidth: 1919,
@@ -101,12 +103,14 @@ const ProductList = ({ category }) => {
 
     const fetchDataProductList = async () => {
         try {
+            setLoading(true)
             console.log(`category id ${categoryId}`)
             const response = await request.get(
                 `/product?category=${categoryId}&softDeleted=false`
             )
             const listData = response.data
             setProductList(listData)
+            setLoading(false)
         } catch (error) {
             console.log(error)
         }
@@ -135,38 +139,40 @@ const ProductList = ({ category }) => {
     }
 
     return (
-        <Row gutter={[40, 24]}>
-            {isDesktop &&
-                productList?.map((item) => (
-                    <Col span={8}>
-                        <ProductCard item={item} width={100} />
-                    </Col>
-                ))}
-            {isBigScreen &&
-                productList?.map((item) => (
-                    <Col span={6}>
-                        <ProductCard item={item} width={100} />
-                    </Col>
-                ))}
-            {isTablet &&
-                productList?.map((item) => (
-                    <Col span={12}>
-                        <ProductCard item={item} width={100} />
-                    </Col>
-                ))}
-            {isLaptop &&
-                productList?.map((item) => (
-                    <Col span={8}>
-                        <ProductCard item={item} width={110} />
-                    </Col>
-                ))}
-            {isMobile &&
-                productList?.map((item) => (
-                    <Col span={24}>
-                        <ProductCard item={item} width={90} />
-                    </Col>
-                ))}
-        </Row>
+        <Spin spinning={loading} size="large" tip="Loading...">
+            <Row gutter={[40, 24]}>
+                {isDesktop &&
+                    productList?.map((item) => (
+                        <Col span={8}>
+                            <ProductCard item={item} width={100} />
+                        </Col>
+                    ))}
+                {isBigScreen &&
+                    productList?.map((item) => (
+                        <Col span={6}>
+                            <ProductCard item={item} width={100} />
+                        </Col>
+                    ))}
+                {isTablet &&
+                    productList?.map((item) => (
+                        <Col span={12}>
+                            <ProductCard item={item} width={100} />
+                        </Col>
+                    ))}
+                {isLaptop &&
+                    productList?.map((item) => (
+                        <Col span={8}>
+                            <ProductCard item={item} width={110} />
+                        </Col>
+                    ))}
+                {isMobile &&
+                    productList?.map((item) => (
+                        <Col span={24}>
+                            <ProductCard item={item} width={90} />
+                        </Col>
+                    ))}
+            </Row>
+        </Spin>
     )
 }
 

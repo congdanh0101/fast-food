@@ -1,4 +1,4 @@
-import { Space, Switch, Table, notification } from 'antd'
+import { Space, Spin, Switch, Table, notification } from 'antd'
 import { useState } from 'react'
 import request from '../../utils/axiosConfig'
 import { useEffect } from 'react'
@@ -6,9 +6,11 @@ import axiosInstance from '../../utils/axiosInstance'
 
 const ManageUser = () => {
     const [listUser, setListUser] = useState([])
+    const [loading, setLoading] = useState(false)
 
     const fetchUser = async () => {
         try {
+            setLoading(true)
             const response = await request.get('/user')
 
             let data = []
@@ -35,6 +37,7 @@ const ManageUser = () => {
                 })
             }
             setListUser(data)
+            setLoading(false)
         } catch (error) {
             console.log(error)
         }
@@ -226,19 +229,23 @@ const ManageUser = () => {
     const defaultTitle = () => <h1>Danh sách khách hàng</h1>
 
     return (
-        <Table
-            columns={columns}
-            title={defaultTitle}
-            dataSource={listUser}
-            bordered
-            size="large"
-            pagination={{
-                position: ['topRight'],
-                defaultPageSize: 10,
-                defaultCurrent: 1,
-                hideOnSinglePage: true,
-            }}
-        ></Table>
+        <div>
+            <Spin spinning={loading} size="large" tip="Loading...">
+                <Table
+                    columns={columns}
+                    title={defaultTitle}
+                    dataSource={listUser}
+                    bordered
+                    size="large"
+                    pagination={{
+                        position: ['topRight'],
+                        defaultPageSize: 10,
+                        defaultCurrent: 1,
+                        hideOnSinglePage: true,
+                    }}
+                ></Table>
+            </Spin>
+        </div>
     )
 }
 

@@ -1,32 +1,32 @@
-    import ReactEChartsCore from 'echarts-for-react/lib/core'
-    import * as echarts from 'echarts/core'
-    import { BarChart, LineChart } from 'echarts/charts'
-    import {
-        GridComponent,
-        TooltipComponent,
-        TitleComponent,
-        DatasetComponent,
-        LegendComponent,
-    } from 'echarts/components'
-    import {
-        CanvasRenderer,
-        // SVGRenderer,
-    } from 'echarts/renderers'
-    import { useEffect, useState } from 'react'
-    import axiosInstance from '../../utils/axiosInstance'
-    import request from '../../utils/axiosConfig'
-    import { Col, Row, Spin } from 'antd'
+import ReactEChartsCore from 'echarts-for-react/lib/core'
+import * as echarts from 'echarts/core'
+import { BarChart, LineChart } from 'echarts/charts'
+import {
+    GridComponent,
+    TooltipComponent,
+    TitleComponent,
+    DatasetComponent,
+    LegendComponent,
+} from 'echarts/components'
+import {
+    CanvasRenderer,
+    // SVGRenderer,
+} from 'echarts/renderers'
+import { useEffect, useState } from 'react'
+import axiosInstance from '../../utils/axiosInstance'
+import request from '../../utils/axiosConfig'
+import { Col, Row, Spin } from 'antd'
 
-    echarts.use([
-        TitleComponent,
-        TooltipComponent,
-        GridComponent,
-        BarChart,
-        LineChart,
-        CanvasRenderer,
-        DatasetComponent,
-        LegendComponent,
-    ])
+echarts.use([
+    TitleComponent,
+    TooltipComponent,
+    GridComponent,
+    BarChart,
+    LineChart,
+    CanvasRenderer,
+    DatasetComponent,
+    LegendComponent,
+])
 
 const OverallChart = () => {
     const [loading, setLoading] = useState(false)
@@ -75,7 +75,7 @@ const OverallChart = () => {
 
     return (
         <div>
-            <Spin spinning={loading}>
+            <Spin spinning={loading} size="large" tip="Loading...">
                 <Row>
                     {Object.keys(dataOverall)?.map((item, index) => (
                         <Col span={5} offset={1} key={index}>

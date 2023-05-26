@@ -158,7 +158,7 @@ export default function EditProduct() {
 
     return (
         <div style={{ marginTop: '2%' }}>
-            <Spin spinning={loading}>
+            <Spin spinning={loading} size="large" tip="Loading...">
                 <Row>
                     {/* <Col span={3}></Col> */}
                     <Col span={10} offset={3}>

@@ -1,4 +1,4 @@
-import { Badge, Button, Space, Switch, Table, notification } from 'antd'
+import { Badge, Button, Space, Spin, Switch, Table, notification } from 'antd'
 import { useEffect, useState } from 'react'
 import request from '../../utils/axiosConfig'
 import { EyeOutlined, EditTwoTone } from '@ant-design/icons'
@@ -19,11 +19,13 @@ const ManageProductList = () => {
     const [listProduct, setListProduct] = useState([])
     const [listCategory, setListCategory] = useState([])
     const [filterCategory, setFilterCategory] = useState([])
-
+    const [loading, setLoading] = useState(false)
     const navigate = useNavigate()
 
     const fetchListProduct = async () => {
         try {
+            setLoading(true)
+
             const data = []
             const response = await request.get('/product')
             for (var i = 0; i < response.data.length; i++) {
@@ -38,6 +40,7 @@ const ManageProductList = () => {
                 })
             }
             setListProduct(data)
+            setLoading(false)
         } catch (error) {
             console.log(error)
         }
@@ -45,6 +48,8 @@ const ManageProductList = () => {
 
     const fetchCategoryList = async () => {
         try {
+            setLoading(true)
+
             const response = await request.get('/category')
             const filter = []
             for (var i = 0; i < response.data.length; i++) {
@@ -54,6 +59,7 @@ const ManageProductList = () => {
                 })
             }
             setFilterCategory(filter)
+            setLoading(false)
         } catch (error) {
             console.log(error)
         }
@@ -159,18 +165,20 @@ const ManageProductList = () => {
 
     return (
         <div>
-            <Table
-                columns={columns}
-                title={defaultTitle}
-                dataSource={listProduct}
-                pagination={{
-                    position: ['bottomRight'],
-                    defaultPageSize: 10,
-                    defaultCurrent: 1,
-                    hideOnSinglePage: true,
-                }}
-                bordered
-            />
+            <Spin spinning={loading} size="large" tip="Loading...">
+                <Table
+                    columns={columns}
+                    title={defaultTitle}
+                    dataSource={listProduct}
+                    pagination={{
+                        position: ['bottomRight'],
+                        defaultPageSize: 10,
+                        defaultCurrent: 1,
+                        hideOnSinglePage: true,
+                    }}
+                    bordered
+                />
+            </Spin>
         </div>
     )
 }

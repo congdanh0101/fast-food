@@ -36,7 +36,7 @@ export const loginUser = async (user, dispatch, navigate) => {
         })
         if (response.data['user']['roles'].includes('ADMIN'))
             setTimeout(() => {
-                navigate('/admin/management')
+                navigate('/admin/dashboard')
                 window.location.reload()
             }, 500)
         else

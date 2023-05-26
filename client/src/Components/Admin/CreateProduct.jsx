@@ -144,7 +144,7 @@ const CreateProduct = () => {
 
     return (
         <div>
-            <Spin spinning={loading}>
+            <Spin spinning={loading} size="large" tip="Loading...">
                 <Row>
                     {/* <Col span={3}></Col> */}
                     <Col span={10} offset={3}>

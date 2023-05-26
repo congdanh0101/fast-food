@@ -1,5 +1,5 @@
 // import "./home.css";
-import { Col, Layout, Menu, Row } from 'antd'
+import { Col, Layout, Menu, Row, Spin } from 'antd'
 import {
     AppstoreOutlined,
     ContainerOutlined,
@@ -43,14 +43,16 @@ const HomePage = () => {
         maxWidth: 1365,
     })
     const isBigScreen = useMediaQuery({ minWidth: 1920 })
-
+    const [loading, setLoading] = useState(false)
     const [category, setCategory] = useState([])
     const [categoryID, setCategoryID] = useState('63f0add10207afdbe49f43ea')
     const fetchCategoryList = async () => {
         try {
+            // setLoading(true)
             const cate = await request.get('/category')
             setCategoryID(cate.data[0]['_id'])
             setCategory(cate.data)
+            // setLoading(false)
         } catch (err) {
             console.log(err)
         }
@@ -71,69 +73,74 @@ const HomePage = () => {
 
     return (
         <div>
-            {/* <NavBar></NavBar> */}
-            <div style={{ marginTop: 50 }}>
-                {(isDesktop || isBigScreen || isLaptop) && (
-                    <Row>
-                        <Col span={1}></Col>
-                        <Col span={4}>
-                            {isBigScreen && items.length > 0 && (
-                                <Menu
-                                    className="menu-category"
-                                    style={{
-                                        fontSize: '200%',
-                                        fontWeight: 'bold',
-                                        margin: 'auto',
-                                    }}
-                                    defaultSelectedKeys={[items[0]?.key]}
-                                    items={items}
-                                    onClick={handleCategoryOnclick}
-                                ></Menu>
-                            )}
-                            {(isDesktop || isLaptop) && items.length > 0 && (
-                                <Menu
-                                    className="menu-category"
-                                    style={{
-                                        fontSize: '150%',
-                                        fontWeight: 'bold',
-                                        margin: 'auto',
-                                    }}
-                                    defaultSelectedKeys={[items[0]?.key]}
-                                    items={items}
-                                    onClick={handleCategoryOnclick}
-                                ></Menu>
-                            )}
+            <Spin spinning={loading} size="large" tip="Loading...">
+                <div style={{ marginTop: 50 }}>
+                    {(isDesktop || isBigScreen || isLaptop) && (
+                        <Row>
+                            <Col span={1}></Col>
+                            <Col span={4}>
+                                {isBigScreen && items.length > 0 && (
+                                    <Menu
+                                        className="menu-category"
+                                        style={{
+                                            fontSize: '200%',
+                                            fontWeight: 'bold',
+                                            margin: 'auto',
+                                        }}
+                                        defaultSelectedKeys={[items[0]?.key]}
+                                        items={items}
+                                        onClick={handleCategoryOnclick}
+                                    ></Menu>
+                                )}
+                                {(isDesktop || isLaptop) &&
+                                    items.length > 0 && (
+                                        <Menu
+                                            className="menu-category"
+                                            style={{
+                                                fontSize: '150%',
+                                                fontWeight: 'bold',
+                                                margin: 'auto',
+                                            }}
+                                            defaultSelectedKeys={[
+                                                items[0]?.key,
+                                            ]}
+                                            items={items}
+                                            onClick={handleCategoryOnclick}
+                                        ></Menu>
+                                    )}
 
-                            {/* <Category /> */}
-                        </Col>
-                        <Col span={1}></Col>
+                                {/* <Category /> */}
+                            </Col>
+                            <Col span={1}></Col>
 
-                        <Col span={16}>
-                            <ProductList category={categoryID} />
-                        </Col>
-                    </Row>
-                )}
-                {(isMobile || isTablet) && (
-                    <div>
-                        <Menu
-                            className="menu-category"
-                            style={{
-                                fontSize: '100%',
-                                fontWeight: 'bold',
-                                margin: 'auto',
-                            }}
-                            defaultSelectedKeys={[items[0]?.key]}
-                            items={items}
-                            onClick={handleCategoryOnclick}
-                        ></Menu>
-                        <br />
-                        <br />
-                        <div style={{ width: '90%' }}>
-                            <ProductList category={categoryID} />
+                            <Col span={16}>
+                                <ProductList category={categoryID} />
+                            </Col>
+                        </Row>
+                    )}
+                    {(isMobile || isTablet) && (
+                        <div>
+                            <Menu
+                                className="menu-category"
+                                style={{
+                                    fontSize: '100%',
+                                    fontWeight: 'bold',
+                                    margin: 'auto',
+                                }}
+                                defaultSelectedKeys={[items[0]?.key]}
+                                items={items}
+                                onClick={handleCategoryOnclick}
+                            ></Menu>
+                            <br />
+                            <br />
+                            <div style={{ width: '90%' }}>
+                                <ProductList category={categoryID} />
+                            </div>
                         </div>
-                    </div>
-                )}
-            </div>
+                    )}
+                </div>
+            </Spin>
+            {/* <NavBar></NavBar> */}
         </div>
     )
 }

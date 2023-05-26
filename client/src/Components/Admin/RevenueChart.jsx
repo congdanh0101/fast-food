@@ -198,7 +198,7 @@ const RevenueChart = () => {
     }, [selectRadio])
     return (
         <div>
-            <Spin spinning={loading}>
+            <Spin spinning={loading} size="large" tip="Loading...">
                 <Radio.Group
                     defaultValue="7"
                     buttonStyle="solid"

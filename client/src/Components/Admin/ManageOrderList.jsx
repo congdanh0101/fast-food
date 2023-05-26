@@ -15,6 +15,7 @@ import {
     Popconfirm,
     Select,
     Space,
+    Spin,
     Table,
     notification,
 } from 'antd'
@@ -33,6 +34,7 @@ const currencyFormat = (price) => (
 )
 
 const ManageOrderList = () => {
+    const [loading, setLoading] = useState(false)
     const userID = localStorage.getItem('userID')
     const [orderList, setOrderList] = useState([])
     const [orderData, setOrderData] = useState([])
@@ -67,6 +69,7 @@ const ManageOrderList = () => {
 
     const fetchOrderByUser = async () => {
         try {
+            setLoading(true)
             const response = await request.get(`/order`)
             console.log(response.data)
 
@@ -95,6 +98,7 @@ const ManageOrderList = () => {
             }
             setOrderData(data)
             setOrderList(response.data)
+            setLoading(false)
         } catch (error) {
             console.log(error)
         }
@@ -457,26 +461,28 @@ const ManageOrderList = () => {
 
     return (
         <>
-            <Table
-                title={defaultTitle}
-                // footer={defaultFooter}
-                columns={columns}
-                expandable={{
-                    // expandRowByClick: true,
-                    expandedRowRender: (record) => (
-                        <ExpandOrderDetail OrderId={record.key} />
-                    ),
-                }}
-                dataSource={orderData}
-                size="small"
-                bordered
-                pagination={{
-                    position: ['topRight'],
-                    defaultPageSize: 5,
-                    defaultCurrent: 1,
-                    hideOnSinglePage: true,
-                }}
-            />
+            <Spin spinning={loading} size="large" tip="Loading...">
+                <Table
+                    title={defaultTitle}
+                    // footer={defaultFooter}
+                    columns={columns}
+                    expandable={{
+                        // expandRowByClick: true,
+                        expandedRowRender: (record) => (
+                            <ExpandOrderDetail OrderId={record.key} />
+                        ),
+                    }}
+                    dataSource={orderData}
+                    size="small"
+                    bordered
+                    pagination={{
+                        position: ['topRight'],
+                        defaultPageSize: 10,
+                        defaultCurrent: 1,
+                        hideOnSinglePage: true,
+                    }}
+                />
+            </Spin>
         </>
     )
 }

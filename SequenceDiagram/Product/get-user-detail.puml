@@ -1,0 +1,23 @@
+@startuml
+autonumber
+actor User
+
+activate User
+
+User -> NPS_FE: Yeu cau lay san pham
+activate NPS_FE
+
+NPS_FE -> NPS_BE: GET api/product/:id
+activate NPS_BE
+NPS_BE -> NPS_BE: Kiem tra id
+
+alt if id khong hop le
+NPS_BE --> NPS_FE: Tra ve tin nhan loi truy van
+NPS_FE --> User: Thong bao loi, khong tim thay san pham
+end
+
+NPS_BE->NPS_BE: Truy van co so du lieu
+NPS_BE --> NPS_FE: Tra ve du lieu vua truy van duoc
+NPS_FE --> User: Hien thi chi tiet san pham
+
+@enduml

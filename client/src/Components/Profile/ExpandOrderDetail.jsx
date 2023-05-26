@@ -1,28 +1,34 @@
-import { Table } from 'antd'
+import { Spin, Table } from 'antd'
 import { useEffect, useState } from 'react'
 import request from '../../utils/axiosConfig'
 
 const ExpandOrderDetail = ({ OrderId }) => {
     // const [itemData,setItemData] =useState([])
     const [data, setData] = useState([])
-
+    const [loading, setLoading] = useState(false)
     const fetchData = async () => {
-        const response = await request.get(`/order/${OrderId}`)
-        const items = response.data.items
-        const record = []
-        for (let i = 0; i < items.length; i++) {
-            const product = items[i].product
-            record.push({
-                key: product['_id'],
-                product: product['name'],
-                quantity: items[i]['quantity'],
-                price: currencyFormat(items[i]['price']),
-                totalPrice: currencyFormat(
-                    items[i]['price'] * items[i]['quantity']
-                ),
-            })
+        try {
+            setLoading(true)
+            const response = await request.get(`/order/${OrderId}`)
+            const items = response.data.items
+            const record = []
+            for (let i = 0; i < items.length; i++) {
+                const product = items[i].product
+                record.push({
+                    key: product['_id'],
+                    product: product['name'],
+                    quantity: items[i]['quantity'],
+                    price: currencyFormat(items[i]['price']),
+                    totalPrice: currencyFormat(
+                        items[i]['price'] * items[i]['quantity']
+                    ),
+                })
+            }
+            setData(record)
+            setLoading(false)
+        } catch (error) {
+            console.log(error)
         }
-        setData(record)
     }
 
     const currencyFormat = (price) => (
@@ -65,15 +71,19 @@ const ExpandOrderDetail = ({ OrderId }) => {
         },
     ]
     return (
-        <Table
-            columns={columns}
-            dataSource={data}
-            pagination={false}
-            bordered
+        <div>
+            <Spin spinning={loading} size="large" tip="Loading...">
+                <Table
+                    columns={columns}
+                    dataSource={data}
+                    pagination={false}
+                    bordered
 
-            // rowClassName={(record) => record.parentId === expandedRowKey ? 'child-row':''}
-            // childrenColumnName='items'
-        />
+                    // rowClassName={(record) => record.parentId === expandedRowKey ? 'child-row':''}
+                    // childrenColumnName='items'
+                />
+            </Spin>
+        </div>
     )
 }
 

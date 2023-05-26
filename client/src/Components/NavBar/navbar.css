@@ -1,4 +1,11 @@
-
+.logo-content {
+    display: flex;
+    justify-content: space-between;
+    /* padding: 0 1.5rem; */
+    background-color: rgb(228, 228, 228);
+    align-items: center;
+    font-size: 1.5rem;
+}
 
 .navbar-container {
     display: flex;

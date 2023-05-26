@@ -11,6 +11,7 @@ import {
     Row,
     Select,
     Slider,
+    Spin,
     notification,
 } from 'antd'
 import ReactHtmlParser from 'react-html-parser'
@@ -62,10 +63,13 @@ const ProductDetail = () => {
         ...defaultFonts,
     ].sort()
 
+    const [loading, setLoading] = useState(false)
+
     // console.log(description)
 
     const fetchDataMustTry = async () => {
         try {
+            setLoading(true)
             const response = await request.get(
                 `/product?category=63f0add10207afdbe49f43ea&softDeleted=false`
             )
@@ -78,6 +82,7 @@ const ProductDetail = () => {
                 })
             }
             setSelectMustTry(dataSelect)
+            setLoading(false)
         } catch (error) {
             console.log(error)
         }
@@ -85,6 +90,7 @@ const ProductDetail = () => {
 
     const fetchDataProduct = async () => {
         try {
+            setLoading(true)
             const p = await request.get(`/product/${id.id}`)
             if (p) {
                 const data = p.data
@@ -98,6 +104,7 @@ const ProductDetail = () => {
                 )
                 setNameUpdate(data['name'])
                 setCategoryUpdate(data['category']['_id'])
+                setLoading(false)
             } else {
                 navigate('/')
             }
@@ -120,6 +127,7 @@ const ProductDetail = () => {
     }
 
     const handleAddToCart = (e) => {
+        setLoading(true)
         let item = { product: product, quantity: quantity }
         var cloneSelect = [...selectMustTry]
         cloneSelect.push(item)
@@ -128,7 +136,6 @@ const ProductDetail = () => {
         let existingItems = JSON.parse(localStorage.getItem('items')) || []
         const updatedExist = [...existingItems]
 
-        debugger
         for (const selectedProduct of cloneSelect) {
             const existingProductIndex = updatedExist.findIndex(
                 (existingProduct) =>
@@ -169,6 +176,7 @@ const ProductDetail = () => {
         context.getCountItem()
         setItems(items)
 
+        setLoading(false)
         notification.success({
             message: 'Đã thêm sản phẩm vào giỏ hàng',
             description: 'Vui lòng vào giỏ hàng để kiểm tra sản phẩm đã chọn',
@@ -202,65 +210,71 @@ const ProductDetail = () => {
 
     return (
         <div style={{ marginTop: '2.5%' }}>
-            <Row>
-                {/* <Col span={3}></Col> */}
-                <Col span={8} style={{ height: '100%' }}>
-                    <img src={product['img']} width={'80%'} height={'100%'} />
-                </Col>
-                <Col span={8}>
-                    <h1 style={{}}>{product.name}</h1>
-                    <h2 style={{ color: 'red' }}>{price}</h2>
-                    {isDescriptionEmpty(product.description) === false ? (
-                        <>
-                            <h3 style={{}}>Thông tin sản phẩm</h3>
-                            <div style={{}}>
-                                {ReactHtmlParser(product.description)}
-                            </div>
-                        </>
-                    ) : (
-                        <></>
-                    )}
-                    <br />
-                    <div>
-                        <h2 style={{}}>Số lượng</h2>
-                        <br />
-                        <QuantityPicker
-                            onChange={(value) => setQuantity(value)}
-                            min={1}
-                            value={quantity}
-                            max={99}
-                            smooth
+            <Spin spinning={loading} size="large" tip="Loading...">
+                <Row>
+                    {/* <Col span={3}></Col> */}
+                    <Col span={8} style={{ height: '100%' }}>
+                        <img
+                            src={product['img']}
+                            width={'80%'}
+                            height={'100%'}
                         />
-                    </div>
-                    <div>
-                        <Button
-                            type="primary"
-                            style={{
-                                height: '200%',
-                                fontSize: '1.5rem',
-                            }}
-                            onClick={handleAddToCart}
-                        >
-                            <ShoppingCartOutlined />
-                            Thêm vào giỏ hàng
-                        </Button>
-                    </div>
-                </Col>
-                <Col span={8} style={{ width: '50%' }}>
-                    <h1>Ăn kèm</h1>
-                    {/* {listMustTryProduct?.map((item) => (
+                    </Col>
+                    <Col span={8}>
+                        <h1 style={{}}>{product.name}</h1>
+                        <h2 style={{ color: 'red' }}>{price}</h2>
+                        {isDescriptionEmpty(product.description) === false ? (
+                            <>
+                                <h3 style={{}}>Thông tin sản phẩm</h3>
+                                <div style={{}}>
+                                    {ReactHtmlParser(product.description)}
+                                </div>
+                            </>
+                        ) : (
+                            <></>
+                        )}
+                        <br />
+                        <div>
+                            <h2 style={{}}>Số lượng</h2>
+                            <br />
+                            <QuantityPicker
+                                onChange={(value) => setQuantity(value)}
+                                min={1}
+                                value={quantity}
+                                max={99}
+                                smooth
+                            />
+                        </div>
+                        <div>
+                            <Button
+                                type="primary"
+                                style={{
+                                    height: '200%',
+                                    fontSize: '1.5rem',
+                                }}
+                                onClick={handleAddToCart}
+                            >
+                                <ShoppingCartOutlined />
+                                Thêm vào giỏ hàng
+                            </Button>
+                        </div>
+                    </Col>
+                    <Col span={8} style={{ width: '50%' }}>
+                        <h1>Ăn kèm</h1>
+                        {/* {listMustTryProduct?.map((item) => (
                         <>
                             <ProductList products={listMustTryProduct}/>
                         </>
                     ))} */}
-                    {/* <ProductList products={listMustTryProduct} /> */}
-                    {/* <img src={product['img']} style={{width:'25%'}}/> */}
-                    <ProductCardMustTry
-                        item={listMustTryProduct}
-                        onChangeMustTryQuantity={onChangeMustTryQuantity}
-                    />
-                </Col>
-            </Row>
+                        {/* <ProductList products={listMustTryProduct} /> */}
+                        {/* <img src={product['img']} style={{width:'25%'}}/> */}
+                        <ProductCardMustTry
+                            item={listMustTryProduct}
+                            onChangeMustTryQuantity={onChangeMustTryQuantity}
+                        />
+                    </Col>
+                </Row>
+            </Spin>
         </div>
     )
 }

@@ -1,23 +1,23 @@
 @startuml
 autonumber
-actor User
+actor USER
 
-activate User
+activate USER
 
-User -> NPS_FE: Yeu cau lay danh sach san pham
+USER -> NPS_FE: Yêu cầu lấy danh sách sản phẩm
 activate NPS_FE
 
 NPS_FE -> NPS_BE: GET api/product?{filter}
 activate NPS_BE
-NPS_BE -> NPS_BE: Kiem tra cac dieu kien filter
+NPS_BE -> NPS_BE: Kiểm tra các điều kiện của filter
 
-alt if filter khong hop le
-NPS_BE --> NPS_FE: Tra ve tin nhan loi truy van
-NPS_FE --> User: Thong bao loi, khong the truy van
+alt if filter không hợp lệ
+NPS_BE --> NPS_FE: Trả về tin nhắn lỗi truy vấn
+NPS_FE --> USER: Thông báo lỗi và không hiển thị danh sách sản phẩm
 end
 
-NPS_BE->NPS_BE: Truy van co so du lieu
-NPS_BE --> NPS_FE: Tra ve du lieu vua truy van duoc
-NPS_FE --> User: Hien thi danh sach san pham
+NPS_BE->NPS_BE: Truy vấn cơ sở dữ liệu
+NPS_BE --> NPS_FE: Trả về dữ liệu vừa được truy vấn
+NPS_FE --> USER: Hiển thị danh sách sản phẩm
 
 @enduml

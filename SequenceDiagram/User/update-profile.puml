@@ -1,25 +1,25 @@
 @startuml
 autonumber
-actor User
-activate User
-User -> NPS_FE: Gửi yêu cầu cập nhật profile
+actor USER
+activate USER
+USER -> NPS_FE: Gửi yêu cầu cập nhật profile
 activate NPS_FE
-NPS_FE -> NPS_BE: PUT api/user/:id
+NPS_FE -> NPS_BE: PUT api/USER/:id
 activate NPS_BE
 NPS_BE -> NPS_BE: Kiểm tra token hợp lệ không
 
 alt if token không hợp lệ
 NPS_BE --> NPS_FE: Trả về lỗi token không hợp lệ
-NPS_FE --> User: Thông báo người dùng không có quyền truy cập
+NPS_FE --> USER: Thông báo người dùng không có quyền truy cập
 end
 
 NPS_BE -> NPS_BE:Kiểm tra thông tin đầu vào
 alt if Dữ liệu đầu vào không hợp lệ
 NPS_BE --> NPS_FE: Trả về mã và tin nhắn lỗi
-NPS_FE --> User: Thông báo lỗi và không thực hiện cập nhật
+NPS_FE --> USER: Thông báo lỗi và không thực hiện cập nhật
 end alt
 
 NPS_BE -> NPS_BE: Cập nhật thông tin người dùng theo id
 NPS_BE --> NPS_FE: Trả về tin nhắn cập nhật thông tin thành công
-NPS_FE --> User: Thông báo cập nhật thông tin người dùng thành công
+NPS_FE --> USER: Thông báo cập nhật thông tin người dùng thành công
 @enduml

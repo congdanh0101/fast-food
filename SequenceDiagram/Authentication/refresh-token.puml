@@ -1,15 +1,15 @@
 @startuml
 autonumber
-actor User
-activate User
-User -> NPS_FE: Yêu cầu làm mới token
+actor USER
+activate USER
+USER -> NPS_FE: Yêu cầu làm mới token
 activate NPS_FE
 NPS_FE -> NPS_BE: PUT api/auth/refresh-token
 activate NPS_BE
 NPS_BE -> NPS_BE: Kiểm tra refresh token có hợp lệ hay không
 alt if token không hợp lệ
 NPS_BE --> NPS_FE: Token không hợp lệ
-NPS_FE --> User: Chuyển người dùng về trang đăng nhập
+NPS_FE --> USER: Chuyển người dùng về trang đăng nhập
 end 
 NPS_BE -> NPS_BE: Tạo mới accessToken & refreshToen
 NPS_BE --> NPS_FE: Trả về accessToken & refreshToken

@@ -1,19 +1,19 @@
 @startuml
 autonumber
-actor User
-activate User
-User -> NPS_FE: Yêu cầu đăng nhập
-activate NPS_FE
-NPS_FE -> NPS_BE: Gọi api/auth/login
-activate NPS_BE
-NPS_BE -> NPS_BE: Truy vấn user by email và password
-NPS_BE -> NPS_BE: Kiểm tra user hợp lệ hay không
+actor USER
+activate USER
+USER -> UFF_UI: Yêu cầu đăng nhập
+activate UFF_UI
+UFF_UI -> UFF_SERVER: Gọi api/auth/login
+activate UFF_SERVER
+UFF_SERVER -> UFF_SERVER: Truy vấn USER by email và password
+UFF_SERVER -> UFF_SERVER: Kiểm tra USER hợp lệ hay không
 alt if người dùng không tồn tại
-NPS_BE --> NPS_FE: Đăng nhập thất bại
-NPS_FE --> User: Sai email hoặc password
+UFF_SERVER --> UFF_UI: Đăng nhập thất bại
+UFF_UI --> USER: Sai email hoặc password
 end alt
-NPS_BE -> NPS_BE: Tạo mới AccessToken & Refresh Token
-NPS_BE --> NPS_FE: Trả về AccessToken & Refresh Token
-NPS_FE --> User: Chuyển người dùng về trang chủ
+UFF_SERVER -> UFF_SERVER: Tạo mới AccessToken & Refresh Token
+UFF_SERVER --> UFF_UI: Trả về AccessToken & Refresh Token
+UFF_UI --> USER: Chuyển người dùng về trang chủ
 
 @enduml

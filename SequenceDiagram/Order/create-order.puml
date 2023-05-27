@@ -1,0 +1,56 @@
+@startuml
+autonumber
+actor USER
+
+activate USER
+
+USER -> UFF_UI: Yêu cầu tạo mới đơn hàng
+activate UFF_UI
+
+UFF_UI -> GHN: POST https://online-gateway.ghn.vn/shiip/public-api/v2/shipping-order/fee
+activate GHN
+
+GHN -> GHN: Kiểm tra GHN_token
+
+alt if GHN_token không hợp lệ
+GHN --> UFF_UI: Trả về mô tả lỗi tính phí vận chuyển
+end
+
+GHN -> GHN: Kiểm tra dữ liệu vận chuyển
+
+
+alt if dữ liệu vận chuyển không hợp lệ
+GHN --> UFF_UI: Trả về mô tả lỗi tính phí vận chuyển
+end
+
+GHN --> UFF_UI: Trả về thông tin phí vận chuyển
+
+UFF_UI -> UFF_SERVER: POST api/order
+activate UFF_SERVER
+
+UFF_SERVER -> UFF_SERVER: Kiểm tra token hợp lệ không
+
+alt if token không hợp lệ
+UFF_SERVER --> UFF_UI: Trả về lỗi token không hợp lệ
+UFF_UI --> USER: Thông báo người dùng không có quyền truy cập
+end
+
+UFF_SERVER -> UFF_SERVER: Kiểm tra dữ liệu đầu vào
+
+alt if Dữ liệu đầu vào không hợp lệ
+UFF_SERVER --> UFF_UI: Trả về tin nhắn mô tả lỗi đặt hàng
+UFF_UI --> USER: Thông báo không tạo được đơn hàng
+end
+
+UFF_SERVER->UFF_SERVER: Tạo mới đơn hàng dưới cơ sở dữ liệu
+UFF_SERVER -> UFF_SERVER: Gửi dữ liệu đơn hàng về email
+UFF_SERVER --> UFF_UI: Trả về dữ liệu đơn hàng được tạo mới
+
+alt if Thanh toán Online
+UFF_UI --> USER: Chuyển trang thanh toán online
+
+else Thanh toán COD
+UFF_UI --> USER: Thông báo đặt hàng thành công
+end
+
+@enduml

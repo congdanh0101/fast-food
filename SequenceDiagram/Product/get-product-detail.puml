@@ -1,0 +1,30 @@
+@startuml
+autonumber
+actor USER
+
+activate USER
+
+USER -> NPS_FE: Yeu cau lay san pham
+activate NPS_FE
+
+NPS_FE -> NPS_BE: GET api/product/:id
+activate NPS_BE
+NPS_BE -> NPS_BE: Kiểm tra access token
+
+alt if Token không hợp lệ
+NPS_BE --> NPS_FE: Trả về lỗi token không hợp lệ
+NPS_FE --> USER: Thông báo không có quyền truy cập
+end
+
+NPS_BE -> NPS_BE: Kiểm tra id
+
+alt if id khong hop le
+NPS_BE --> NPS_FE: Trả về tin nhắn lỗi truy vấn
+NPS_FE --> USER: Thông báo lỗi, không tìm thấy sản phẩm và chuyển trang 404
+end
+
+NPS_BE->NPS_BE: Truy vấn cơ sở dữ liệu
+NPS_BE --> NPS_FE: Trả về dữ liệu vừa được truy vấn
+NPS_FE --> USER: Hiển thị thông tin chi tiết sản phẩm
+
+@enduml

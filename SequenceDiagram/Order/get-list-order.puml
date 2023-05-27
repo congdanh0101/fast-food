@@ -1,0 +1,34 @@
+@startuml
+autonumber
+actor USER
+
+activate USER
+
+USER -> UFF_UI: Yêu cầu lấy danh sách đơn hàng
+activate UFF_UI
+
+UFF_UI -> UFF_SERVER: GET api/order?{filter}
+activate UFF_SERVER
+
+UFF_SERVER -> UFF_SERVER: Kiểm tra token hợp lệ không
+
+alt if token không hợp lệ
+UFF_SERVER --> UFF_UI: Trả về lỗi token không hợp lệ
+UFF_UI --> USER: Thông báo người dùng không có quyền truy cập
+end
+
+UFF_SERVER -> UFF_SERVER: Kiểm tra điều kiện filter
+
+alt if filter không hợp lệ
+UFF_SERVER --> UFF_UI: Trả về tin nhắn mô tả lỗi truy vấn
+UFF_UI --> USER: Không tìm thấy dữ liệu hợp lệ và chuyển trang 404
+end
+
+UFF_SERVER->UFF_SERVER: Truy vấn danh sách đơn hàng ở CSDL
+UFF_SERVER --> UFF_UI: Trả về dữ liệu danh sách đơn hàng vừa được truy vấn
+
+
+UFF_UI --> USER: Hiển thị danh sách đơn hàng
+
+
+@enduml

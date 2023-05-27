@@ -1,29 +1,29 @@
 @startuml
 autonumber
-actor User
-activate User
-User -> NPS_FE: Yều cầu đăng ký tài khoản
-activate NPS_FE
-NPS_FE -> NPS_BE: POST api/auth/register
-activate NPS_BE
-NPS_BE -> NPS_BE: Kiểm tra email có tồn tại trong database chưa
+actor USER
+activate USER
+USER -> UFF_UI: Yều cầu đăng ký tài khoản
+activate UFF_UI
+UFF_UI -> UFF_SERVER: POST api/auth/register
+activate UFF_SERVER
+UFF_SERVER -> UFF_SERVER: Kiểm tra email có tồn tại trong database chưa
 alt  email đã tồn tại
-NPS_BE --> NPS_FE: Trả về lỗi email đã tồn tại
-NPS_FE --> User: Hiển thị lỗi email đã tồn tại
+UFF_SERVER --> UFF_UI: Trả về lỗi email đã tồn tại
+UFF_UI --> USER: Hiển thị lỗi email đã tồn tại
 end alt
-NPS_BE -> NPS_BE: Gửi mã xác thực đến email được đăng ký
-NPS_BE --> NPS_FE: Trả về thông tin yêu cầu đăng ký thành công
-NPS_FE --> User: Chuyển trang xác nhận email
-User -> NPS_FE: Nhập mã xác thực
-NPS_FE -> NPS_BE: POST api/auth/verify/register
-NPS_BE -> NPS_BE: Kiểm tra mã xác thực
+UFF_SERVER -> UFF_SERVER: Gửi mã xác thực đến email được đăng ký
+UFF_SERVER --> UFF_UI: Trả về thông tin yêu cầu đăng ký thành công
+UFF_UI --> USER: Chuyển trang xác nhận email
+USER -> UFF_UI: Nhập mã xác thực
+UFF_UI -> UFF_SERVER: POST api/auth/verify/register
+UFF_SERVER -> UFF_SERVER: Kiểm tra mã xác thực
 alt Mã xác thực không chính xác
-NPS_BE -> NPS_FE: Trả về thông tin lỗi
-NPS_FE -> User: Hiển thị thông báo lỗi
+UFF_SERVER -> UFF_UI: Trả về thông tin lỗi
+UFF_UI -> USER: Hiển thị thông báo lỗi
 end alt
 
-NPS_BE -> NPS_BE: Tạo mới tài khoản dựa trên yêu cầu đăng ký
-NPS_BE -> NPS_FE: Trả thông tin tài khoản vừa được tạo mới
-NPS_FE -> User: Thông báo đăng ký thành công và chuyển trang đăng nhập
+UFF_SERVER -> UFF_SERVER: Tạo mới tài khoản dựa trên yêu cầu đăng ký
+UFF_SERVER -> UFF_UI: Trả thông tin tài khoản vừa được tạo mới
+UFF_UI -> USER: Thông báo đăng ký thành công và chuyển trang đăng nhập
 
 @enduml

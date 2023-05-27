@@ -1,0 +1,48 @@
+@startuml
+autonumber
+actor USER
+
+activate USER
+
+USER -> UFF_UI: Yêu cầu thanh toán đơn hàng
+activate UFF_UI
+
+UFF_UI -> UFF_SERVER: POST api/payment/create_payment_url
+activate UFF_SERVER
+
+UFF_SERVER -> UFF_SERVER: Kiểm tra token hợp lệ không
+
+alt if token không hợp lệ
+UFF_SERVER --> UFF_UI: Trả về lỗi token không hợp lệ
+UFF_UI --> USER: Thông báo người dùng không có quyền truy cập
+end
+
+UFF_SERVER -> UFF_SERVER: Kiểm tra dữ liệu đầu vào
+
+alt if Dữ liệu đầu vào không hợp lệ
+UFF_SERVER --> UFF_UI: Trả về tin nhắn mô tả lỗi
+UFF_UI --> USER:Thông báo lỗi và chuyển trang 404
+end
+
+
+UFF_SERVER->UFF_SERVER: Tạo đường dẫn thanh toán
+UFF_SERVER --> UFF_UI: Trả về dữ liệu đường dẫn thanh toán
+UFF_UI --> USER: Chuyển trang thanh toán online
+
+activate VNPAY
+USER -> VNPAY: Nhập thông tin (thẻ) thanh toán
+VNPAY -> VNPAY: Xử lý thông tin thanh toán
+VNPAY --> UFF_SERVER: Trả thông tin dữ liệu về thanh toán
+
+alt if Thanh toán thành công
+UFF_SERVER --> UFF_SERVER: Cập nhật thông tin thanh toán đơn hàng CSDL
+UFF_SERVER --> UFF_UI: Trả dữ liệu đơn hàng được cập nhật
+UFF_UI --> USER: Chuyển trang thanh toán thành công
+
+else Thanh toán không thành công
+UFF_SERVER --> UFF_UI: Trả dữ liệu mã lỗi thanh toán
+UFF_UI --> USER: Chuyển trang thanh toán không thành công
+end
+
+
+@enduml

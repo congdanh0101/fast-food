@@ -1,0 +1,41 @@
+@startuml
+autonumber
+actor ADMIN
+
+activate ADMIN
+
+ADMIN -> UFF_UI: Yêu cầu cập nhật đơn hàng
+activate UFF_UI
+
+UFF_UI -> UFF_SERVER: PUT api/order/:id
+activate UFF_SERVER
+
+UFF_SERVER -> UFF_SERVER: Kiểm tra token hợp lệ không
+
+alt if token không hợp lệ
+UFF_SERVER --> UFF_UI: Trả về lỗi token không hợp lệ
+UFF_UI --> ADMIN: Thông báo người dùng không có quyền truy cập
+end
+
+UFF_SERVER -> UFF_SERVER: Kiểm tra id
+
+alt if id không hợp lệ
+UFF_SERVER --> UFF_UI: Trả về tin nhắn mô tả lỗi truy vấn
+UFF_UI --> ADMIN: Không tìm thấy dữ liệu hợp lệ và chuyển trang 404
+end
+
+UFF_SERVER -> UFF_SERVER: Kiểm tra dữ liệu đầu vào
+
+alt if dữ liệu đầu vào không hợp lệ
+UFF_SERVER --> UFF_UI: Trả về tin nhắn mô tả lỗi cập nhật
+UFF_UI --> ADMIN: Thông báo không thể cập nhật đơn hàng
+end
+
+
+
+UFF_SERVER->UFF_SERVER: Cập nhật đơn hàng ở CSDL
+UFF_SERVER --> UFF_UI: Trả về dữ liệu đơn hàng vừa được cập nhật
+UFF_UI --> ADMIN: Hiển thị đơn hàng vừa được cập nhật 
+
+
+@enduml

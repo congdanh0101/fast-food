@@ -1,24 +1,30 @@
 @startuml
 autonumber
-actor Admin
+actor ADMIN
 
-activate Admin
+activate ADMIN
 
-Admin -> NPS_FE: Yeu cau tao moi san pham
+ADMIN -> NPS_FE: Yêu cầu tạo mới sản phẩm
 activate NPS_FE
 
 NPS_FE -> NPS_BE: POST api/product
 activate NPS_BE
 
-NPS_BE -> NPS_BE: Kiem tra du lieu dau vao
+NPS_BE -> NPS_BE: Kiểm tra access token
+
+alt if Token không hợp lệ
+NPS_BE --> NPS_FE: Trả về lỗi token không hợp lệ
+NPS_FE --> ADMIN: Thông báo không có quyền truy cập
+end
+NPS_BE -> NPS_BE: Kiểm tra dữ liệu đầu vào
 
 alt if Du lieu dau vao khong hop le
-NPS_BE --> NPS_FE: Tra ve tin mo ta loi tao moi san pham
-NPS_FE --> Admin: Khong the tao moi san pham
+NPS_BE --> NPS_FE: Trả về tin nhắn mô tả lỗi tạo mới sản phẩm
+NPS_FE --> ADMIN: Thông báo không thể tạo mới sản phẩm
 end
 
-NPS_BE->NPS_BE: Tao moi san pham duoi CSDL
-NPS_BE --> NPS_FE: Tra ve du lieu vua tao moi
-NPS_FE --> Admin: Hien thi san pham duoc tao moi
+NPS_BE->NPS_BE: Tạo mới sản phẩm dưới CSDL
+NPS_BE --> NPS_FE: Trả về thông tin dữ liệu vừa được lưu
+NPS_FE --> ADMIN: Hiển thị sản phẩm vừa được tạo mới
 
 @enduml

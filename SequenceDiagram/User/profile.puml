@@ -1,23 +1,23 @@
 @startuml
 autonumber
-actor User
-activate User
-User -> NPS_FE: Yêu cầu xem profile
+actor USER
+activate USER
+USER -> NPS_FE: Yêu cầu xem profile
 activate NPS_FE
-NPS_FE -> NPS_BE: Gọi api/v1/user/:id
+NPS_FE -> NPS_BE: Gọi api/v1/USER/:id
 activate NPS_BE
 NPS_BE -> NPS_BE: Kiểm tra token có hợp lệ không
 alt if token không hợp lệ
 NPS_BE --> NPS_FE: Trả về lỗi token không hợp lệ
-NPS_FE --> User: Thông báo lỗi người không có quyền truy cập
+NPS_FE --> USER: Thông báo lỗi người không có quyền truy cập
 end
-NPS_BE -> NPS_BE: Truy vấn thông tin user theo id
+NPS_BE -> NPS_BE: Truy vấn thông tin USER theo id
 
-alt if user không tồn tại
-NPS_BE -> NPS_FE: Trả về lỗi user không tồn tại
-NPS_FE -> User: Thông báo lỗi và chuyển trang 404 error
+alt if USER không tồn tại
+NPS_BE -> NPS_FE: Trả về lỗi USER không tồn tại
+NPS_FE -> USER: Thông báo lỗi và chuyển trang 404 error
 end
 
-NPS_BE --> NPS_FE: Trả về thông tin user
-NPS_FE --> User: Hiển thị thông tin user lên màn hình
+NPS_BE --> NPS_FE: Trả về thông tin USER
+NPS_FE --> USER: Hiển thị thông tin USER lên màn hình
 @enduml

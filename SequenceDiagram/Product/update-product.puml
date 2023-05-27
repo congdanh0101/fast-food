@@ -1,30 +1,38 @@
 @startuml
 autonumber
-actor Admin
+actor ADMIN
 
-activate Admin
+activate ADMIN
 
-Admin -> NPS_FE: Yeu cau cap nhat san pham
+ADMIN -> NPS_FE: Yeu cau cap nhat san pham
 activate NPS_FE
 
 NPS_FE -> NPS_BE: PUT api/product/:id
 activate NPS_BE
-NPS_BE -> NPS_BE: Kiem tra id hop le khong
 
-alt if id khong hop le
-NPS_BE --> NPS_FE: Tra ve tin nhan loi truy van
-NPS_FE --> Admin:Khong tim thay san pham de cap nhat
+NPS_BE -> NPS_BE: Kiểm tra access token
+
+alt if Token không hợp lệ
+NPS_BE --> NPS_FE: Trả về lỗi token không hợp lệ
+NPS_FE --> ADMIN: Thông báo không có quyền truy cập
 end
 
-NPS_BE -> NPS_BE: Kiem tra du lieu dau vao
+NPS_BE -> NPS_BE: Kiểm tra id
 
-alt if Du lieu dau vao khong hop le
-NPS_BE --> NPS_FE: Tra ve tin mo ta loi cap nhat
-NPS_FE --> Admin: Khong the cap nhat san pham
+alt if id không hợp lệ
+NPS_BE --> NPS_FE: Trả về tin nhắn mô tả lỗi truy vấn
+NPS_FE --> ADMIN:Không tìm thấy sản phẩm để cập nhật
 end
 
-NPS_BE->NPS_BE: Cap nhat san pham duoi CSDL
-NPS_BE --> NPS_FE: Tra ve du lieu vua cap nhat
-NPS_FE --> Admin: Hien thi san pham duoc cap nhat
+NPS_BE -> NPS_BE: Kiểm tra dữ liệu đầu vào
+
+alt if Dữ liệu đầu vào không hợp lệ
+NPS_BE --> NPS_FE: Trả về tin nhắn mô tả lỗi cập nhật
+NPS_FE --> ADMIN: Không thể cập nhật sản phẩm
+end
+
+NPS_BE->NPS_BE: Cập nhật sản phẩm dưới CSDL
+NPS_BE --> NPS_FE: Trả về dữ liệu vừa được cập nhật
+NPS_FE --> ADMIN: Hiển thị sản phẩm được cập nhật
 
 @enduml

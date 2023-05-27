@@ -2,22 +2,22 @@
 autonumber
 actor USER
 activate USER
-USER -> NPS_FE: Yêu cầu xem profile
-activate NPS_FE
-NPS_FE -> NPS_BE: Gọi api/v1/USER/:id
-activate NPS_BE
-NPS_BE -> NPS_BE: Kiểm tra token có hợp lệ không
+USER -> UFF_UI: Yêu cầu xem profile
+activate UFF_UI
+UFF_UI -> UFF_SERVER: Gọi api/v1/USER/:id
+activate UFF_SERVER
+UFF_SERVER -> UFF_SERVER: Kiểm tra token có hợp lệ không
 alt if token không hợp lệ
-NPS_BE --> NPS_FE: Trả về lỗi token không hợp lệ
-NPS_FE --> USER: Thông báo lỗi người không có quyền truy cập
+UFF_SERVER --> UFF_UI: Trả về lỗi token không hợp lệ
+UFF_UI --> USER: Thông báo lỗi người không có quyền truy cập
 end
-NPS_BE -> NPS_BE: Truy vấn thông tin USER theo id
+UFF_SERVER -> UFF_SERVER: Truy vấn thông tin USER theo id
 
 alt if USER không tồn tại
-NPS_BE -> NPS_FE: Trả về lỗi USER không tồn tại
-NPS_FE -> USER: Thông báo lỗi và chuyển trang 404 error
+UFF_SERVER -> UFF_UI: Trả về lỗi USER không tồn tại
+UFF_UI -> USER: Thông báo lỗi và chuyển trang 404 error
 end
 
-NPS_BE --> NPS_FE: Trả về thông tin USER
-NPS_FE --> USER: Hiển thị thông tin USER lên màn hình
+UFF_SERVER --> UFF_UI: Trả về thông tin USER
+UFF_UI --> USER: Hiển thị thông tin USER lên màn hình
 @enduml

@@ -4,35 +4,35 @@ actor ADMIN
 
 activate ADMIN
 
-ADMIN -> NPS_FE: Yeu cau cap nhat san pham
-activate NPS_FE
+ADMIN -> UFF_UI: Yeu cau cap nhat san pham
+activate UFF_UI
 
-NPS_FE -> NPS_BE: PUT api/product/:id
-activate NPS_BE
+UFF_UI -> UFF_SERVER: PUT api/product/:id
+activate UFF_SERVER
 
-NPS_BE -> NPS_BE: Kiểm tra access token
+UFF_SERVER -> UFF_SERVER: Kiểm tra access token
 
 alt if Token không hợp lệ
-NPS_BE --> NPS_FE: Trả về lỗi token không hợp lệ
-NPS_FE --> ADMIN: Thông báo không có quyền truy cập
+UFF_SERVER --> UFF_UI: Trả về lỗi token không hợp lệ
+UFF_UI --> ADMIN: Thông báo không có quyền truy cập
 end
 
-NPS_BE -> NPS_BE: Kiểm tra id
+UFF_SERVER -> UFF_SERVER: Kiểm tra id
 
 alt if id không hợp lệ
-NPS_BE --> NPS_FE: Trả về tin nhắn mô tả lỗi truy vấn
-NPS_FE --> ADMIN:Không tìm thấy sản phẩm để cập nhật
+UFF_SERVER --> UFF_UI: Trả về tin nhắn mô tả lỗi truy vấn
+UFF_UI --> ADMIN:Không tìm thấy sản phẩm để cập nhật
 end
 
-NPS_BE -> NPS_BE: Kiểm tra dữ liệu đầu vào
+UFF_SERVER -> UFF_SERVER: Kiểm tra dữ liệu đầu vào
 
 alt if Dữ liệu đầu vào không hợp lệ
-NPS_BE --> NPS_FE: Trả về tin nhắn mô tả lỗi cập nhật
-NPS_FE --> ADMIN: Không thể cập nhật sản phẩm
+UFF_SERVER --> UFF_UI: Trả về tin nhắn mô tả lỗi cập nhật
+UFF_UI --> ADMIN: Không thể cập nhật sản phẩm
 end
 
-NPS_BE->NPS_BE: Cập nhật sản phẩm dưới CSDL
-NPS_BE --> NPS_FE: Trả về dữ liệu vừa được cập nhật
-NPS_FE --> ADMIN: Hiển thị sản phẩm được cập nhật
+UFF_SERVER->UFF_SERVER: Cập nhật sản phẩm dưới CSDL
+UFF_SERVER --> UFF_UI: Trả về dữ liệu vừa được cập nhật
+UFF_UI --> ADMIN: Hiển thị sản phẩm được cập nhật
 
 @enduml

@@ -2,15 +2,15 @@
 autonumber
 actor USER
 activate USER
-USER -> NPS_FE: Yêu cầu làm mới token
-activate NPS_FE
-NPS_FE -> NPS_BE: PUT api/auth/refresh-token
-activate NPS_BE
-NPS_BE -> NPS_BE: Kiểm tra refresh token có hợp lệ hay không
+USER -> UFF_UI: Yêu cầu làm mới token
+activate UFF_UI
+UFF_UI -> UFF_SERVER: PUT api/auth/refresh-token
+activate UFF_SERVER
+UFF_SERVER -> UFF_SERVER: Kiểm tra refresh token có hợp lệ hay không
 alt if token không hợp lệ
-NPS_BE --> NPS_FE: Token không hợp lệ
-NPS_FE --> USER: Chuyển người dùng về trang đăng nhập
+UFF_SERVER --> UFF_UI: Token không hợp lệ
+UFF_UI --> USER: Chuyển người dùng về trang đăng nhập
 end 
-NPS_BE -> NPS_BE: Tạo mới accessToken & refreshToen
-NPS_BE --> NPS_FE: Trả về accessToken & refreshToken
+UFF_SERVER -> UFF_SERVER: Tạo mới accessToken & refreshToen
+UFF_SERVER --> UFF_UI: Trả về accessToken & refreshToken
 @enduml

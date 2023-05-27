@@ -4,22 +4,22 @@ actor USER
 activate USER
 USER -> NPS_FE: Gửi yêu cầu cập nhật profile
 activate NPS_FE
-NPS_FE -> NPS_BE: PUT api/USER/:id
-activate NPS_BE
-NPS_BE -> NPS_BE: Kiểm tra token hợp lệ không
+NPS_FE -> UFF_SERVER: PUT api/user/:id
+activate UFF_SERVER
+UFF_SERVER -> UFF_SERVER: Kiểm tra token hợp lệ không
 
 alt if token không hợp lệ
-NPS_BE --> NPS_FE: Trả về lỗi token không hợp lệ
+UFF_SERVER --> NPS_FE: Trả về lỗi token không hợp lệ
 NPS_FE --> USER: Thông báo người dùng không có quyền truy cập
 end
 
-NPS_BE -> NPS_BE:Kiểm tra thông tin đầu vào
+UFF_SERVER -> NPS_BUFF_SERVERE:Kiểm tra thông tin đầu vào
 alt if Dữ liệu đầu vào không hợp lệ
-NPS_BE --> NPS_FE: Trả về mã và tin nhắn lỗi
-NPS_FE --> USER: Thông báo lỗi và không thực hiện cập nhật
+UFF_SERVER --> NPS_FE: Trả về mã và tin nhắn lỗi
+UFF_UI --> USER: Thông báo lỗi và không thực hiện cập nhật
 end alt
 
-NPS_BE -> NPS_BE: Cập nhật thông tin người dùng theo id
-NPS_BE --> NPS_FE: Trả về tin nhắn cập nhật thông tin thành công
-NPS_FE --> USER: Thông báo cập nhật thông tin người dùng thành công
+UFF_SERVER -> UFF_SERVER: Cập nhật thông tin người dùng theo id
+UFF_SERVER --> UFF_UI: Trả về tin nhắn cập nhật thông tin thành công
+UFF_UI --> USER: Thông báo cập nhật thông tin người dùng thành công
 @enduml

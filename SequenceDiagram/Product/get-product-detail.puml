@@ -4,27 +4,22 @@ actor USER
 
 activate USER
 
-USER -> NPS_FE: Yeu cau lay san pham
-activate NPS_FE
+USER -> UFF_UI: Yeu cau lay san pham
+activate UFF_UI
 
-NPS_FE -> NPS_BE: GET api/product/:id
-activate NPS_BE
-NPS_BE -> NPS_BE: Kiểm tra access token
+UFF_UI -> UFF_SERVER: GET api/product/:id
+activate UFF_SERVER
 
-alt if Token không hợp lệ
-NPS_BE --> NPS_FE: Trả về lỗi token không hợp lệ
-NPS_FE --> USER: Thông báo không có quyền truy cập
+
+UFF_SERVER -> UFF_SERVER: Kiểm tra id
+
+alt if id không hợp lệ
+UFF_SERVER --> UFF_UI: Trả về tin nhắn lỗi truy vấn
+UFF_UI --> USER: Thông báo lỗi, không tìm thấy sản phẩm và chuyển trang 404
 end
 
-NPS_BE -> NPS_BE: Kiểm tra id
-
-alt if id khong hop le
-NPS_BE --> NPS_FE: Trả về tin nhắn lỗi truy vấn
-NPS_FE --> USER: Thông báo lỗi, không tìm thấy sản phẩm và chuyển trang 404
-end
-
-NPS_BE->NPS_BE: Truy vấn cơ sở dữ liệu
-NPS_BE --> NPS_FE: Trả về dữ liệu vừa được truy vấn
-NPS_FE --> USER: Hiển thị thông tin chi tiết sản phẩm
+UFF_SERVER->UFF_SERVER: Truy vấn cơ sở dữ liệu
+UFF_SERVER --> UFF_UI: Trả về dữ liệu vừa được truy vấn
+UFF_UI --> USER: Hiển thị thông tin chi tiết sản phẩm
 
 @enduml

@@ -4,27 +4,27 @@ actor ADMIN
 
 activate ADMIN
 
-ADMIN -> NPS_FE: Yêu cầu tạo mới sản phẩm
-activate NPS_FE
+ADMIN -> UFF_UI: Yêu cầu tạo mới sản phẩm
+activate UFF_UI
 
-NPS_FE -> NPS_BE: POST api/product
-activate NPS_BE
+UFF_UI -> UFF_SERVER: POST api/product
+activate UFF_SERVER
 
-NPS_BE -> NPS_BE: Kiểm tra access token
+UFF_SERVER -> UFF_SERVER: Kiểm tra access token
 
 alt if Token không hợp lệ
-NPS_BE --> NPS_FE: Trả về lỗi token không hợp lệ
-NPS_FE --> ADMIN: Thông báo không có quyền truy cập
+UFF_SERVER --> UFF_UI: Trả về lỗi token không hợp lệ
+UFF_UI --> ADMIN: Thông báo không có quyền truy cập
 end
-NPS_BE -> NPS_BE: Kiểm tra dữ liệu đầu vào
+UFF_SERVER -> UFF_SERVER: Kiểm tra dữ liệu đầu vào
 
 alt if Du lieu dau vao khong hop le
-NPS_BE --> NPS_FE: Trả về tin nhắn mô tả lỗi tạo mới sản phẩm
-NPS_FE --> ADMIN: Thông báo không thể tạo mới sản phẩm
+UFF_SERVER --> UFF_UI: Trả về tin nhắn mô tả lỗi tạo mới sản phẩm
+UFF_UI --> ADMIN: Thông báo không thể tạo mới sản phẩm
 end
 
-NPS_BE->NPS_BE: Tạo mới sản phẩm dưới CSDL
-NPS_BE --> NPS_FE: Trả về thông tin dữ liệu vừa được lưu
-NPS_FE --> ADMIN: Hiển thị sản phẩm vừa được tạo mới
+UFF_SERVER->UFF_SERVER: Tạo mới sản phẩm dưới CSDL
+UFF_SERVER --> UFF_UI: Trả về thông tin dữ liệu vừa được lưu
+UFF_UI --> ADMIN: Hiển thị sản phẩm vừa được tạo mới
 
 @enduml

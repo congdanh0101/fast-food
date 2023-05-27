@@ -2,16 +2,16 @@
 autonumber
 actor USER
 activate USER
-USER -> NPS_FE: Yêu cầu đăng xuất
-activate NPS_FE
-NPS_FE -> NPS_BE: Gọi api/v1/USER/logout
-activate NPS_BE
-NPS_BE -> NPS_BE: Kiểm tra acces token 
+USER -> UFF_UI: Yêu cầu đăng xuất
+activate UFF_UI
+UFF_UI -> UFF_SERVER: Gọi api/v1/USER/logout
+activate UFF_SERVER
+UFF_SERVER -> UFF_SERVER: Kiểm tra acces token 
 alt if token không hợp lệ
-NPS_BE --> NPS_FE: Trả về lỗi token không hợp lệ
-NPS_FE --> USER: Thông báo người dùng không có quyền truy cập
+UFF_SERVER --> UFF_UI: Trả về lỗi token không hợp lệ
+UFF_UI --> USER: Thông báo người dùng không có quyền truy cập
 end
-NPS_BE -> NPS_BE: Xoá token của USER dưới redis
-NPS_BE --> NPS_FE: Trả về tin nhắn đăng xuất thành công
-NPS_FE --> USER: Chuyển hướng người dùng về trang chủ
+UFF_SERVER -> UFF_SERVER: Xoá token của USER dưới redis
+UFF_SERVER --> UFF_UI: Trả về tin nhắn đăng xuất thành công
+UFF_UI --> USER: Chuyển hướng người dùng về trang chủ
 @enduml

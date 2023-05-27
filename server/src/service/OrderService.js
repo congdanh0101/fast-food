@@ -6,6 +6,7 @@ const User = require('../model/User')
 const createHttpError = require('http-errors')
 const ResourceNotFoundException = require('../exception/ResourceNotFoundException')
 const VoucherService = require('./VoucherService')
+const Product = require('../model/Product')
 require('dotenv').config()
 
 class OrderService {
@@ -115,6 +116,17 @@ class OrderService {
                         order['totalPrice'] / process.env.RATE_REWARD
                     user['rankingPoint'] +=
                         order['totalPrice'] / process.env.RATE_REWARD
+                    const items = order['items']
+                    items.forEach(async (prod) => {
+                        const productId = prod['product']
+                        const quantity = prod['quantity']
+                        const product = await Product.findByIdAndUpdate(
+                            productId,
+                            {
+                                $inc: { sold: quantity },
+                            }
+                        )
+                    })
                     break
                 default:
                     break
@@ -125,9 +137,7 @@ class OrderService {
                 runValidators: true,
             })
             if (!updatedUser)
-                throw createHttpError.InternalServerError(
-                    'Đã xảy ra lỗi'
-                )
+                throw createHttpError.InternalServerError('Đã xảy ra lỗi')
             order['status'] = data['status']
             if (order['isPaid'] != true) {
                 order['isPaid'] = data['isPaid']

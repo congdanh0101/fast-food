@@ -30,6 +30,7 @@ import ManageOrderList from './ManageOrderList'
 import ManageUser from './ManageUser'
 import ManageProductList from './ManageProductList'
 import { useNavigate } from 'react-router-dom'
+import ManageCategoryList from './ManageCategoryList'
 
 echarts.use([
     TitleComponent,
@@ -76,6 +77,7 @@ const items = [
     //     'category'
     //     // <TransactionOutlined style={{ fontSize: '150%' }} />
     // ),
+    getItem('Loại sản phẩm', 'category'),
 ]
 
 const AdminDashboard = () => {
@@ -250,6 +252,7 @@ const AdminDashboard = () => {
                         {key === 'order' && <ManageOrderList />}
                         {key === 'product' && <ManageProductList />}
                         {key === 'user' && <ManageUser />}
+                        {key === 'category' && <ManageCategoryList />}
                     </Content>
                 </Layout>
             </Layout>

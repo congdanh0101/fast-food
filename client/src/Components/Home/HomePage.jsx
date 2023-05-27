@@ -45,7 +45,7 @@ const HomePage = () => {
     const isBigScreen = useMediaQuery({ minWidth: 1920 })
     const [loading, setLoading] = useState(false)
     const [category, setCategory] = useState([])
-    const [categoryID, setCategoryID] = useState('63f0add10207afdbe49f43ea')
+    const [categoryID, setCategoryID] = useState('63f0aeadaf6df55e5fa4f50e')
     const fetchCategoryList = async () => {
         try {
             // setLoading(true)

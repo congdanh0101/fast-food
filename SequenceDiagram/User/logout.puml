@@ -4,7 +4,7 @@ actor USER
 activate USER
 USER -> UFF_UI: Yêu cầu đăng xuất
 activate UFF_UI
-UFF_UI -> UFF_SERVER: Gọi api/v1/USER/logout
+UFF_UI -> UFF_SERVER: Gọi api/v1/user/logout
 activate UFF_SERVER
 UFF_SERVER -> UFF_SERVER: Kiểm tra acces token 
 alt if token không hợp lệ

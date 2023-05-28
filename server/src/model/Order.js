@@ -83,6 +83,32 @@ const orderSchema = new Schema({
         type: Number,
         require: true,
     },
+    contact: {
+        address: {
+            type: String,
+            require: true,
+            default: null,
+        },
+        ward: {
+            type: String,
+            require: true,
+            default: null,
+        },
+        district: {
+            type: String,
+            require: true,
+            default: null,
+        },
+        phoneNumber: {
+            type: String,
+            required: true,
+            default: null,
+        },
+    },
+    estimatedDelivery: {
+        type: String,
+        default: null,
+    },
 })
 
 // orderSchema.post('findOneAndUpdate', async (data) => {

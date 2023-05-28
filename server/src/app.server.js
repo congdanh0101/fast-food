@@ -10,6 +10,7 @@ const cors = require('cors')
 const Voucher = require('./model/Voucher')
 const cron = require('node-cron')
 const moment = require('moment')
+const Order = require('./model/Order')
 
 //HTTP logger
 app.use(morgan('dev'))
@@ -58,5 +59,8 @@ app.listen(PORT, () => console.log(`App listening at port ${PORT}`))
 //Scan and update automatically
 cron.schedule('0 0 * * *', async () => {})
 
-const nextMonth = moment().add(30, 'days').endOf('day').toDate()
+const nextMonth = moment().endOf('day').toDate()
 console.log(nextMonth)
+var today = new Date()
+
+// console.log(today)

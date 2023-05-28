@@ -2,20 +2,20 @@
 autonumber
 actor USER
 activate USER
-USER -> NPS_FE: Gửi yêu cầu cập nhật profile
-activate NPS_FE
-NPS_FE -> UFF_SERVER: PUT api/user/:id
+USER -> UFF_UI: Gửi yêu cầu cập nhật profile
+activate UFF_UI
+UFF_UI -> UFF_SERVER: PUT api/user/:id
 activate UFF_SERVER
 UFF_SERVER -> UFF_SERVER: Kiểm tra token hợp lệ không
 
 alt if token không hợp lệ
-UFF_SERVER --> NPS_FE: Trả về lỗi token không hợp lệ
-NPS_FE --> USER: Thông báo người dùng không có quyền truy cập
+UFF_SERVER --> UFF_UI: Trả về lỗi token không hợp lệ
+UFF_UI --> USER: Thông báo người dùng không có quyền truy cập
 end
 
-UFF_SERVER -> NPS_BUFF_SERVERE:Kiểm tra thông tin đầu vào
+UFF_SERVER -> UFF_SERVER:Kiểm tra thông tin đầu vào
 alt if Dữ liệu đầu vào không hợp lệ
-UFF_SERVER --> NPS_FE: Trả về mã và tin nhắn lỗi
+UFF_SERVER --> UFF_UI: Trả về mã và tin nhắn lỗi
 UFF_UI --> USER: Thông báo lỗi và không thực hiện cập nhật
 end alt
 

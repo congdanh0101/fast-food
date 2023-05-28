@@ -19,10 +19,10 @@ import {
     CanvasRenderer,
     // SVGRenderer,
 } from 'echarts/renderers'
-import { useEffect, useState } from 'react'
+import { useContext, useEffect, useState } from 'react'
 import axiosInstance from '../../utils/axiosInstance'
 import request from '../../utils/axiosConfig'
-import { Button, Col, Layout, Menu, Row, Spin, theme } from 'antd'
+import { Button, Col, Layout, Menu, Row, Spin, notification, theme } from 'antd'
 
 import OverallChart from './OverallChart'
 import RevenueChart from './RevenueChart'
@@ -31,6 +31,7 @@ import ManageUser from './ManageUser'
 import ManageProductList from './ManageProductList'
 import { useNavigate } from 'react-router-dom'
 import ManageCategoryList from './ManageCategoryList'
+import CartContext from '../../context/CartContext'
 
 echarts.use([
     TitleComponent,
@@ -86,6 +87,7 @@ const AdminDashboard = () => {
 
     const [optionsChart, setOptionChart] = useState({})
     const [collapsed, setCollapsed] = useState(false)
+    const context = useContext(CartContext)
     const {
         token: { colorBgContainer },
     } = theme.useToken()
@@ -94,11 +96,24 @@ const AdminDashboard = () => {
     const [user, setUser] = useState(null)
     const navigate = useNavigate()
 
-    const getUser = () => {
+    const AuthenticateAdmin = () => {
         const currentUser = JSON.parse(localStorage.getItem('user'))
         if (currentUser) {
             setUser(currentUser)
+            if (currentUser?.roles.length < 2) {
+                notification.error({
+                    message: 'Có lỗi xảy ra',
+                    description: 'Không có quyền truy cập vào trang này',
+                    duration: 2,
+                })
+                navigate('/notfound')
+            }
         } else {
+            notification.error({
+                message: 'Có lỗi xảy ra',
+                description: 'Vui lòng đăng nhập trước khi vào trang',
+                duration: 2,
+            })
             navigate('/login')
         }
     }
@@ -134,7 +149,8 @@ const AdminDashboard = () => {
     }
 
     useEffect(() => {
-        getUser()
+        AuthenticateAdmin()
+        // if (context.isAdmin === false) navigate('/login')
         fetchDataOverall()
 
         return () => {

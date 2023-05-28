@@ -4,7 +4,7 @@ actor USER
 activate USER
 USER -> UFF_UI: Yêu cầu xem profile
 activate UFF_UI
-UFF_UI -> UFF_SERVER: Gọi api/v1/USER/:id
+UFF_UI -> UFF_SERVER: Gọi api/v1/user/:id
 activate UFF_SERVER
 UFF_SERVER -> UFF_SERVER: Kiểm tra token có hợp lệ không
 alt if token không hợp lệ

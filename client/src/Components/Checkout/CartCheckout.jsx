@@ -138,12 +138,19 @@ function Summary({
             voucher: promoCode === '' ? null : promoCode,
         }
         console.log(order)
+        const currentUser = JSON.parse(localStorage.getItem('user'))
         try {
             const responseOrder = await axiosInstance.post('/order', {
                 items: orderItems,
                 payment: selectMethod,
                 feeShip: feeShip,
                 voucher: promoCode === '' ? null : promoCode,
+                contact:{
+                    address:currentUser['address']['add'],
+                    ward:currentUser['address']['ward']['name'],
+                    district: currentUser['address']['district']['name'],
+                    phoneNumber: currentUser['phoneNumber']
+                }
             })
 
             if (selectMethod === 'Online') {

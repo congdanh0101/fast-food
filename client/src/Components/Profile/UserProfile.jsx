@@ -10,6 +10,7 @@ import {
     Row,
     Space,
     Typography,
+    notification,
 } from 'antd'
 import {
     UserOutlined,
@@ -68,19 +69,31 @@ const items = [
 function UserProfile() {
     const [form] = Form.useForm()
     const [isLoading, setIsLoading] = useState(false)
-
+    const context = useContext(CartContext)
 
     const navigate = useNavigate()
-
     const [user, setUser] = useState(null)
 
     const getUser = () => {
         const currentUser = JSON.parse(localStorage.getItem('user'))
         if (currentUser) {
             setUser(currentUser)
-            if(currentUser?.roles.length>=2) navigate('/notfound')
+            if (currentUser?.roles.length >= 2) {
+                notification.error({
+                    message: 'Có lỗi xảy ra',
+                    description: 'Vui lòng đăng nhập trước khi vào trang',
+                    duration: 2,
+                })
+                navigate('/notfound')
+            }
+        } else {
+            notification.error({
+                message: 'Có lỗi xảy ra',
+                description: 'Vui lòng đăng nhập trước khi vào trang',
+                duration: 2,
+            })
+            navigate('/login')
         }
-        else navigate('/login')
     }
 
     useEffect(() => {
@@ -91,8 +104,6 @@ function UserProfile() {
     }, [])
 
     const [key, setKey] = useState('info')
-
-   
 
     const handleMenuChanged = (e) => {
         console.log(e.key)

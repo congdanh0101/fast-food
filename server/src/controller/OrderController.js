@@ -1,3 +1,4 @@
+const EmailService = require('../service/EmailService')
 const OrderService = require('../service/OrderService')
 
 class OrderController {
@@ -8,13 +9,15 @@ class OrderController {
         const order = {
             items: data.items,
             user: userID,
-            deliveryMethod: data.deliveryMethod,
+            // deliveryMethod: data.deliveryMethod,
             payment: data.payment,
             voucher: data.voucher,
             feeShip: data.feeShip,
+            contact: data.contact,
         }
         try {
             const result = await OrderService.createOrder(order)
+            
             return res.json(result)
         } catch (error) {
             return next(error)

@@ -7,6 +7,7 @@ const createHttpError = require('http-errors')
 const ResourceNotFoundException = require('../exception/ResourceNotFoundException')
 const VoucherService = require('./VoucherService')
 const Product = require('../model/Product')
+const EmailService = require('./EmailService')
 require('dotenv').config()
 
 class OrderService {
@@ -66,7 +67,19 @@ class OrderService {
             //update user
             await user.save()
             const o = new Order(order)
-            return await o.save()
+            const orderSaved = await o.save()
+            const estimate = new Date(
+                new Date(orderSaved['dateOrder']).getTime() +
+                    (Math.floor(Math.random() * 31) + 15) * 1000 * 60
+            ).toLocaleString('en-GB')
+            orderSaved['estimatedDelivery'] = estimate
+            await orderSaved.save()
+            await EmailService.sendEmail(
+                user['email'],
+                `xác nhận thông tin đơn hàng`.toUpperCase(),
+                await EmailService.htmlOrderConfirmation(orderSaved)
+            )
+            return orderSaved
         } catch (error) {
             throw error
         }

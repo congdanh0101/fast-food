@@ -41,7 +41,7 @@ class AuthService {
 
             await EmailService.sendEmail(
                 user['email'],
-                'Email verification code'.toUpperCase(),
+                'mã xác thực email'.toUpperCase(),
                 EmailService.htmlEmailVerificationCodeRegister(
                     randomCode,
                     user['fullName']
@@ -144,7 +144,7 @@ class AuthService {
             const randomCode = Utils.generateVerificationCode()
             await EmailService.sendEmail(
                 email,
-                `Email verification code`.toUpperCase(),
+                `mã xác thực email`.toUpperCase(),
                 EmailService.htmlEmailVerificationCodeForgotPasswor(
                     randomCode,
                     user['fullName']
@@ -162,7 +162,7 @@ class AuthService {
             console.log(newPassword)
             await EmailService.sendEmail(
                 email,
-                `email verfication code`.toUpperCase(),
+                `mật khẩu mới`.toUpperCase(),
                 EmailService.htmlResetPassword(newPassword)
             )
             const user = await User.findOneAndUpdate(

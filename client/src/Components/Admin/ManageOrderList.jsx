@@ -90,10 +90,22 @@ const ManageOrderList = () => {
                     paid: order['isPaid'],
                     status: order['status'],
                     user: order?.user?.fullName || '',
-                    phoneNumber: order.user?.phoneNumber || '',
-                    add: order.user?.address?.add || '',
-                    ward: order.user?.address?.ward?.name || '',
-                    district: order.user?.address?.district?.name || '',
+                    phoneNumber:
+                        order?.contact?.phoneNumber ||
+                        order.user?.phoneNumber ||
+                        '',
+                    add:
+                        order?.contact?.address ||
+                        order.user?.address?.add ||
+                        '',
+                    ward:
+                        order?.contact?.ward ||
+                        order.user?.address?.ward?.name ||
+                        '',
+                    district:
+                        order?.contact?.district ||
+                        order.user?.address?.district?.name ||
+                        '',
                 })
             }
             setOrderData(data)

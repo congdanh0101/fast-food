@@ -51,11 +51,11 @@ const Transaction = () => {
                     no: (i + 1).toString(),
                     date: new Date(order['dateOrder']).toLocaleDateString(),
                     time: new Date(order['dateOrder']).toLocaleTimeString(),
-                    totalPrice: currencyFormat(order['totalPrice']),
-                    discount: currencyFormat(-order['discount']),
-                    subTotal: currencyFormat(order['subtotal']),
-                    feeShip: currencyFormat(order['feeShip']),
-                    vat: currencyFormat(order['vat']),
+                    totalPrice: currencyFormat(order['totalPrice'] || 0),
+                    discount: currencyFormat(-order['discount'] || 0),
+                    subTotal: currencyFormat(order['subtotal']) || 0,
+                    feeShip: currencyFormat(order['feeShip'] || 0),
+                    vat: currencyFormat(order['vat'] || 0),
                     payment: getTextPaymentMethod(order['payment']),
                     paid:
                         order['isPaid'] === true ? (

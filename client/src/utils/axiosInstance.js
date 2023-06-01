@@ -11,7 +11,7 @@ let access
 if (token != null) access = token['accessToken']
 
 const axiosInstance = axios.create({
-    baseURL: 'http://localhost:2001/api',
+    baseURL: 'http://44.210.141.132:2001/api',
     headers: {
         'Content-Type': ['application/json'],
         'Access-Control-Allow-Origin': '*',

@@ -31,6 +31,11 @@ const LogoutIcon = () => {
                 description: error.response?.data.message,
                 duration: 2,
             })
+            localStorage.removeItem('user')
+            localStorage.removeItem('userID')
+            localStorage.removeItem('items')
+            localStorage.removeItem('accessToken')
+            window.location.reload()
         }
     }
 

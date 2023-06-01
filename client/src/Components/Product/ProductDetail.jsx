@@ -71,7 +71,7 @@ const ProductDetail = () => {
         try {
             setLoading(true)
             const response = await request.get(
-                `/product?category=63f0add10207afdbe49f43ea&softDeleted=false`
+                `/product?category=6478f52d3173452effb74303,63f0af4e9fe3ef4df2c66190&softDeleted=false`
             )
             setListMustTryProduct(response.data)
             const dataSelect = []
@@ -260,7 +260,7 @@ const ProductDetail = () => {
                         </div>
                     </Col>
                     <Col span={8} style={{ width: '50%' }}>
-                        <h1>Ăn kèm</h1>
+                        <h1>Dùng thêm</h1>
                         {/* {listMustTryProduct?.map((item) => (
                         <>
                             <ProductList products={listMustTryProduct}/>

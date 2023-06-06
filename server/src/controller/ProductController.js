@@ -71,12 +71,15 @@ class ProductController {
         const file = req.file
         const fileName = file ? file.filename : null
         const basePath = `${req.protocol}://${req.get('host')}/public/`
+        var link
+        if (file != null || file != undefined) link = await uploadImage(file)
         const product = {
             name: data.name,
             price: data.price,
             category: data.category,
             combo: data.combo,
-            img: fileName ? `${basePath}${fileName}` : null,
+            // img: fileName ? `${basePath}${fileName}` : null,
+            img: link?.Location || null,
             // img: `${basePath}${fileName}`,
             description: data.description,
         }

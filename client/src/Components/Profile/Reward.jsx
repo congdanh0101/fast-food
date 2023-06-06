@@ -1,4 +1,4 @@
-import { Col, Modal, Row, Slider, Table } from 'antd'
+import { Col, Modal, Row, Slider, Spin, Table } from 'antd'
 import { createContext, useEffect, useState } from 'react'
 import { Card } from 'react-bootstrap'
 import request from '../../utils/axiosConfig'
@@ -76,7 +76,7 @@ const VoucherCard = ({ item, width }) => {
 const Reward = () => {
     // const user = JSON.parse(localStorage.getItem('user'))
     const userID = localStorage.getItem('userID')
-
+    const [loading, setLoading] = useState(false)
     const [user, setUser] = useState({})
     const [rankingPoint, setRankingPoint] = useState(0)
     const fetchUser = async () => {
@@ -95,6 +95,7 @@ const Reward = () => {
         let listData = []
         for (var index = 0; index < user?.voucher?.length; index++) {
             try {
+                setLoading(true)
                 const response = await request(
                     `/voucher/${user.voucher[index]}`
                 )
@@ -109,6 +110,7 @@ const Reward = () => {
             }
         }
         setVoucherList(listData)
+        setLoading(false)
     }
     useEffect(() => {
         fetchUser()
@@ -145,22 +147,23 @@ const Reward = () => {
     }
 
     return (
-        <div style={{ width: '100%' }}>
-            <div>
-                <Slider
-                    marks={marks}
-                    // defaultValue={parseInt(user.rankingPoint)}
-                    style={{
-                        marginLeft: '36px',
-                        marginRight: '36px',
-                        marginTop: '36px',
-                    }}
-                    max={1000}
-                    range
-                    value={[0, user['rankingPoint']]}
-                ></Slider>
+        <Spin spinning={loading} size="large" tip="Loading...">
+            <div style={{ width: '100%' }}>
+                <div>
+                    <Slider
+                        marks={marks}
+                        // defaultValue={parseInt(user.rankingPoint)}
+                        style={{
+                            marginLeft: '36px',
+                            marginRight: '36px',
+                            marginTop: '36px',
+                        }}
+                        max={1000}
+                        range
+                        value={[0, user['rankingPoint']]}
+                    ></Slider>
 
-                {/* <ul
+                    {/* <ul
                     style={{
                         display: 'flex',
                         justifyContent: 'space-around',
@@ -195,16 +198,17 @@ const Reward = () => {
                         <p style={{ color: 'red' }}>{user.rewardPoint}</p>
                     </li>
                 </ul> */}
-            </div>
+                </div>
 
-            <Row gutter={[40, 24]}>
-                {voucherList?.map((item) => (
-                    <Col span={5} offset={1}>
-                        <VoucherCard item={item} width={100} />
-                    </Col>
-                ))}
-            </Row>
-        </div>
+                <Row gutter={[40, 24]}>
+                    {voucherList?.map((item) => (
+                        <Col span={5} offset={1}>
+                            <VoucherCard item={item} width={100} />
+                        </Col>
+                    ))}
+                </Row>
+            </div>
+        </Spin>
     )
 }
 

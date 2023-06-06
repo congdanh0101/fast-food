@@ -381,13 +381,13 @@ const ManageOrderList = () => {
                                                 response.data.isPaid
                                             notification.success({
                                                 message:
-                                                    'Update order successfully',
+                                                    'Cập nhật đơn hàng thành công',
                                                 duration: 2,
                                             })
                                             fetchOrderByUser()
                                         } catch (error) {
                                             notification.error({
-                                                message: 'Update order failed',
+                                                message: 'Cập nhật đơn hàng thất bại',
                                                 description:
                                                     error.response?.data
                                                         .message,

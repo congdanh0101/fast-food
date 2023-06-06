@@ -54,13 +54,18 @@ const ManageUser = () => {
     const handleSwitchChange = async (record, e) => {
         try {
             const response = await axiosInstance.put(`/user/soft/${record.key}`)
-            notification.success({
-                message: 'Edit user successfully',
-            })
+            if (response.data.softDeleted === true)
+                notification.success({
+                    message: 'Khóa tài khoản người dùng thành công',
+                })
+            else
+                notification.success({
+                    message: 'Kích hoạt tài khoản người dùng thành công',
+                })
         } catch (error) {
             console.log(error)
             notification.error({
-                message: 'Edit user failed',
+                message: 'Chỉnh sửa người dùng thất bại',
                 description: error.response?.data.message,
             })
         }

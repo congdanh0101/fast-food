@@ -205,15 +205,15 @@ const Checkout = () => {
                 !currentUser?.address?.district?.code
             ) {
                 notification.error({
-                    message: 'Address',
-                    description: 'Please try again',
+                    message: 'Địa chỉ không hợp lệ',
+                    description: 'Vui lòng nhập địa chỉ',
                 })
                 navigate('/profile')
             }
             if (!currentUser?.phoneNumber) {
                 notification.error({
-                    message: 'Phone number',
-                    description: 'Please try again',
+                    message: 'Số điện thoại không hợp lệ',
+                    description: 'Vui lòng nhập số điện thoại',
                 })
                 navigate('/profile')
             }

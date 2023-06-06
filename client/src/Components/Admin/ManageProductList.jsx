@@ -79,13 +79,18 @@ const ManageProductList = () => {
             const response = await axiosInstance.put(
                 `/product/soft/${record.key}`
             )
-            notification.success({
-                message: 'Edit user successfully',
-            })
+            if (response.data.softDeleted === true)
+                notification.success({
+                    message: 'Ẩn sản phẩm thành công',
+                })
+            else
+                notification.success({
+                    message: 'Hiện sản phẩm thành công',
+                })
         } catch (error) {
             console.log(error)
             notification.error({
-                message: 'Edit user failed',
+                message: 'Chỉnh sửa sản phẩm thất bại',
                 description: error.response?.data.message,
             })
         }

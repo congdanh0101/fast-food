@@ -145,12 +145,12 @@ function Summary({
                 payment: selectMethod,
                 feeShip: feeShip,
                 voucher: promoCode === '' ? null : promoCode,
-                contact:{
-                    address:currentUser['address']['add'],
-                    ward:currentUser['address']['ward']['name'],
+                contact: {
+                    address: currentUser['address']['add'],
+                    ward: currentUser['address']['ward']['name'],
                     district: currentUser['address']['district']['name'],
-                    phoneNumber: currentUser['phoneNumber']
-                }
+                    phoneNumber: currentUser['phoneNumber'],
+                },
             })
 
             if (selectMethod === 'Online') {
@@ -165,8 +165,7 @@ function Summary({
                         // window.open(res.data.payment, '_blank')
                     })
                     .catch((err) => console.log(err))
-            }
-            else{
+            } else {
                 navigate('/order/success')
             }
         } catch (error) {
@@ -177,7 +176,7 @@ function Summary({
     return (
         <section className="container">
             <div className="promotion">
-                <label htmlFor="promo-code">Have A Promo Code?</label>
+                <label htmlFor="promo-code">Bạn có sử dụng mã giảm giá không?</label>
                 <input type="text" onChange={onEnterPromoCode} />
                 <button type="button" onClick={checkPromoCode} />
                 <Radio.Group
@@ -252,20 +251,20 @@ function CartCheckout({ selectPaymentMethod }) {
 
     const getFeeShip = async () => {
         const user = JSON.parse(localStorage.getItem('user'))
-        const obj = {
-            from_district_id: 1461,
-            service_id: 53320,
-            service_type_id: null,
-            to_district_id: parseInt(user?.address.district.code),
-            to_ward_code: user?.address.ward.code,
-            height: Math.floor(Math.random() * 50) + 1,
-            length: Math.floor(Math.random() * 50) + 1,
-            weight: Math.floor(Math.random() * 1000) + 1,
-            width: Math.floor(Math.random() * 50) + 1,
-            insurance_value: 10000,
-            coupon: null,
-            shop_id: 121162,
-        }
+        // const obj = {
+        //     from_district_id: 1461,
+        //     service_id: 53320,
+        //     service_type_id: null,
+        //     to_district_id: parseInt(user?.address.district.code),
+        //     to_ward_code: user?.address.ward.code,
+        //     height: Math.floor(Math.random() * 50) + 1,
+        //     length: Math.floor(Math.random() * 50) + 1,
+        //     weight: Math.floor(Math.random() * 1000) + 1,
+        //     width: Math.floor(Math.random() * 50) + 1,
+        //     insurance_value: 10000,
+        //     coupon: null,
+        //     shop_id: 121162,
+        // }
         try {
             // const resp = await fetch(
             //     `https://dev-online-gateway.ghn.vn/shiip/public-api/v2/shipping-order/fee`,
@@ -281,22 +280,43 @@ function CartCheckout({ selectPaymentMethod }) {
             // const response = await resp.json()
             // const data = await response.data
             // setFeeShip(data.total)
-            const res = await axios.post(
-                'https://dev-online-gateway.ghn.vn/shiip/public-api/v2/shipping-order/fee',
-                obj,
-                {
-                    headers: {
-                        'Content-Type': ['application/json', 'text/plain'],
-                        token: 'eab201ba-816f-11ed-a2ce-1e68bf6263c5',
-                    },
-                    withCredentials: false,
+            if (
+                user.address.district.code &&
+                user.address.district.name &&
+                user.address.ward.code &&
+                user.address.ward.name &&
+                user.address.add
+            ) {
+                const obj = {
+                    from_district_id: 1461,
+                    service_id: 53320,
+                    service_type_id: null,
+                    to_district_id: parseInt(user?.address.district.code),
+                    to_ward_code: user?.address.ward.code,
+                    height: Math.floor(Math.random() * 50) + 1,
+                    length: Math.floor(Math.random() * 50) + 1,
+                    weight: Math.floor(Math.random() * 1000) + 1,
+                    width: Math.floor(Math.random() * 50) + 1,
+                    insurance_value: 10000,
+                    coupon: null,
+                    shop_id: 121162,
                 }
-            )
-            console.log()
-            setFeeShip(res.data.data.total)
+                const res = await axios.post(
+                    'https://dev-online-gateway.ghn.vn/shiip/public-api/v2/shipping-order/fee',
+                    obj,
+                    {
+                        headers: {
+                            'Content-Type': ['application/json', 'text/plain'],
+                            token: 'eab201ba-816f-11ed-a2ce-1e68bf6263c5',
+                        },
+                        withCredentials: false,
+                    }
+                )
+                setFeeShip(res.data.data.total)
+            }
         } catch (error) {
             notification.error({
-                message: 'error',
+                message: 'Có lỗi xảy ra, vui lòng thử lại',
                 description: error.res?.data.message,
             })
             console.log(error)
@@ -315,15 +335,14 @@ function CartCheckout({ selectPaymentMethod }) {
             })
             setDiscount(response.data.discount)
             notification.success({
-                message: 'Promo Code',
-                description: 'Successfully',
+                message: 'Áp dụng voucher thành công',
             })
             return
         } catch (error) {
             setDiscount(0)
             console.log(error)
             notification.error({
-                message: 'Promo Code',
+                message: 'Áp dụng voucher thất bại',
                 description: error.response.data.message,
             })
         }

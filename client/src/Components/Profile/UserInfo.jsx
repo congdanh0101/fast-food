@@ -64,7 +64,7 @@ const UserInfo = () => {
     )
     const [userWard, setUserWard] = useState(currentUser.address?.ward || '')
     const [idDistrict, setIdDistrict] = useState(
-        currentUser.address?.district?.code
+        currentUser.address?.district?.code || ''
     )
 
     const handleUpdateData = async () => {
@@ -92,14 +92,14 @@ const UserInfo = () => {
             setUserDistrict(updateResponse.data.address.district)
             setUserWard(updateResponse.data.address.ward)
             notification.success({
-                message: 'Update successfully',
+                message: 'Cập nhật thành công',
                 duration: 3,
             })
             getUser()
             // setTimeout(()=>window.location.reload(),700)
         } catch (error) {
             notification.error({
-                message: 'Update Failure',
+                message: 'Cập nhật thất bại',
                 description: error.response?.data.message,
                 duration: 3,
             })

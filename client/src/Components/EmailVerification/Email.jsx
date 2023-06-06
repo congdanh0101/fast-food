@@ -72,7 +72,7 @@ const Email = () => {
                 navigate('/verify/forgot')
             } catch (error) {
                 notification.error({
-                    message: 'Error',
+                    message: 'Có lỗi xảy ra, vui lòng thử lại',
                     description: error.response.data.message,
                 })
             }

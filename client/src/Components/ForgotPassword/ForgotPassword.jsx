@@ -19,8 +19,8 @@ const ForgotPassword = () => {
             navigate('/verify/forgot')
         } catch (error) {
             notification.error({
-                message:'Error',
-                description:error.response.data.message
+                message: 'Có lỗi xảy ra, vui lòng thử lại',
+                description: error.response.data.message,
             })
         }
     }

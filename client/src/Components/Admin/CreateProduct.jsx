@@ -86,12 +86,12 @@ const CreateProduct = () => {
         ) {
             setSelectedImage(file)
             notification.success({
-                message: 'Upload successfully',
+                message: 'Tải ảnh thành công',
             })
         } else {
             notification.error({
-                message: 'Upload failed',
-                description: 'Only upload JPEG/JPG/PNG image',
+                message: 'Tải ảnh thất bại',
+                description: 'Chỉ tải ảnh có dạng JPEG/JPG/PNG',
             })
         }
     }
@@ -108,8 +108,8 @@ const CreateProduct = () => {
             selectCategory === ''
         )
             notification.error({
-                message: 'Add new product failed',
-                description: 'Please enter all field!',
+                message: 'Thêm sản phẩm thất bại',
+                description: 'Vui lòng nhập tất cả thông tin!',
             })
         else
             try {
@@ -131,12 +131,12 @@ const CreateProduct = () => {
                 )
                 setLoading(false)
                 notification.success({
-                    message: 'Add new product successfully',
+                    message: 'Thêm sản phẩm thành công',
                 })
             } catch (error) {
                 console.log(error)
                 notification.error({
-                    message: 'Add new product failed',
+                    message: 'Thêm sản phẩm thất bại',
                     description: error.response?.data.message,
                 })
             }

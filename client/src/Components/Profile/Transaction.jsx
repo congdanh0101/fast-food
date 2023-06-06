@@ -7,7 +7,7 @@ import {
     CloseOutlined,
     CloseCircleOutlined,
 } from '@ant-design/icons'
-import { Badge, Dropdown, Space, Table } from 'antd'
+import { Badge, Dropdown, Space, Spin, Table } from 'antd'
 import { useEffect, useState } from 'react'
 import request from '../../utils/axiosConfig'
 import { Link, useNavigate } from 'react-router-dom'
@@ -18,7 +18,7 @@ const Transaction = () => {
     const [orderList, setOrderList] = useState([])
     const [orderData, setOrderData] = useState([])
     const [user, setUser] = useState({})
-
+    const [loading, setLoading] = useState(false)
     const navigate = useNavigate()
 
     const vnpay = (e) => {
@@ -40,6 +40,7 @@ const Transaction = () => {
 
     const fetchOrderByUser = async () => {
         try {
+            setLoading(true)
             const response = await request.get(`/order?user=${userID}`)
             console.log(response.data)
 
@@ -105,6 +106,7 @@ const Transaction = () => {
             }
             setOrderData(data)
             setOrderList(response.data)
+            setLoading(false)
         } catch (error) {
             console.log(error)
         }
@@ -283,7 +285,7 @@ const Transaction = () => {
         </span>
     )
     return (
-        <>
+        <Spin spinning={loading} size="large" tip="Loading...">
             <Table
                 title={defaultTitle}
                 // footer={defaultFooter}
@@ -304,7 +306,7 @@ const Transaction = () => {
                     hideOnSinglePage: true,
                 }}
             />
-        </>
+        </Spin>
     )
 }
 export default Transaction

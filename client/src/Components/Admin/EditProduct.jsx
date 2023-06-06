@@ -77,11 +77,11 @@ export default function EditProduct() {
             // render.readAsDataURL(file)
             setSelectedImage(file)
             notification.success({
-                message: 'Upload successfully',
+                message: 'Tải ảnh lên thành công',
             })
         } else {
             notification.error({
-                message: 'Upload failed',
+                message: 'Tải ảnh lên thất bại',
             })
         }
     }
@@ -146,11 +146,11 @@ export default function EditProduct() {
             })
             setLoading(false)
             notification.success({
-                message: 'Update product successfully',
+                message: 'Cập nhật sản phẩm thành công',
             })
         } catch (error) {
             notification.error({
-                message: 'Update product failed',
+                message: 'Cập nhật sản phẩm thất bại',
                 description: error.response?.data?.message,
             })
         }

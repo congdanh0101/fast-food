@@ -174,7 +174,6 @@ function Summary({
                 message: 'Có lỗi xảy ra',
                 description: 'Vui lòng đăng nhập trước khi thanh toán',
                 duration: 2,
-                
             })
             navigate('/login')
         }
@@ -309,15 +308,14 @@ function Page() {
             })
             setDiscount(response.data.discount)
             notification.success({
-                message: 'Promo Code',
-                description: 'Successfully',
+                message: 'Áp dụng voucher thành công',
             })
             return
         } catch (error) {
             setDiscount(0)
             console.log(error)
             notification.error({
-                message: 'Promo Code',
+                message: 'Áp dụng voucher thất bại',
                 description: error.response.data.message,
             })
         }
